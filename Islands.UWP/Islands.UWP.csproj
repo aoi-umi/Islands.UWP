@@ -99,8 +99,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\AThreadModel.cs" />
-    <Compile Include="MyEnum.cs" />
+    <Compile Include="Model\ThreadModel.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="ThreadsView.xaml.cs">
       <DependentUpon>ThreadsView.xaml</DependentUpon>
     </Compile>
@@ -127,6 +127,7 @@
     <None Include="Islands.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\luwei.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

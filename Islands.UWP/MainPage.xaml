@@ -13,7 +13,7 @@
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot>
-            <PivotItem Header="A" Margin="0">
+            <PivotItem Name="pivotItemA" Header="A" Margin="0">
                 <local:MainControl />
             </PivotItem>
             <PivotItem Header="B" Margin="0">

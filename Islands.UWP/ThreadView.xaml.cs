@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -19,12 +20,21 @@ namespace Islands.UWP
 {
     public sealed partial class ThreadView : UserControl
     {
-        Model.AThreadModel thread;
-        public ThreadView(Model.AThreadModel thread)
+        public string ThreadID { get { return thread.No; } }
+        Model.ThreadModel thread;
+        public ThreadView(Model.ThreadModel thread)
         {
             this.InitializeComponent();
             this.thread = thread;
+            if (!string.IsNullOrEmpty(this.thread.Image))
+                imageBox.Source = new BitmapImage(new Uri(this.thread.Image));
             
+        }
+
+        private void ImageBox_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            if(!string.IsNullOrEmpty(thread.Image))
+                imageBox.Source = new BitmapImage(new Uri("ms-appx:/Assets/luwei.jpg", UriKind.RelativeOrAbsolute));
         }
     }
 }

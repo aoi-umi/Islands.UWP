@@ -26,7 +26,7 @@ namespace Islands.UWP
     {
         public bool IsInitRefresh = false;
         public PostModel postModel = new PostModel();
-        public IslandCode islandCode;
+        public IslandsCode islandCode;
         int currPage { get; set; }
         public class PostModel
         {
@@ -36,7 +36,7 @@ namespace Islands.UWP
             public PostModel() { }
         }
 
-        private ObservableCollection<Model.AThreadModel> _list = new ObservableCollection<Model.AThreadModel>();
+        private ObservableCollection<Model.ThreadModel> _list = new ObservableCollection<Model.ThreadModel>();
 
         public ThreadsView()
         {
@@ -64,7 +64,6 @@ namespace Islands.UWP
 
         private void _Refresh()
         {
-            Debug.WriteLine("refresh");
             threadListView.Items.Clear();
             try
             {
@@ -81,7 +80,7 @@ namespace Islands.UWP
             }
         }
 
-        private async void GetThreadList(Model.PostRequest req, IslandCode code)
+        private async void GetThreadList(Model.PostRequest req, IslandsCode code)
         {
             DataLoading();
             string res = "";
@@ -91,11 +90,11 @@ namespace Islands.UWP
                 res = await Data.Post.GetThreads(String.Format(req.API, req.Host, req.ID, req.Page));
                 JArray Threads;
                 switch (code) {
-                    case IslandCode.A:
-                    case IslandCode.Beitai:
+                    case IslandsCode.A:
+                    case IslandsCode.Beitai:
                         Threads = JArray.Parse(res);
                         break;
-                    case IslandCode.Koukuko:
+                    case IslandsCode.Koukuko:
                         JObject jObj = (JObject)JsonConvert.DeserializeObject(res);
                         Threads = JArray.Parse(jObj["data"]["threads"].ToString());
                         break;
@@ -107,7 +106,8 @@ namespace Islands.UWP
                 foreach (var thread in Threads) {
                     StringReader sr = new StringReader(thread.ToString());
                     JsonSerializer serializer = new JsonSerializer();
-                    Model.AThreadModel tm = (Model.AThreadModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.AThreadModel));
+                    Model.ThreadModel tm = (Model.ThreadModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ThreadModel));
+                    tm.islandCode = code;
                     threadListView.Items.Add(new ThreadView(tm));
                 }
 
@@ -125,12 +125,14 @@ namespace Islands.UWP
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            ListItemClick();
+            ThreadView tv = e.ClickedItem as ThreadView;
+            if (tv != null)
+                ListItemClick(tv.ThreadID);
         }
 
-        protected void ListItemClick()
+        private void ListItemClick(string threadID)
         {
-
+            Debug.WriteLine(threadID);
         }
 
         //滑动刷新
@@ -142,7 +144,7 @@ namespace Islands.UWP
             {
                 try
                 {
-                    sv.ScrollToVerticalOffset(sv.VerticalOffset - 1);
+                    sv.ChangeView(null,sv.VerticalOffset - 1,null);
                     GetThreadList(new Model.PostRequest()
                     {
                         API = postModel.GetThreadAPI,

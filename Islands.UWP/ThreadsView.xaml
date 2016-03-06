@@ -70,7 +70,8 @@
         <ListView Name="threadListView"
                   CanReorderItems="True"
                   IsItemClickEnabled="True"
-                  SelectionMode="None">
+                  SelectionMode="None"
+                  ItemClick="ListView_ItemClick">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

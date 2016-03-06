@@ -19,19 +19,37 @@ namespace Islands.UWP
 {
     public sealed partial class MainControl : UserControl
     {
-        ThreadsView ThreadControl = new ThreadsView() {
-            postModel = new ThreadsView.PostModel {
-                Host = "http://h.nimingban.com",
-                GetThreadAPI= "{0}/Api/showf/id/{1}/page/{2}",
-                ThreadID = "4"
-            },
-            islandCode = IslandCode.A
-        };
+        public string Host { get; set; }
+        public string PictureHost { get; set; }
+        public string GetThreadAPI { get; set; }
+        public string GetReplyAPI { get; set; }
+        public string PostThreadAPI { get; set; }
+        public string PostReplyAPI { get; set; }
+        public IslandsCode IslandCode;
+
+        ThreadsView ThreadControl;
         public MainControl()
         {
             this.InitializeComponent();
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            ThreadControl = new ThreadsView()
+            {
+                postModel = new ThreadsView.PostModel
+                {
+                    Host = Host,
+                    GetThreadAPI = GetThreadAPI,
+                    ThreadID = "4"
+                },
+                islandCode = IslandCode
+            };
             mainSplitView.Content = ThreadControl;
         }
+
+        
+
         private void mainNavigationList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 

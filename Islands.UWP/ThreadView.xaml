@@ -11,14 +11,14 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="标题：">
                 </TextBlock>
-                <TextBlock Text="{x:Bind thread.title}"
+                <TextBlock Text="{x:Bind thread.Title}"
                            Margin="0,0,5,0">
                 </TextBlock>
                 <TextBlock Text="email："></TextBlock>
-                <TextBlock Text="{x:Bind thread.email}"
+                <TextBlock Text="{x:Bind thread.Email}"
                            Margin="0,0,5,0"></TextBlock>
                 <TextBlock Text="名字："></TextBlock>
-                <TextBlock Text="{x:Bind thread.name}"
+                <TextBlock Text="{x:Bind thread.Name}"
                            Margin="0,0,5,0"></TextBlock>
             </StackPanel>
             <RelativePanel>
@@ -26,22 +26,22 @@
                            Text="No.">
                 </TextBlock>
                 <TextBox Name="txtId" 
-                         Text="{x:Bind thread.id}" 
+                         Text="{x:Bind thread.No}" 
                          Margin="0,0,5,0"
                          RelativePanel.RightOf="id">
                 </TextBox>
-                <TextBlock Name="txtNow" 
-                           Text="{x:Bind thread.now}"
+                <TextBlock Name="txtCreateDate" 
+                           Text="{x:Bind thread.CreateDate}"
                            Margin="0,0,5,0"
                            RelativePanel.RightOf="txtId">
                 </TextBlock>
                 <TextBlock Name="userid"
                            Text="ID:"
-                           RelativePanel.RightOf="txtNow"
+                           RelativePanel.RightOf="txtCreateDate"
                            >
                 </TextBlock>
                 <TextBlock Name="txtUserid" 
-                           Text="{x:Bind thread.userid}"
+                           Text="{x:Bind thread.ID}"
                            RelativePanel.RightOf="userid"
                            >
                 </TextBlock>
@@ -51,14 +51,20 @@
                            >
                 </TextBlock>
                 <TextBlock Name="txtReplyCount"
-                           Text="{x:Bind thread.replyCount}"
+                           Text="{x:Bind thread.ReplyCount}"
                            RelativePanel.AlignRightWithPanel="True"
                            >
                 </TextBlock>
             </RelativePanel>
             <TextBox Name="txtContent"
                      TextWrapping="Wrap"
-                     Text="{x:Bind thread.content}"></TextBox>
+                     Text="{x:Bind thread.Content}"></TextBox>
+            <Image Name="imageBox"  
+                   MaxHeight="200" 
+                   MaxWidth="200" 
+                   HorizontalAlignment="Left"
+                   ImageFailed="ImageBox_ImageFailed" />
+            <TextBox Text="{x:Bind thread.Image}"></TextBox>
         </StackPanel>
     </Grid>
 </UserControl>

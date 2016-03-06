@@ -5,10 +5,10 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Loaded="UserControl_Loaded">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <SplitView Name="mainSplitView" CompactPaneLength="43" OpenPaneLength="120" DisplayMode="CompactOverlay">
+        <SplitView Name="mainSplitView" CompactPaneLength="43" OpenPaneLength="118" DisplayMode="CompactOverlay">
             <SplitView.Pane>
                 <ListBox Name="mainNavigationList"
                          SelectionMode="Single"
@@ -16,17 +16,17 @@
                     <ListBoxItem Tag="0" Tapped="ListBoxItem_Tapped" Name="menuItem">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE700;" 
-                                       FontSize="20" 
+                                       FontSize="18" 
                                        FontFamily="Segoe MDL2 Assets"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem Tag="1" Tapped="ListBoxItem_Tapped" Name="homeItem">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE80F;" 
-                                       FontSize="20" 
+                                       FontSize="18" 
                                        FontFamily="Segoe MDL2 Assets"
                                        Padding="0,4,0,0" Foreground="Black"/>
-                            <TextBlock Text="板块" 
+                            <TextBlock Text="Home" 
                                        FontSize="18"
                                        FontFamily="微软雅黑"
                                        Margin="12,0,0,0"/>
@@ -47,7 +47,7 @@
                     <ListBoxItem Tag="3" Tapped="ListBoxItem_Tapped" Name="myReplyItem">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE120;" 
-                                       FontSize="20" 
+                                       FontSize="18" 
                                        FontFamily="Segoe MDL2 Assets"
                                        Padding="0,4,0,0" Foreground="Black"/>
                             <TextBlock Text="回复" 
@@ -59,7 +59,7 @@
                     <ListBoxItem Tag="4" Tapped="ListBoxItem_Tapped" Name="draftItem">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE74E;" 
-                                       FontSize="20" 
+                                       FontSize="18" 
                                        FontFamily="Segoe MDL2 Assets"
                                        Padding="0,4,0,0" Foreground="Black"/>
                             <TextBlock Text="草稿" 
@@ -79,7 +79,7 @@
                     <ListBoxItem Tag="10" Tapped="ListBoxItem_Tapped" Name="settingItem">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE713;" 
-                                       FontSize="20" 
+                                       FontSize="18" 
                                        FontFamily="Segoe MDL2 Assets"
                                        TextAlignment="Center"
                                        Padding="0,4,0,0"/>

@@ -25,6 +25,12 @@ namespace Islands.UWP
         public MainPage()
         {
             this.InitializeComponent();
+            MainControl mainControlA = new MainControl() {
+            Host= Config.A.Host,
+            PictureHost = Config.A.PictureHost,
+            GetThreadAPI= Config.A.GetThreadAPI,
+            };
+            pivotItemA.Content = mainControlA;
         }
     }
 }
