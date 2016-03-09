@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Grid>
-        <StackPanel Name="threadSp" Margin="2">
+        <StackPanel Margin="2">
             <StackPanel>
                 <TextBlock Text="{x:Bind thread.Title}"
                            Visibility="{x:Bind thread.IsHadTitle}">

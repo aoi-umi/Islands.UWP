@@ -28,27 +28,32 @@
             <Button Name="Menu"
                     Content="&#xE700;"
                     FontFamily="Segoe MDL2 Assets"
-                    FontSize="22"
+                    FontSize="24"
                     RelativePanel.AlignLeftWithPanel="True"
                     RelativePanel.AlignVerticalCenterWithPanel="True"
                     Background="Transparent"
                     Visibility="Collapsed"
                     >
             </Button>
+
+            <Button Name="SwitchButton"
+                    x:FieldModifier="public"
+                    Content="&#xE13C;"
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="24"
+                    Margin="0,0,5,0"
+                    Background="Transparent">
+            </Button>
             <TextBlock Name="Title"
-                       Text="标题"
-                       RelativePanel.RightOf="Menu"
-                       RelativePanel.AlignVerticalCenterWithPanel="True"
-                       FontSize="22"
-                       FontFamily="微软雅黑"
-                       Padding="20,0,0,0">
+                       Text="{x:Bind postModel.ReplyID}"
+                       RelativePanel.RightOf="SwitchButton"
+                       FontSize="24"
+                       FontFamily="微软雅黑">
             </TextBlock>
             <TextBlock Name="ListCount"
-                       FontSize="14"
+                       FontSize="24"
                        RelativePanel.RightOf="Title"
-                       RelativePanel.AlignTopWith="Title"
-                       Margin="10,0,0,0"
-                       Text="">
+                       Text="{x:Bind txtReplyCount}">
             </TextBlock>
             <Button Name="RefreshButton"
                     Content="&#xE117;"

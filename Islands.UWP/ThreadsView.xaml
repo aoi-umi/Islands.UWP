@@ -35,18 +35,23 @@
                     Visibility="Collapsed"
                     >
             </Button>
-            <TextBlock Name="Title"
-                       Text="标题"
-                       RelativePanel.RightOf="Menu"
-                       RelativePanel.AlignVerticalCenterWithPanel="True"
+            <Button Name="SwitchButton"
+                    x:FieldModifier="public"
+                    Content="&#xE13C;"
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="24"
+                    Margin="0,0,5,0"
+                    Background="Transparent">
+            </Button>
+            <TextBlock Name="_Title"
+                       Text="{x:Bind Title}"
+                       RelativePanel.RightOf="SwitchButton"
                        FontSize="22"
-                       FontFamily="微软雅黑"
-                       Padding="20,0,0,0">
+                       FontFamily="微软雅黑">
             </TextBlock>
             <TextBlock Name="ListCount"
                        FontSize="14"
-                       RelativePanel.RightOf="Title"
-                       RelativePanel.AlignTopWith="Title"
+                       RelativePanel.RightOf="_Title"
                        Margin="10,0,0,0"
                        Text="">
             </TextBlock>
@@ -55,7 +60,6 @@
                     RelativePanel.AlignRightWithPanel="True"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="24"
-                    RelativePanel.AlignVerticalCenterWithPanel="True"
                     Margin="0,0,5,0"
                     Background="Transparent"
                     Click="RefreshButton_Click">

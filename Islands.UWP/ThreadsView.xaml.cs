@@ -27,6 +27,13 @@ namespace Islands.UWP
         public bool IsInitRefresh = false;
         public PostModel postModel = new PostModel();
         public IslandsCode islandCode;
+        public string Title { get; set; }
+        TextBlock ThreadStatusBox = new TextBlock()
+        {
+            Text = "什么也没有(つд⊂),点我加载",
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+
         int currPage { get; set; }
         public class PostModel
         {
@@ -42,8 +49,21 @@ namespace Islands.UWP
         {
             this.InitializeComponent();
             threadListScrollViewer.ViewChanged += ThreadListScrollViewer_ViewChanged;
+            ThreadStatusBox.Tapped += ThreadStatusBox_Tapped;
+            threadListView.Items.Add(ThreadStatusBox);
             if (IsInitRefresh)
                 _Refresh();
+        }
+
+        private void ThreadStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            GetThreadList(new Model.PostRequest()
+            {
+                API = postModel.GetThreadAPI,
+                Host = postModel.Host,
+                ID = postModel.ThreadID,
+                Page = ++currPage
+            }, islandCode);
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -55,9 +75,11 @@ namespace Islands.UWP
         {
             Loading.IsActive = true;
             IsHitTestVisible = false;
+            threadListView.Items.Remove(ThreadStatusBox);
         }
         private void DataLoaded()
         {
+            threadListView.Items.Add(ThreadStatusBox);
             Loading.IsActive = false;
             IsHitTestVisible = true;
         }
@@ -82,6 +104,7 @@ namespace Islands.UWP
 
         private async void GetThreadList(Model.PostRequest req, IslandsCode code)
         {
+            if (Loading.IsActive) return;
             DataLoading();
             string res = "";
             currPage = req.Page;
@@ -114,7 +137,7 @@ namespace Islands.UWP
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                ThreadStatusBox.Text = ex.Message;
             }
             finally
             {

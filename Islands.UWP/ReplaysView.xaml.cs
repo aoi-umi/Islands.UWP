@@ -26,6 +26,11 @@ namespace Islands.UWP
     {
         public PostModel postModel;
         public IslandsCode islandCode;
+        TextBlock ReplyStatusBox = new TextBlock()
+        {
+            Text = "还未看过任何串(つд⊂)",
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
         int currPage { get; set; }
         int allPage
         {
@@ -36,6 +41,7 @@ namespace Islands.UWP
             }
         }
         int replyCount { get; set; }
+        string txtReplyCount { get { return "(" + replyCount.ToString() + ")"; } }
         int pageSize { get; set; }
         public class PostModel
         {
@@ -49,9 +55,21 @@ namespace Islands.UWP
         public ReplysView()
         {
             this.InitializeComponent();
+            replyListView.Items.Add(ReplyStatusBox);
             replyListScrollViewer.ViewChanged += ReplyListScrollViewer_ViewChanged;
+            ReplyStatusBox.Tapped += ReplyStatusBox_Tapped;
         }
-        
+
+        private void ReplyStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            GetReplyList(new Model.PostRequest()
+            {
+                API = postModel.GetReplyAPI,
+                Host = postModel.Host,
+                ID = postModel.ReplyID,
+                Page = ++currPage
+            }, islandCode);
+        }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
@@ -62,9 +80,11 @@ namespace Islands.UWP
         {
             Loading.IsActive = true;
             IsHitTestVisible = false;
+            replyListView.Items.Remove(ReplyStatusBox);
         }
         private void DataLoaded()
         {
+            replyListView.Items.Add(ReplyStatusBox);
             Loading.IsActive = false;
             IsHitTestVisible = true;
         }
@@ -74,17 +94,11 @@ namespace Islands.UWP
             try
             {
                 postModel.ReplyID = replyID;
-                GetReplyList(new Model.PostRequest()
-                {
-                    API = postModel.GetReplyAPI,
-                    Host = postModel.Host,
-                    ID = postModel.ReplyID,
-                    Page = 1
-                }, islandCode);
+                _Refresh();
             }
             catch (Exception ex)
             {
-
+                ReplyStatusBox.Text = ex.Message;
             }
         }
 
@@ -109,6 +123,7 @@ namespace Islands.UWP
 
         private async void GetReplyList(Model.PostRequest req, IslandsCode code)
         {
+            if (Loading.IsActive) return;
             DataLoading();
             string res = "";
             currPage = req.Page;
@@ -122,6 +137,9 @@ namespace Islands.UWP
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
+                        int _replyCount;
+                        int.TryParse(jObj["replyCount"].ToString(), out _replyCount);
+                        replyCount = _replyCount;
                         Replys = JArray.Parse(jObj["replys"].ToString());
                         break;
                     case IslandsCode.Koukuko:

@@ -30,6 +30,7 @@ namespace Islands.UWP
 
         ThreadsView ThreadControl;
         ReplysView ReplyControl;
+        bool IsMain = true;
         public MainControl()
         {
             this.InitializeComponent();
@@ -59,7 +60,16 @@ namespace Islands.UWP
             };
             
             ThreadControl.ThreadClick += ThreadControl_ThreadClick;
+            ThreadControl.SwitchButton.Click += SwitchButton_Click;
+            ReplyControl.SwitchButton.Click += SwitchButton_Click;
             mainSplitView.Content = ThreadControl;
+        }
+
+        private void SwitchButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsMain) mainSplitView.Content = ReplyControl;
+            else mainSplitView.Content = ThreadControl;
+            IsMain = !IsMain;
         }
 
         private void ThreadControl_ThreadClick(object sender, ItemClickEventArgs e)
@@ -67,6 +77,7 @@ namespace Islands.UWP
             ThreadView tv = e.ClickedItem as ThreadView;
             if (tv != null)
             {
+                IsMain = !IsMain;
                 mainSplitView.Content = ReplyControl;
                 ReplyControl.GetReplyListByID(tv.ThreadID);
             }
