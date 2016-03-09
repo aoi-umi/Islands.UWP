@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 
 namespace Islands.UWP.Model
 {
-    public class ThreadModel
+    public class ReplyModel
     {
         public string id { get; set; }
         public string img { get; set; }
@@ -20,8 +20,6 @@ namespace Islands.UWP.Model
         public string content { get; set; }
         public string sage { get; set; }
         public string admin { get; set; }
-        public string remainReplys { get; set; }
-        public string replyCount { get; set; }
 
 
         public IslandsCode islandCode;
@@ -70,7 +68,7 @@ namespace Islands.UWP.Model
             {
                 switch (islandCode)
                 {
-                    case IslandsCode.A: return "email:"+email;
+                    case IslandsCode.A: return "email:" + email;
                     default: return "";
                 }
             }
@@ -81,7 +79,7 @@ namespace Islands.UWP.Model
             {
                 switch (islandCode)
                 {
-                    case IslandsCode.A: return "名字:"+name;
+                    case IslandsCode.A: return "名字:" + name;
                     default: return "";
                 }
             }
@@ -120,17 +118,6 @@ namespace Islands.UWP.Model
                 }
             }
         }
-        public string ReplyCount
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A: return replyCount;
-                    default: return "";
-                }
-            }
-        }
         public string Image
         {
             get
@@ -157,6 +144,6 @@ namespace Islands.UWP.Model
             }
         }
 
-        public ThreadModel() {}
+        public ReplyModel() { }
     }
 }

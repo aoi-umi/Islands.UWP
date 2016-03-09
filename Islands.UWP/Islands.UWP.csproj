@@ -11,8 +11,8 @@
     <AssemblyName>Islands.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
@@ -101,6 +101,13 @@
     </Compile>
     <Compile Include="Model\ThreadModel.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="ReplaysView.xaml.cs">
+      <DependentUpon>ReplaysView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ReplyModel.cs" />
+    <Compile Include="ReplyView.xaml.cs">
+      <DependentUpon>ReplyView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ThreadsView.xaml.cs">
       <DependentUpon>ThreadsView.xaml</DependentUpon>
     </Compile>
@@ -114,7 +121,7 @@
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\ContentModel.cs" />
     <Compile Include="Model\CookieModel.cs" />
-    <Compile Include="Model\RefreshRequest.cs" />
+    <Compile Include="Model\PostRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ThreadView.xaml.cs">
       <DependentUpon>ThreadView.xaml</DependentUpon>
@@ -142,6 +149,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="ReplaysView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReplyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ThreadsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

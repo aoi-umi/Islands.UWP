@@ -22,29 +22,36 @@ using System.Collections.ObjectModel;
 
 namespace Islands.UWP
 {
-    public sealed partial class ThreadsView : UserControl
+    public sealed partial class ReplysView : UserControl
     {
-        public bool IsInitRefresh = false;
-        public PostModel postModel = new PostModel();
+        public PostModel postModel;
         public IslandsCode islandCode;
         int currPage { get; set; }
+        int allPage
+        {
+            get
+            {
+                if (replyCount == 0) return 0;
+                return replyCount / (pageSize + 1) + 1;
+            }
+        }
+        int replyCount { get; set; }
+        int pageSize { get; set; }
         public class PostModel
         {
-            public string ThreadID { get; set; }
+            public string ReplyID { get; set; }
             public string Host { get; set; }
-            public string GetThreadAPI { get; set; }
+            public string GetReplyAPI { get; set; }
             public PostModel() { }
         }
 
         private ObservableCollection<Model.ThreadModel> _list = new ObservableCollection<Model.ThreadModel>();
-
-        public ThreadsView()
+        public ReplysView()
         {
             this.InitializeComponent();
-            threadListScrollViewer.ViewChanged += ThreadListScrollViewer_ViewChanged;
-            if (IsInitRefresh)
-                _Refresh();
+            replyListScrollViewer.ViewChanged += ReplyListScrollViewer_ViewChanged;
         }
+        
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
@@ -62,16 +69,36 @@ namespace Islands.UWP
             IsHitTestVisible = true;
         }
 
-        private void _Refresh()
+        public void GetReplyListByID(string replyID)
         {
-            threadListView.Items.Clear();
             try
             {
-                GetThreadList(new Model.PostRequest()
+                postModel.ReplyID = replyID;
+                GetReplyList(new Model.PostRequest()
                 {
-                    API = postModel.GetThreadAPI,
+                    API = postModel.GetReplyAPI,
                     Host = postModel.Host,
-                    ID = postModel.ThreadID
+                    ID = postModel.ReplyID,
+                    Page = 1
+                }, islandCode);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void _Refresh()
+        {
+            replyListView.Items.Clear();
+            try
+            {
+                GetReplyList(new Model.PostRequest()
+                {
+                    API = postModel.GetReplyAPI,
+                    Host = postModel.Host,
+                    ID = postModel.ReplyID,
+                    Page = 1
                 }, islandCode);
             }
             catch (Exception ex)
@@ -80,7 +107,7 @@ namespace Islands.UWP
             }
         }
 
-        private async void GetThreadList(Model.PostRequest req, IslandsCode code)
+        private async void GetReplyList(Model.PostRequest req, IslandsCode code)
         {
             DataLoading();
             string res = "";
@@ -88,27 +115,30 @@ namespace Islands.UWP
             try
             {
                 res = await Data.Post.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
-                JArray Threads;
-                switch (code) {
+                JObject jObj = (JObject)JsonConvert.DeserializeObject(res);
+                JArray Replys;
+                Debug.WriteLine(res);
+                switch (code)
+                {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
-                        Threads = JArray.Parse(res);
+                        Replys = JArray.Parse(jObj["replys"].ToString());
                         break;
                     case IslandsCode.Koukuko:
-                        JObject jObj = (JObject)JsonConvert.DeserializeObject(res);
-                        Threads = JArray.Parse(jObj["data"]["threads"].ToString());
+                        Replys = JArray.Parse(jObj["data"]["threads"].ToString());
                         break;
-                    default: Threads = new JArray(); break;
+                    default: Replys = new JArray(); break;
                 }
-                if (Threads.Count == 0)
+                if (Replys.Count == 0)
                     throw new Exception("什么也没有");
-                threadListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
-                foreach (var thread in Threads) {
-                    StringReader sr = new StringReader(thread.ToString());
+                replyListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
+                foreach (var reply in Replys)
+                {
+                    StringReader sr = new StringReader(reply.ToString());
                     JsonSerializer serializer = new JsonSerializer();
-                    Model.ThreadModel tm = (Model.ThreadModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ThreadModel));
-                    tm.islandCode = code;
-                    threadListView.Items.Add(new ThreadView(tm));
+                    Model.ReplyModel rm = (Model.ReplyModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ReplyModel));
+                    rm.islandCode = code;
+                    replyListView.Items.Add(new ReplyView(rm));
                 }
 
             }
@@ -122,23 +152,11 @@ namespace Islands.UWP
             }
 
         }
+        
 
-        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            ThreadView tv = e.ClickedItem as ThreadView;
-            if (tv != null)
-                OnItemClick(e);
-        }
-
-        public delegate void ThreadClickEventHandler(Object sender, ItemClickEventArgs e);
-        public event ThreadClickEventHandler ThreadClick;
-        void OnItemClick(ItemClickEventArgs e) {
-            if (this.ThreadClick != null)
-                this.ThreadClick(this, e);
-        }
 
         //滑动刷新
-        private void ThreadListScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private void ReplyListScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             ScrollViewer sv = (ScrollViewer)sender;
             //Debug.WriteLine("{0}|{1}+{2}={3} => {4}", sv.ActualHeight, sv.ViewportHeight, sv.VerticalOffset, sv.ViewportHeight + sv.VerticalOffset, sv.ExtentHeight);
@@ -147,11 +165,11 @@ namespace Islands.UWP
                 try
                 {
                     sv.ChangeView(null,sv.VerticalOffset - 1,null);
-                    GetThreadList(new Model.PostRequest()
+                    GetReplyList(new Model.PostRequest()
                     {
-                        API = postModel.GetThreadAPI,
+                        API = postModel.GetReplyAPI,
                         Host = postModel.Host,
-                        ID = postModel.ThreadID,
+                        ID = postModel.ReplyID,
                         Page = ++currPage
                     }, islandCode);
                 }

@@ -9,7 +9,7 @@ namespace Islands.UWP.Data
 {
     public static class Post
     {
-        public static async Task<string> GetThreads(string url)
+        public static async Task<string> GetData(string url)
         {
             try
             {

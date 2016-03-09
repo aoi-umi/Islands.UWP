@@ -1,25 +1,26 @@
 ﻿<UserControl
-    x:Class="Islands.UWP.ThreadView"
+    x:Class="Islands.UWP.ReplyView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+
     <Grid>
         <StackPanel Name="threadSp" Margin="2">
             <StackPanel>
-                <TextBlock Text="{x:Bind thread.Title}"
-                           Visibility="{x:Bind thread.IsHadTitle}">
+                <TextBlock Text="{x:Bind reply.Title}"
+                           Visibility="{x:Bind reply.IsHadTitle}">
                 </TextBlock>
-                <TextBlock Text="{x:Bind thread.Email}"
-                           Visibility="{x:Bind thread.IsHadEmail}">
+                <TextBlock Text="{x:Bind reply.Email}"
+                           Visibility="{x:Bind reply.IsHadEmail}">
                 </TextBlock>
-                <TextBlock Text="{x:Bind thread.Name}"
-                           Visibility="{x:Bind thread.IsHadName}">
+                <TextBlock Text="{x:Bind reply.Name}"
+                           Visibility="{x:Bind reply.IsHadName}">
                 </TextBlock>
                 <TextBlock Name="txtCreateDate" 
-                           Text="{x:Bind thread.CreateDate}"
+                           Text="{x:Bind reply.CreateDate}"
                            Margin="0,0,5,0">
                 </TextBlock>
             </StackPanel>
@@ -28,7 +29,7 @@
                            Text="No.">
                 </TextBlock>
                 <TextBox Name="txtId" 
-                         Text="{x:Bind thread.No}" 
+                         Text="{x:Bind reply.No}" 
                          Margin="0,0,5,0"
                          RelativePanel.RightOf="id">
                 </TextBox>
@@ -38,24 +39,15 @@
                            >
                 </TextBlock>
                 <TextBlock Name="txtUserid" 
-                           Text="{x:Bind thread.ID}"
+                           Text="{x:Bind reply.ID}"
                            RelativePanel.RightOf="userid"
                            >
                 </TextBlock>
-                <TextBlock Name="replyCount"
-                           Text="回复:"
-                           RelativePanel.LeftOf="txtReplyCount"
-                           >
-                </TextBlock>
-                <TextBlock Name="txtReplyCount"
-                           Text="{x:Bind thread.ReplyCount}"
-                           RelativePanel.AlignRightWithPanel="True"
-                           >
-                </TextBlock>
+                
             </RelativePanel>
             <TextBox Name="txtContent"
                      TextWrapping="Wrap"
-                     Text="{x:Bind thread.Content}"></TextBox>
+                     Text="{x:Bind reply.Content}"></TextBox>
             <Image Name="imageBox"  
                    MaxHeight="200" 
                    MaxWidth="200" 

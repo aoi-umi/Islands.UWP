@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -28,6 +29,7 @@ namespace Islands.UWP
         public IslandsCode IslandCode;
 
         ThreadsView ThreadControl;
+        ReplysView ReplyControl;
         public MainControl()
         {
             this.InitializeComponent();
@@ -45,10 +47,30 @@ namespace Islands.UWP
                 },
                 islandCode = IslandCode
             };
+            ReplyControl = new ReplysView()
+            {
+                postModel = new ReplysView.PostModel
+                {
+                    Host = Host,
+                    GetReplyAPI = GetReplyAPI,
+                    ReplyID = "0"
+                },
+                islandCode = IslandCode
+            };
+            
+            ThreadControl.ThreadClick += ThreadControl_ThreadClick;
             mainSplitView.Content = ThreadControl;
         }
 
-        
+        private void ThreadControl_ThreadClick(object sender, ItemClickEventArgs e)
+        {
+            ThreadView tv = e.ClickedItem as ThreadView;
+            if (tv != null)
+            {
+                mainSplitView.Content = ReplyControl;
+                ReplyControl.GetReplyListByID(tv.ThreadID);
+            }
+        }
 
         private void mainNavigationList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

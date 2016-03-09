@@ -20,6 +20,7 @@ namespace Islands.UWP
             public static string PictureHost = "http://h-nimingban-com.n1.yun.tf:8999/Public/Upload/";
             public static string GetThreadAPI = "{0}/Api/showf/id/{1}/page/{2}";
             public static string GetReplyAPI = "{0}/Api/thread/id/{1}/page/{2}";
+            public static int PageSize = 19;
         }
     }
 }

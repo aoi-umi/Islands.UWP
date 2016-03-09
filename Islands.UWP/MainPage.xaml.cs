@@ -29,6 +29,7 @@ namespace Islands.UWP
             Host= Config.A.Host,
             PictureHost = Config.A.PictureHost,
             GetThreadAPI= Config.A.GetThreadAPI,
+            GetReplyAPI = Config.A.GetReplyAPI
             };
             pivotItemA.Content = mainControlA;
         }
