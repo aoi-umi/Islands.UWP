@@ -5,7 +5,7 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" MinWidth="350" MinHeight="700">
+    mc:Ignorable="d">
     <Page.Resources>
         <Style TargetType="Pivot">
             <Setter Property="FontSize" Value="10"></Setter>
@@ -16,10 +16,10 @@
             <PivotItem Name="pivotItemA" Header="A" Margin="0">
                 <local:MainControl />
             </PivotItem>
-            <PivotItem Header="B" Margin="0">
+            <PivotItem Name="pivotItemK" Header="K" Margin="0">
                 <local:MainControl />
             </PivotItem>
-            <PivotItem Header="C" Margin="0">
+            <PivotItem Name="pivotItemB" Header="B" Margin="0">
                 <local:MainControl />
             </PivotItem>
         </Pivot>

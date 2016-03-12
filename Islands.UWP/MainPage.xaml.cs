@@ -29,9 +29,34 @@ namespace Islands.UWP
             Host= Config.A.Host,
             PictureHost = Config.A.PictureHost,
             GetThreadAPI= Config.A.GetThreadAPI,
-            GetReplyAPI = Config.A.GetReplyAPI
+            GetReplyAPI = Config.A.GetReplyAPI,
+            PageSize = Config.A.PageSize,
+            IslandCode = IslandsCode.A
             };
             pivotItemA.Content = mainControlA;
+
+
+            MainControl mainControlK = new MainControl()
+            {
+                Host = Config.K.Host,
+                PictureHost = Config.K.PictureHost,
+                GetThreadAPI = Config.K.GetThreadAPI,
+                GetReplyAPI = Config.K.GetReplyAPI,
+                PageSize = Config.K.PageSize,
+                IslandCode = IslandsCode.Koukuko
+            };
+            pivotItemK.Content = mainControlK;
+
+            MainControl mainControlB = new MainControl()
+            {
+                Host = Config.B.Host,
+                PictureHost = Config.B.PictureHost,
+                GetThreadAPI = Config.B.GetThreadAPI,
+                GetReplyAPI = Config.B.GetReplyAPI,
+                PageSize = Config.B.PageSize,
+                IslandCode = IslandsCode.Beitai
+            };
+            pivotItemB.Content = mainControlB;
         }
     }
 }

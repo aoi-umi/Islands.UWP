@@ -27,14 +27,8 @@ namespace Islands.UWP
         public bool IsInitRefresh = false;
         public PostModel postModel = new PostModel();
         public IslandsCode islandCode;
-        public string Title { get; set; }
-        TextBlock ThreadStatusBox = new TextBlock()
-        {
-            Text = "什么也没有(つд⊂),点我加载",
-            HorizontalAlignment = HorizontalAlignment.Center
-        };
-
-        int currPage { get; set; }
+        public delegate void ThreadClickEventHandler(Object sender, ItemClickEventArgs e);
+        public event ThreadClickEventHandler ThreadClick;
         public class PostModel
         {
             public string ThreadID { get; set; }
@@ -42,6 +36,17 @@ namespace Islands.UWP
             public string GetThreadAPI { get; set; }
             public PostModel() { }
         }
+
+        TextBlock ThreadStatusBox = new TextBlock()
+        {
+            Text = "什么也没有(つд⊂),点我加载",
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+
+        public string initTitle { set { Title.Text = value; } }
+        string _Title { set { Title.Text = value; } }
+        int currPage { get; set; }
+        
 
         private ObservableCollection<Model.ThreadModel> _list = new ObservableCollection<Model.ThreadModel>();
 
@@ -55,6 +60,12 @@ namespace Islands.UWP
                 _Refresh();
         }
 
+        public void RefreshById(Model.ForumModel forum) {
+            postModel.ThreadID = forum.forumValue;
+            _Title = forum.forumName;
+            _Refresh();
+        }
+
         private void ThreadStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
         {
             GetThreadList(new Model.PostRequest()
@@ -62,7 +73,7 @@ namespace Islands.UWP
                 API = postModel.GetThreadAPI,
                 Host = postModel.Host,
                 ID = postModel.ThreadID,
-                Page = ++currPage
+                Page = currPage + 1
             }, islandCode);
         }
 
@@ -73,9 +84,11 @@ namespace Islands.UWP
 
         private void DataLoading()
         {
+            
             Loading.IsActive = true;
             IsHitTestVisible = false;
             threadListView.Items.Remove(ThreadStatusBox);
+            ThreadStatusBox.Text = "点我加载";
         }
         private void DataLoaded()
         {
@@ -86,6 +99,7 @@ namespace Islands.UWP
 
         private void _Refresh()
         {
+            currPage = 1;
             threadListView.Items.Clear();
             try
             {
@@ -107,7 +121,6 @@ namespace Islands.UWP
             if (Loading.IsActive) return;
             DataLoading();
             string res = "";
-            currPage = req.Page;
             try
             {
                 res = await Data.Post.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
@@ -130,9 +143,9 @@ namespace Islands.UWP
                     StringReader sr = new StringReader(thread.ToString());
                     JsonSerializer serializer = new JsonSerializer();
                     Model.ThreadModel tm = (Model.ThreadModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ThreadModel));
-                    tm.islandCode = code;
-                    threadListView.Items.Add(new ThreadView(tm));
+                    threadListView.Items.Add(new ThreadView(tm,code));
                 }
+                currPage = req.Page;
 
             }
             catch (Exception ex)
@@ -153,8 +166,6 @@ namespace Islands.UWP
                 OnItemClick(e);
         }
 
-        public delegate void ThreadClickEventHandler(Object sender, ItemClickEventArgs e);
-        public event ThreadClickEventHandler ThreadClick;
         void OnItemClick(ItemClickEventArgs e) {
             if (this.ThreadClick != null)
                 this.ThreadClick(this, e);
@@ -175,7 +186,7 @@ namespace Islands.UWP
                         API = postModel.GetThreadAPI,
                         Host = postModel.Host,
                         ID = postModel.ThreadID,
-                        Page = ++currPage
+                        Page = currPage + 1
                     }, islandCode);
                 }
                 catch (Exception ex)

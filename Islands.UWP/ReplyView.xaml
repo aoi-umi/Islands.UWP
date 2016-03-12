@@ -10,17 +10,17 @@
     <Grid>
         <StackPanel Name="threadSp" Margin="2">
             <StackPanel>
-                <TextBlock Text="{x:Bind reply.Title}"
-                           Visibility="{x:Bind reply.IsHadTitle}">
+                <TextBlock Text="{x:Bind replyTitle}"
+                           Visibility="{x:Bind replyIsHadTitle}">
                 </TextBlock>
-                <TextBlock Text="{x:Bind reply.Email}"
-                           Visibility="{x:Bind reply.IsHadEmail}">
+                <TextBlock Text="{x:Bind replyEmail}"
+                           Visibility="{x:Bind replyIsHadEmail}">
                 </TextBlock>
-                <TextBlock Text="{x:Bind reply.Name}"
-                           Visibility="{x:Bind reply.IsHadName}">
+                <TextBlock Text="{x:Bind replyName}"
+                           Visibility="{x:Bind replyIsHadName}">
                 </TextBlock>
                 <TextBlock Name="txtCreateDate" 
-                           Text="{x:Bind reply.CreateDate}"
+                           Text="{x:Bind replyCreateDate}"
                            Margin="0,0,5,0">
                 </TextBlock>
             </StackPanel>
@@ -29,7 +29,7 @@
                            Text="No.">
                 </TextBlock>
                 <TextBox Name="txtId" 
-                         Text="{x:Bind reply.No}" 
+                         Text="{x:Bind replyNo}" 
                          Margin="0,0,5,0"
                          RelativePanel.RightOf="id">
                 </TextBox>
@@ -39,7 +39,7 @@
                            >
                 </TextBlock>
                 <TextBlock Name="txtUserid" 
-                           Text="{x:Bind reply.ID}"
+                           Text="{x:Bind replyID}"
                            RelativePanel.RightOf="userid"
                            >
                 </TextBlock>
@@ -47,7 +47,7 @@
             </RelativePanel>
             <TextBox Name="txtContent"
                      TextWrapping="Wrap"
-                     Text="{x:Bind reply.Content}"></TextBox>
+                     Text="{x:Bind replyContent}"></TextBox>
             <Image Name="imageBox"  
                    MaxHeight="200" 
                    MaxWidth="200" 

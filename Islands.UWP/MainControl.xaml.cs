@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace Islands.UWP
         public string GetReplyAPI { get; set; }
         public string PostThreadAPI { get; set; }
         public string PostReplyAPI { get; set; }
+        public int PageSize { get; set; }
         public IslandsCode IslandCode;
 
         ThreadsView ThreadControl;
@@ -38,15 +40,18 @@ namespace Islands.UWP
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            Model.ForumModel currForum;
+            ForumsListInit(IslandCode, out currForum);
             ThreadControl = new ThreadsView()
             {
                 postModel = new ThreadsView.PostModel
                 {
                     Host = Host,
                     GetThreadAPI = GetThreadAPI,
-                    ThreadID = "4"
+                    ThreadID = currForum.forumValue
                 },
-                islandCode = IslandCode
+                islandCode = IslandCode,
+                initTitle = currForum.forumName
             };
             ReplyControl = new ReplysView()
             {
@@ -56,9 +61,9 @@ namespace Islands.UWP
                     GetReplyAPI = GetReplyAPI,
                     ReplyID = "0"
                 },
-                islandCode = IslandCode
+                islandCode = IslandCode,
+                pageSize = PageSize
             };
-            
             ThreadControl.ThreadClick += ThreadControl_ThreadClick;
             ThreadControl.SwitchButton.Click += SwitchButton_Click;
             ReplyControl.SwitchButton.Click += SwitchButton_Click;
@@ -79,21 +84,81 @@ namespace Islands.UWP
             {
                 IsMain = !IsMain;
                 mainSplitView.Content = ReplyControl;
-                ReplyControl.GetReplyListByID(tv.ThreadID);
+                ReplyControl.GetReplyListByID(tv.threadNo);
             }
         }
 
         private void mainNavigationList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
         }
 
         private void ListBoxItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
             ListBoxItem tapped_item = sender as ListBoxItem;
-            if (tapped_item != null && tapped_item.Tag != null && tapped_item.Tag.ToString().Equals("0")) 
+            if (tapped_item != null && tapped_item.Tag != null) 
             {
-                mainSplitView.IsPaneOpen = !mainSplitView.IsPaneOpen;
+                switch (tapped_item.Tag.ToString())
+                {
+                    case "menu":
+                        mainSplitView.IsPaneOpen = !mainSplitView.IsPaneOpen;
+                        break;
+                    case "home":
+                        if (IsMain)
+                            mainSplitView.Content = ThreadControl;
+                        else
+                            mainSplitView.Content = ReplyControl;
+                        break;
+                    case "forums":
+                        mainSplitView.Content = ForumList;
+                        break;
+                    default: break;
+                }
+            }
+        }
+        private void ForumsListInit(IslandsCode islandCode, out Model.ForumModel currForum)
+        {
+            currForum = new Model.ForumModel();
+            List<String> forums = null;
+            switch (islandCode)
+            {
+                case IslandsCode.A:
+                    forums = Config.A.Forums;
+                    break;
+                case IslandsCode.Koukuko:
+                    forums = Config.K.Forums;
+                    break;
+                case IslandsCode.Beitai:
+                    forums = Config.B.Forums;
+                    break;
+            }
+            foreach (var forum in forums) {
+                var split = forum.Split(',');
+                if (string.IsNullOrEmpty(split[1]))
+                    continue;
+                var f = new Model.ForumModel() {
+                    forumName = split[0],
+                    forumValue = split[1]
+                };
+                if (ForumList.Items.Count == 0)
+                    currForum = f;
+                ForumList.Items.Add(new TextBlock()
+                {
+                    Text = split[0],
+                    Tag = f
+                });
+            }
+        }
+
+        private void ForumList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var tb = e.ClickedItem as TextBlock;
+            if (e != null) {
+                var f = tb.Tag as Model.ForumModel;
+                if(f != null)
+                {
+                    ThreadControl.RefreshById(f);
+                    mainSplitView.Content = ThreadControl;
+                }
             }
         }
     }

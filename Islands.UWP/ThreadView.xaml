@@ -9,17 +9,17 @@
     <Grid>
         <StackPanel Margin="2">
             <StackPanel>
-                <TextBlock Text="{x:Bind thread.Title}"
-                           Visibility="{x:Bind thread.IsHadTitle}">
+                <TextBlock Text="{x:Bind threadTitle}"
+                           Visibility="{x:Bind threadIsHadTitle}">
                 </TextBlock>
-                <TextBlock Text="{x:Bind thread.Email}"
-                           Visibility="{x:Bind thread.IsHadEmail}">
+                <TextBlock Text="{x:Bind threadEmail}"
+                           Visibility="{x:Bind threadIsHadEmail}">
                 </TextBlock>
-                <TextBlock Text="{x:Bind thread.Name}"
-                           Visibility="{x:Bind thread.IsHadName}">
+                <TextBlock Text="{x:Bind threadName}"
+                           Visibility="{x:Bind threadIsHadName}">
                 </TextBlock>
                 <TextBlock Name="txtCreateDate" 
-                           Text="{x:Bind thread.CreateDate}"
+                           Text="{x:Bind threadCreateDate}"
                            Margin="0,0,5,0">
                 </TextBlock>
             </StackPanel>
@@ -28,7 +28,7 @@
                            Text="No.">
                 </TextBlock>
                 <TextBox Name="txtId" 
-                         Text="{x:Bind thread.No}" 
+                         Text="{x:Bind threadNo}" 
                          Margin="0,0,5,0"
                          RelativePanel.RightOf="id">
                 </TextBox>
@@ -38,7 +38,7 @@
                            >
                 </TextBlock>
                 <TextBlock Name="txtUserid" 
-                           Text="{x:Bind thread.ID}"
+                           Text="{x:Bind threadID}"
                            RelativePanel.RightOf="userid"
                            >
                 </TextBlock>
@@ -48,20 +48,20 @@
                            >
                 </TextBlock>
                 <TextBlock Name="txtReplyCount"
-                           Text="{x:Bind thread.ReplyCount}"
+                           Text="{x:Bind threadReplyCount}"
                            RelativePanel.AlignRightWithPanel="True"
                            >
                 </TextBlock>
             </RelativePanel>
             <TextBox Name="txtContent"
                      TextWrapping="Wrap"
-                     Text="{x:Bind thread.Content}"></TextBox>
+                     Text="{x:Bind threadContent}"></TextBox>
             <Image Name="imageBox"  
                    MaxHeight="200" 
                    MaxWidth="200" 
                    HorizontalAlignment="Left"
                    ImageFailed="ImageBox_ImageFailed" />
-            <!--<TextBox Text="{x:Bind thread.Image}"></TextBox>-->
+            <!--<TextBox Text="{x:Bind threadImage}"></TextBox>-->
         </StackPanel>
     </Grid>
 </UserControl>

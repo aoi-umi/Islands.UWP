@@ -35,25 +35,10 @@
                     Visibility="Collapsed"
                     >
             </Button>
-            <Button Name="SwitchButton"
-                    x:FieldModifier="public"
-                    Content="&#xE13C;"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="24"
-                    Margin="0,0,5,0"
-                    Background="Transparent">
-            </Button>
-            <TextBlock Name="_Title"
-                       Text="{x:Bind Title}"
-                       RelativePanel.RightOf="SwitchButton"
-                       FontSize="22"
-                       FontFamily="微软雅黑">
-            </TextBlock>
-            <TextBlock Name="ListCount"
-                       FontSize="14"
-                       RelativePanel.RightOf="_Title"
-                       Margin="10,0,0,0"
-                       Text="">
+            <TextBlock Name="Title"
+                       Text=""
+                       RelativePanel.RightOf="Menu"
+                       FontSize="22">
             </TextBlock>
             <Button Name="RefreshButton"
                     Content="&#xE117;"
@@ -67,7 +52,15 @@
         </RelativePanel>
         <RelativePanel Grid.Row="2"
                        Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
-            <TextBlock></TextBlock>
+            <Button Name="SwitchButton"
+                    x:FieldModifier="public"
+                    Content="&#xE13C;"
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="24"
+                    Margin="0,0,5,0"
+                    RelativePanel.AlignRightWithPanel="True"
+                    Background="Transparent">
+            </Button>
         </RelativePanel>
         <ScrollViewer Name="threadListScrollViewer"
                   Grid.Row="1">

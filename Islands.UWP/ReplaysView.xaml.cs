@@ -41,8 +41,10 @@ namespace Islands.UWP
             }
         }
         int replyCount { get; set; }
-        string txtReplyCount { get { return "(" + replyCount.ToString() + ")"; } }
-        int pageSize { get; set; }
+
+        string replyId {set { Title.Text= value; } }
+        string txtReplyCount { set { ListCount.Text = "(" +value + ")"; } }
+        public int pageSize { get; set; }
         public class PostModel
         {
             public string ReplyID { get; set; }
@@ -67,7 +69,7 @@ namespace Islands.UWP
                 API = postModel.GetReplyAPI,
                 Host = postModel.Host,
                 ID = postModel.ReplyID,
-                Page = ++currPage
+                Page = currPage
             }, islandCode);
         }
 
@@ -81,6 +83,7 @@ namespace Islands.UWP
             Loading.IsActive = true;
             IsHitTestVisible = false;
             replyListView.Items.Remove(ReplyStatusBox);
+            ReplyStatusBox.Text = "点我加载";
         }
         private void DataLoaded()
         {
@@ -93,6 +96,7 @@ namespace Islands.UWP
         {
             try
             {
+                replyId = replyID;
                 postModel.ReplyID = replyID;
                 _Refresh();
             }
@@ -104,6 +108,8 @@ namespace Islands.UWP
 
         private void _Refresh()
         {
+            lastReply = null;
+            currPage = 1;
             replyListView.Items.Clear();
             try
             {
@@ -112,15 +118,16 @@ namespace Islands.UWP
                     API = postModel.GetReplyAPI,
                     Host = postModel.Host,
                     ID = postModel.ReplyID,
-                    Page = 1
+                    Page = currPage
                 }, islandCode);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                ReplyStatusBox.Text = ex.Message;
             }
         }
 
+        Model.ReplyModel lastReply = null;
         private async void GetReplyList(Model.PostRequest req, IslandsCode code)
         {
             if (Loading.IsActive) return;
@@ -130,39 +137,70 @@ namespace Islands.UWP
             try
             {
                 res = await Data.Post.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
+
+                StringReader sr;
+                JsonSerializer serializer= new JsonSerializer();
                 JObject jObj = (JObject)JsonConvert.DeserializeObject(res);
-                JArray Replys;
-                Debug.WriteLine(res);
+                Model.ThreadModel top = null;
+                JArray Replys = null;
                 switch (code)
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
-                        int _replyCount;
-                        int.TryParse(jObj["replyCount"].ToString(), out _replyCount);
-                        replyCount = _replyCount;
-                        Replys = JArray.Parse(jObj["replys"].ToString());
+                        sr = new StringReader(res);
+                        top = (Model.ThreadModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ThreadModel));
+                        if (jObj["replys"].HasValues)
+                            Replys = JArray.Parse(jObj["replys"].ToString());
                         break;
                     case IslandsCode.Koukuko:
-                        Replys = JArray.Parse(jObj["data"]["threads"].ToString());
+                        sr = new StringReader(jObj["threads"].ToString());
+                        top = (Model.ThreadModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ThreadModel));
+                        if (jObj["replys"].HasValues)
+                            Replys = JArray.Parse(jObj["replys"].ToString());
                         break;
-                    default: Replys = new JArray(); break;
                 }
-                if (Replys.Count == 0)
-                    throw new Exception("什么也没有");
-                replyListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
+                int _replyCount;
+                int.TryParse(top.replyCount, out _replyCount);
+                if (replyListView.Items.Count == 0 && top != null)
+                {
+                    replyListView.Items.Add(new ThreadView(top, code));
+                }
+                replyCount = _replyCount;
+                txtReplyCount = _replyCount.ToString();
+                if (Replys == null || Replys.Count == 0)
+                    throw new Exception("已经没有了");
+
+                if((replyListView.Items.Count - 1) % (pageSize + 1) == 0)
+                    replyListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
                 foreach (var reply in Replys)
                 {
-                    StringReader sr = new StringReader(reply.ToString());
-                    JsonSerializer serializer = new JsonSerializer();
+                    sr = new StringReader(reply.ToString());
                     Model.ReplyModel rm = (Model.ReplyModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ReplyModel));
-                    rm.islandCode = code;
-                    replyListView.Items.Add(new ReplyView(rm));
+                    if (lastReply == null && Replys.IndexOf(reply) == Replys.Count - 1)
+                        lastReply = rm;
+                    else if (lastReply != null)
+                    {
+                        switch (code)
+                        {
+                            case IslandsCode.A:
+                            case IslandsCode.Beitai:
+                                if (String.Compare(rm.now, lastReply.now) <= 0) continue; break;
+                            case IslandsCode.Koukuko:
+                                if (String.Compare(rm.createdAt, lastReply.createdAt) <= 0) continue; break;
+                        }
+                        lastReply = rm;
+                    }
+                    replyListView.Items.Add(new ReplyView(rm, code));
+
                 }
+                if (Replys.Count < pageSize)
+                    throw new Exception("已经没有了");
+                ++currPage;
 
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                ReplyStatusBox.Text = ex.Message;
             }
             finally
             {
@@ -177,8 +215,7 @@ namespace Islands.UWP
         private void ReplyListScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             ScrollViewer sv = (ScrollViewer)sender;
-            //Debug.WriteLine("{0}|{1}+{2}={3} => {4}", sv.ActualHeight, sv.ViewportHeight, sv.VerticalOffset, sv.ViewportHeight + sv.VerticalOffset, sv.ExtentHeight);
-            if (sv.VerticalOffset > 0 && sv.ActualHeight + sv.VerticalOffset >= sv.ExtentHeight)
+            if (currPage <= allPage && sv.VerticalOffset > 0 && sv.ActualHeight + sv.VerticalOffset >= sv.ExtentHeight)
             {
                 try
                 {
@@ -188,13 +225,23 @@ namespace Islands.UWP
                         API = postModel.GetReplyAPI,
                         Host = postModel.Host,
                         ID = postModel.ReplyID,
-                        Page = ++currPage
+                        Page = currPage
                     }, islandCode);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.ToString());
+                    ReplyStatusBox.Text = ex.Message;
                 }
+            }
+        }
+
+        private void MarkButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+            }         
+            catch (Exception ex) {
             }
         }
     }
