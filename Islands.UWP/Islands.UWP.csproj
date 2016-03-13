@@ -99,6 +99,23 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Data\Database.cs" />
+    <Compile Include="Data\File.cs" />
+    <Compile Include="Data\Message.cs" />
+    <Compile Include="ImageView.xaml.cs">
+      <DependentUpon>ImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ResponseModel.cs" />
+    <Compile Include="Model\SendModel.cs" />
+    <Compile Include="MyReplysView.xaml.cs">
+      <DependentUpon>MyReplysView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MyReplyView.xaml.cs">
+      <DependentUpon>MyReplyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SendView.xaml.cs">
+      <DependentUpon>SendView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\ForumModel.cs" />
     <Compile Include="Model\ThreadModel.cs" />
     <Compile Include="Config.cs" />
@@ -109,10 +126,13 @@
     <Compile Include="ReplyView.xaml.cs">
       <DependentUpon>ReplyView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MarksView.xaml.cs">
+      <DependentUpon>MarksView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ThreadsView.xaml.cs">
       <DependentUpon>ThreadsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Data\Post.cs" />
+    <Compile Include="Data\Http.cs" />
     <Compile Include="MainControl.xaml.cs">
       <DependentUpon>MainControl.xaml</DependentUpon>
     </Compile>
@@ -120,7 +140,6 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\BaseModel.cs" />
-    <Compile Include="Model\ContentModel.cs" />
     <Compile Include="Model\CookieModel.cs" />
     <Compile Include="Model\PostRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -150,6 +169,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="ImageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyReplysView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MyReplyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SendView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ReplaysView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -157,6 +192,10 @@
     <Page Include="ReplyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MarksView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ThreadsView.xaml">
       <SubType>Designer</SubType>
@@ -175,7 +214,11 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <SDKReference Include="SQLite.UAP.2015, Version=3.9.2">
+      <Name>SQLite for Universal App Platform</Name>
+    </SDKReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

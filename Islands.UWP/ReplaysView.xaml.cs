@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Navigation;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.ObjectModel;
+using Windows.UI.Popups;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -26,11 +27,17 @@ namespace Islands.UWP
     {
         public PostModel postModel;
         public IslandsCode islandCode;
+        string message {
+            set {
+                ReplyStatusBox.Text = value;
+            }
+        }
         TextBlock ReplyStatusBox = new TextBlock()
         {
             Text = "还未看过任何串(つд⊂)",
             HorizontalAlignment = HorizontalAlignment.Center
         };
+        int markId { get; set; }
         int currPage { get; set; }
         int allPage
         {
@@ -52,8 +59,7 @@ namespace Islands.UWP
             public string GetReplyAPI { get; set; }
             public PostModel() { }
         }
-
-        private ObservableCollection<Model.ThreadModel> _list = new ObservableCollection<Model.ThreadModel>();
+        
         public ReplysView()
         {
             this.InitializeComponent();
@@ -83,7 +89,7 @@ namespace Islands.UWP
             Loading.IsActive = true;
             IsHitTestVisible = false;
             replyListView.Items.Remove(ReplyStatusBox);
-            ReplyStatusBox.Text = "点我加载";
+            message = "点我加载";
         }
         private void DataLoaded()
         {
@@ -92,17 +98,20 @@ namespace Islands.UWP
             IsHitTestVisible = true;
         }
 
-        public void GetReplyListByID(string replyID)
+        public string currThread { get; set; }
+        public void GetReplyListByID(string threadId, int markId)
         {
+            currThread = threadId;
             try
             {
-                replyId = replyID;
-                postModel.ReplyID = replyID;
+                this.markId = markId;
+                replyId = threadId;
+                postModel.ReplyID = threadId;
                 _Refresh();
             }
             catch (Exception ex)
             {
-                ReplyStatusBox.Text = ex.Message;
+                message = ex.Message;
             }
         }
 
@@ -123,10 +132,11 @@ namespace Islands.UWP
             }
             catch (Exception ex)
             {
-                ReplyStatusBox.Text = ex.Message;
+                message = ex.Message;
             }
         }
 
+        Model.ThreadModel top = null;
         Model.ReplyModel lastReply = null;
         private async void GetReplyList(Model.PostRequest req, IslandsCode code)
         {
@@ -136,12 +146,12 @@ namespace Islands.UWP
             currPage = req.Page;
             try
             {
-                res = await Data.Post.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
+                res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
 
                 StringReader sr;
                 JsonSerializer serializer= new JsonSerializer();
                 JObject jObj = (JObject)JsonConvert.DeserializeObject(res);
-                Model.ThreadModel top = null;
+                top = null;
                 JArray Replys = null;
                 switch (code)
                 {
@@ -159,11 +169,16 @@ namespace Islands.UWP
                             Replys = JArray.Parse(jObj["replys"].ToString());
                         break;
                 }
+                top.islandCode = code;
+                top._id = markId;
+
                 int _replyCount;
                 int.TryParse(top.replyCount, out _replyCount);
                 if (replyListView.Items.Count == 0 && top != null)
                 {
-                    replyListView.Items.Add(new ThreadView(top, code));
+                    var tv = new ThreadView(top, code) { Tag = top };
+                    tv.ImageTapped += Image_ImageTapped;
+                    replyListView.Items.Add(tv);
                 }
                 replyCount = _replyCount;
                 txtReplyCount = _replyCount.ToString();
@@ -190,7 +205,9 @@ namespace Islands.UWP
                         }
                         lastReply = rm;
                     }
-                    replyListView.Items.Add(new ReplyView(rm, code));
+                    var rv = new ReplyView(rm, code);
+                    rv.ImageTapped += Image_ImageTapped;
+                    replyListView.Items.Add(rv);
 
                 }
                 if (Replys.Count < pageSize)
@@ -200,7 +217,7 @@ namespace Islands.UWP
             }
             catch (Exception ex)
             {
-                ReplyStatusBox.Text = ex.Message;
+                message = ex.Message;
             }
             finally
             {
@@ -208,8 +225,19 @@ namespace Islands.UWP
             }
 
         }
-        
 
+        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
+        public event ImageTappedEventHandler ImageTapped;
+
+        void OnTapped(Object sender, TappedRoutedEventArgs e)
+        {
+            if (ImageTapped != null)
+                ImageTapped(sender, e);
+        }
+        private void Image_ImageTapped(object sender, TappedRoutedEventArgs e)
+        {
+            OnTapped(sender, e);
+        }
 
         //滑动刷新
         private void ReplyListScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -230,18 +258,42 @@ namespace Islands.UWP
                 }
                 catch (Exception ex)
                 {
-                    ReplyStatusBox.Text = ex.Message;
+                    message = ex.Message;
                 }
             }
         }
 
+        public delegate void MarkSuccessEventHandler(Object sender, Model.ThreadModel t);
+        public event MarkSuccessEventHandler MarkSuccess;
+
+        void OnMarkSuccess()
+        {
+            if (this.MarkSuccess != null)
+                this.MarkSuccess(this, top);
+        }
+
         private void MarkButton_Click(object sender, RoutedEventArgs e)
         {
-
             try
             {
-            }         
-            catch (Exception ex) {
+                if (top._id != 0)
+                {
+                    Data.Message.ShowMessage("已经收藏过");
+                    return;
+                }
+                if (top != null)
+                {
+                    using (var conn = Data.Database.GetDbConnection<Model.ThreadModel>())
+                    {
+                        conn.Insert(top);
+                        OnMarkSuccess();
+                        Data.Message.ShowMessage("收藏成功");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Data.Message.ShowMessage(ex.Message);
             }
         }
     }

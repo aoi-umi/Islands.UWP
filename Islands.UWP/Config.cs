@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Islands.UWP
 {
@@ -14,12 +10,16 @@ namespace Islands.UWP
     };
     public static class Config
     {
+        public static string dbName = "Islands.db";
         public static class A
         {
             public static string Host = "http://h.nimingban.com";
             public static string PictureHost = "http://h-nimingban-com.n1.yun.tf:8999/Public/Upload/";
             public static string GetThreadAPI = "{0}/Api/showf/id/{1}/page/{2}";
             public static string GetReplyAPI = "{0}/Api/thread/id/{1}/page/{2}";
+            public static string GetRefAPI = "{0}/Api/ref?id={1}";
+            public static string PostThreadAPI = "{0}/Home/Forum/doPostThread.html";
+            public static string PostReplyAPI = "{0}/Home/Forum/doReplyThread.html";
             public static int PageSize = 19;
             #region 板块
             public static List<string> Forums = new List<string>(){
@@ -106,6 +106,9 @@ namespace Islands.UWP
             public static string PictureHost = "http://static.koukuko.com/h";
             public static string GetThreadAPI = "{0}/api/{1}?page={2}";
             public static string GetReplyAPI = "{0}/api/t/{1}?page={2}";
+            public static string GetRefAPI = "{0}/api/homepage/ref?tid={1}";
+            public static string PostThreadAPI = "{0}/api/{1}/create";
+            public static string PostReplyAPI = "{0}/api/t/{1}/create";
             public static int PageSize = 20;
             #region 板块
             public static List<string> Forums = new List<string>() {
@@ -179,6 +182,9 @@ namespace Islands.UWP
             public static string PictureHost = "http://h-adnmb-com.n1.yun.tf:8999/Public/Upload/";
             public static string GetThreadAPI = "{0}/Home/Api/showt/id/{1}/page/{2}";
             public static string GetReplyAPI = "{0}/Home/Api/thread/id/{1}/page/{2}";
+            public static string GetRefAPI = "{0}/Home/Api/thread/id/{1}/page/1";
+            public static string PostThreadAPI = "{0}/home/forum/dopostthread.html";
+            public static string PostReplyAPI = "{0}/home/forum/doreplythread.html";
             public static int PageSize = 19;
             #region 板块
             public static List<string> Forums = new List<string>() {

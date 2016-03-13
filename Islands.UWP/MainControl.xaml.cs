@@ -1,19 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -25,13 +15,18 @@ namespace Islands.UWP
         public string PictureHost { get; set; }
         public string GetThreadAPI { get; set; }
         public string GetReplyAPI { get; set; }
+        public string GetRefAPI { get; set; }
         public string PostThreadAPI { get; set; }
         public string PostReplyAPI { get; set; }
         public int PageSize { get; set; }
         public IslandsCode IslandCode;
 
+        ImageView ImageControl;
         ThreadsView ThreadControl;
         ReplysView ReplyControl;
+        MarksView MarkControl;
+        SendView SendControl;
+        MyReplysView MyReplysControl;
         bool IsMain = true;
         public MainControl()
         {
@@ -51,8 +46,10 @@ namespace Islands.UWP
                     ThreadID = currForum.forumValue
                 },
                 islandCode = IslandCode,
+                currForum = currForum,
                 initTitle = currForum.forumName
             };
+
             ReplyControl = new ReplysView()
             {
                 postModel = new ReplysView.PostModel
@@ -64,10 +61,103 @@ namespace Islands.UWP
                 islandCode = IslandCode,
                 pageSize = PageSize
             };
+
+
+
+            MarkControl = new MarksView(IslandCode);
+            ImageControl = new ImageView();
+            SendControl = new SendView() {
+                postModel = new SendView.PostModel {
+                    islandCode = IslandCode,
+                    Host = Host,
+                    Cookie = new Model.CookieModel()
+                },
+                islandCode = IslandCode
+            };
+            MyReplysControl = new MyReplysView(IslandCode);
+
             ThreadControl.ThreadClick += ThreadControl_ThreadClick;
             ThreadControl.SwitchButton.Click += SwitchButton_Click;
+            ThreadControl.ImageTapped += Control_ImageTapped;
+            ThreadControl.SendButton.Click += SendButton_Click;
             ReplyControl.SwitchButton.Click += SwitchButton_Click;
+            ReplyControl.MarkSuccess += ReplyControl_MarkSuccess;
+            ReplyControl.ImageTapped += Control_ImageTapped;
+            ReplyControl.SendButton.Click += SendButton_Click;
+            MarkControl.MarkClick += MarkControl_MarkClick;
+            SendControl.Response += SendControl_Response;
+            SendControl.SendClick += SendControl_SendClick;
+            MyReplysControl.MyReplyClick += MyReplysControl_MyReplyClick;
+
             mainSplitView.Content = ThreadControl;
+        }
+
+        private void MyReplysControl_MyReplyClick(object sender, ItemClickEventArgs e)
+        {
+            MyReplyView mpv = e.ClickedItem as MyReplyView;
+            if (mpv != null)
+            {
+                IsMain = false;
+                mainSplitView.Content = ReplyControl;
+                mainNavigationList.SelectedIndex = 1;
+                var myreply = mpv.Tag as Model.SendModel;
+                if (myreply != null)
+                if(myreply.isMain && myreply.islandCode == IslandsCode.Koukuko) ReplyControl.GetReplyListByID(myreply.ThreadId, 0);
+                else if(!myreply.isMain) ReplyControl.GetReplyListByID(myreply.sendId, 0);
+            }
+        }
+
+        private void SendControl_SendClick(object sender, RoutedEventArgs e)
+        {
+            if (IsMain) mainSplitView.Content = ThreadControl;
+            else mainSplitView.Content = ReplyControl;
+        }
+
+        private void SendControl_Response(bool Success, Model.SendModel send)
+        {
+            if (Success) {
+                Data.Message.ShowMessage("发送成功");
+                using (var conn = Data.Database.GetDbConnection<Model.SendModel>())
+                {
+                    if (conn != null) {
+                        conn.Insert(send);
+                        MyReplysControl.AddMyReply(send);
+                    }
+                }
+            }
+        }
+
+        private void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsMain)
+            {
+                SendControl.title = ThreadControl.currForum.forumName;
+                SendControl.postModel.Api = PostThreadAPI;
+                SendControl.postModel.Id = ThreadControl.currForum.forumValue;
+            }
+            else {
+                SendControl.title = ReplyControl.currThread;
+                SendControl.postModel.Api = PostReplyAPI;
+                SendControl.postModel.Id = ReplyControl.currThread;
+            }
+            SendControl.postModel.IsMain = IsMain;
+            mainSplitView.Content = SendControl;
+        }
+
+        private void Control_ImageTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var image = sender as Image;
+            if(image != null)
+            {
+                ImageControl.imageUrl = image.Tag.ToString();
+                mainNavigationList.SelectedIndex = 5;
+                mainSplitView.Content = ImageControl;
+            }
+        }
+
+        private void ReplyControl_MarkSuccess(object sender, Model.ThreadModel t)
+        {
+            MarkControl.AddMark(t);
         }
 
         private void SwitchButton_Click(object sender, RoutedEventArgs e)
@@ -82,15 +172,31 @@ namespace Islands.UWP
             ThreadView tv = e.ClickedItem as ThreadView;
             if (tv != null)
             {
-                IsMain = !IsMain;
+                IsMain = false;
                 mainSplitView.Content = ReplyControl;
-                ReplyControl.GetReplyListByID(tv.threadNo);
+                var markId = (from mark in MarkControl.markList
+                              where mark.id == tv.threadNo
+                              select mark._id
+                              ).FirstOrDefault();
+                ReplyControl.GetReplyListByID(tv.threadNo, markId);
             }
         }
 
-        private void mainNavigationList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MarkControl_MarkClick(object sender, ItemClickEventArgs e)
         {
-        }
+            ThreadView tv = e.ClickedItem as ThreadView;
+            if (tv != null)
+            {
+                IsMain = false;
+                mainSplitView.Content = ReplyControl;
+                mainNavigationList.SelectedIndex = 1;
+                var tm = tv.Tag as Model.ThreadModel;
+                var id = 1;
+                if (tm != null)
+                    id = tm._id;
+                ReplyControl.GetReplyListByID(tv.threadNo, id);
+            }
+        }       
 
         private void ListBoxItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -108,6 +214,15 @@ namespace Islands.UWP
                         else
                             mainSplitView.Content = ReplyControl;
                         break;
+                    case "mark":
+                        mainSplitView.Content = MarkControl;
+                        break;
+                    case "myreply":
+                        mainSplitView.Content = MyReplysControl;
+                        break;
+                    case "image":
+                        mainSplitView.Content = ImageControl;
+                        break;
                     case "forums":
                         mainSplitView.Content = ForumList;
                         break;
@@ -115,6 +230,7 @@ namespace Islands.UWP
                 }
             }
         }
+
         private void ForumsListInit(IslandsCode islandCode, out Model.ForumModel currForum)
         {
             currForum = new Model.ForumModel();
@@ -158,6 +274,7 @@ namespace Islands.UWP
                 {
                     ThreadControl.RefreshById(f);
                     mainSplitView.Content = ThreadControl;
+                    mainNavigationList.SelectedIndex = 1;
                 }
             }
         }

@@ -195,9 +195,26 @@ namespace Islands.UWP
             this.reply = reply;
             this.islandCode = islandCode;
             if (!string.IsNullOrEmpty(this.replyThumb))
+            {
                 imageBox.Source = new BitmapImage(new Uri(this.replyThumb));
+                imageBox.Tag = replyImage;
+                imageBox.Tapped += ImageBox_Tapped;
+            }
         }
 
+        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
+        public event ImageTappedEventHandler ImageTapped;
+
+        void OnTapped(Object sender, TappedRoutedEventArgs e)
+        {
+            if (ImageTapped != null)
+                ImageTapped(sender, e);
+        }
+
+        private void ImageBox_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            OnTapped(sender, e);
+        }
 
         private void ImageBox_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {

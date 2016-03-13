@@ -46,7 +46,7 @@ namespace Islands.UWP
         public string initTitle { set { Title.Text = value; } }
         string _Title { set { Title.Text = value; } }
         int currPage { get; set; }
-        
+        string message { set { ThreadStatusBox.Text = value; } }
 
         private ObservableCollection<Model.ThreadModel> _list = new ObservableCollection<Model.ThreadModel>();
 
@@ -60,7 +60,9 @@ namespace Islands.UWP
                 _Refresh();
         }
 
+        public Model.ForumModel currForum { get; set; }
         public void RefreshById(Model.ForumModel forum) {
+            currForum = forum;
             postModel.ThreadID = forum.forumValue;
             _Title = forum.forumName;
             _Refresh();
@@ -88,7 +90,7 @@ namespace Islands.UWP
             Loading.IsActive = true;
             IsHitTestVisible = false;
             threadListView.Items.Remove(ThreadStatusBox);
-            ThreadStatusBox.Text = "点我加载";
+            message = "点我加载";
         }
         private void DataLoaded()
         {
@@ -116,6 +118,16 @@ namespace Islands.UWP
             }
         }
 
+
+        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
+        public event ImageTappedEventHandler ImageTapped;
+
+        void OnTapped(Object sender, TappedRoutedEventArgs e)
+        {
+            if (ImageTapped != null)
+                ImageTapped(sender, e);
+        }
+
         private async void GetThreadList(Model.PostRequest req, IslandsCode code)
         {
             if (Loading.IsActive) return;
@@ -123,7 +135,7 @@ namespace Islands.UWP
             string res = "";
             try
             {
-                res = await Data.Post.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
+                res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
                 JArray Threads;
                 switch (code) {
                     case IslandsCode.A:
@@ -143,20 +155,28 @@ namespace Islands.UWP
                     StringReader sr = new StringReader(thread.ToString());
                     JsonSerializer serializer = new JsonSerializer();
                     Model.ThreadModel tm = (Model.ThreadModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ThreadModel));
-                    threadListView.Items.Add(new ThreadView(tm,code));
+                    var tv = new ThreadView(tm, code);
+                    tv.ImageTapped += Tv_ImageTapped;
+                    threadListView.Items.Add(tv);
                 }
                 currPage = req.Page;
 
             }
             catch (Exception ex)
             {
-                ThreadStatusBox.Text = ex.Message;
+                message = ex.Message;
             }
             finally
             {
                 DataLoaded();
             }
 
+        }
+
+        private void Tv_ImageTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (ImageTapped != null)
+                ImageTapped(sender, e);
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)

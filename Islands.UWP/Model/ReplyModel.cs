@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite.Net.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,11 @@ namespace Islands.UWP.Model
 {
     public class ReplyModel
     {
+        public IslandsCode islandCode { get; set; }
+
+        [PrimaryKey, AutoIncrement]
+        public int _id { get; set; }
+
         public string id { get; set; }
         public string img { get; set; }
         public string ext { get; set; }

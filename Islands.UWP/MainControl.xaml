@@ -11,8 +11,7 @@
         <SplitView Name="mainSplitView" CompactPaneLength="35" OpenPaneLength="100" DisplayMode="CompactOverlay">
             <SplitView.Pane>
                 <ListBox Name="mainNavigationList"
-                         SelectionMode="Single"
-                         SelectionChanged="mainNavigationList_SelectionChanged">
+                         SelectionMode="Single">
                     <ListBoxItem Tag="menu" Tapped="ListBoxItem_Tapped" Name="menuItem">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE700;" 
@@ -32,7 +31,7 @@
                                        Margin="12,0,0,0"/>
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem Tag="2" Tapped="ListBoxItem_Tapped" Name="collectionItem">
+                    <ListBoxItem Tag="mark" Tapped="ListBoxItem_Tapped" Name="collectionItem">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE728;" 
                                        FontSize="12" 
@@ -44,7 +43,7 @@
                                        Margin="12,0,0,0"/>
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem Tag="3" Tapped="ListBoxItem_Tapped" Name="myReplyItem">
+                    <ListBoxItem Tag="myreply" Tapped="ListBoxItem_Tapped" Name="myReplyItem">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE120;" 
                                        FontSize="12" 
@@ -56,13 +55,26 @@
                                        Margin="12,0,0,0"/>
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem Tag="4" Tapped="ListBoxItem_Tapped" Name="draftItem">
+                    <ListBoxItem Tag="4" Tapped="ListBoxItem_Tapped" Name="draftItem"
+                                 Visibility="Collapsed">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE74E;" 
                                        FontSize="12" 
                                        FontFamily="Segoe MDL2 Assets"
                                        Padding="0,4,0,0" Foreground="Black"/>
                             <TextBlock Text="草稿" 
+                                       FontSize="12"
+                                       FontFamily="微软雅黑"
+                                       Margin="12,0,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem Tag="image" Tapped="ListBoxItem_Tapped" Name="imageItem">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xEB9F;" 
+                                       FontSize="12" 
+                                       FontFamily="Segoe MDL2 Assets"
+                                       Padding="0,4,0,0" Foreground="Black"/>
+                            <TextBlock Text="图片" 
                                        FontSize="12"
                                        FontFamily="微软雅黑"
                                        Margin="12,0,0,0"/>
@@ -76,7 +88,8 @@
                                 Margin="0"/>
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem Tag="10" Tapped="ListBoxItem_Tapped" Name="settingItem">
+                    <ListBoxItem Tag="10" Tapped="ListBoxItem_Tapped" Name="settingItem"
+                                 Visibility="Collapsed">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE713;" 
                                        FontSize="12" 

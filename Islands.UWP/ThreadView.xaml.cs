@@ -173,7 +173,7 @@ namespace Islands.UWP
                     case IslandsCode.A:
                         if (string.IsNullOrEmpty(thread.img))
                             return "";
-                        return (Config.A.PictureHost + thread.img + thread.ext);
+                        return (Config.A.PictureHost + "image/" + thread.img + thread.ext);
                     case IslandsCode.Beitai:
                         if (string.IsNullOrEmpty(thread.img))
                             return "";
@@ -208,14 +208,33 @@ namespace Islands.UWP
             this.thread = thread;
             this.islandCode = islandCode;
             if (!string.IsNullOrEmpty(this.threadThumb))
+            {
                 imageBox.Source = new BitmapImage(new Uri(this.threadThumb));
+                imageBox.Tag = this.threadImage;
+                imageBox.Tapped += ImageBox_Tapped;
+            }
             
+        }
+
+        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
+        public event ImageTappedEventHandler ImageTapped;
+
+        void OnTapped(Object sender,TappedRoutedEventArgs e) {
+            if (ImageTapped != null)
+                ImageTapped(sender, e);
+        }
+
+        private void ImageBox_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            OnTapped(sender, e);
         }
 
         private void ImageBox_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            if(!string.IsNullOrEmpty(threadThumb))
+            if (!string.IsNullOrEmpty(threadThumb))
+            {
                 imageBox.Source = new BitmapImage(new Uri("ms-appx:/Assets/luwei.jpg", UriKind.RelativeOrAbsolute));
+            }
         }
     }
 }
