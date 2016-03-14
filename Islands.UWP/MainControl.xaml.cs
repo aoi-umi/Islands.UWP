@@ -62,8 +62,6 @@ namespace Islands.UWP
                 pageSize = PageSize
             };
 
-
-
             MarkControl = new MarksView(IslandCode);
             ImageControl = new ImageView();
             SendControl = new SendView() {
@@ -87,121 +85,16 @@ namespace Islands.UWP
             MarkControl.MarkClick += MarkControl_MarkClick;
             SendControl.Response += SendControl_Response;
             SendControl.SendClick += SendControl_SendClick;
+            ImageControl.BackButton.Click += BackButton_Click;
             MyReplysControl.MyReplyClick += MyReplysControl_MyReplyClick;
 
             mainSplitView.Content = ThreadControl;
         }
 
-        private void MyReplysControl_MyReplyClick(object sender, ItemClickEventArgs e)
-        {
-            MyReplyView mpv = e.ClickedItem as MyReplyView;
-            if (mpv != null)
-            {
-                IsMain = false;
-                mainSplitView.Content = ReplyControl;
-                mainNavigationList.SelectedIndex = 1;
-                var myreply = mpv.Tag as Model.SendModel;
-                if (myreply != null)
-                if(myreply.isMain && myreply.islandCode == IslandsCode.Koukuko) ReplyControl.GetReplyListByID(myreply.ThreadId, 0);
-                else if(!myreply.isMain) ReplyControl.GetReplyListByID(myreply.sendId, 0);
-            }
-        }
-
-        private void SendControl_SendClick(object sender, RoutedEventArgs e)
-        {
-            if (IsMain) mainSplitView.Content = ThreadControl;
-            else mainSplitView.Content = ReplyControl;
-        }
-
-        private void SendControl_Response(bool Success, Model.SendModel send)
-        {
-            if (Success) {
-                Data.Message.ShowMessage("发送成功");
-                using (var conn = Data.Database.GetDbConnection<Model.SendModel>())
-                {
-                    if (conn != null) {
-                        conn.Insert(send);
-                        MyReplysControl.AddMyReply(send);
-                    }
-                }
-            }
-        }
-
-        private void SendButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (IsMain)
-            {
-                SendControl.title = ThreadControl.currForum.forumName;
-                SendControl.postModel.Api = PostThreadAPI;
-                SendControl.postModel.Id = ThreadControl.currForum.forumValue;
-            }
-            else {
-                SendControl.title = ReplyControl.currThread;
-                SendControl.postModel.Api = PostReplyAPI;
-                SendControl.postModel.Id = ReplyControl.currThread;
-            }
-            SendControl.postModel.IsMain = IsMain;
-            mainSplitView.Content = SendControl;
-        }
-
-        private void Control_ImageTapped(object sender, TappedRoutedEventArgs e)
-        {
-            var image = sender as Image;
-            if(image != null)
-            {
-                ImageControl.imageUrl = image.Tag.ToString();
-                mainNavigationList.SelectedIndex = 5;
-                mainSplitView.Content = ImageControl;
-            }
-        }
-
-        private void ReplyControl_MarkSuccess(object sender, Model.ThreadModel t)
-        {
-            MarkControl.AddMark(t);
-        }
-
-        private void SwitchButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (IsMain) mainSplitView.Content = ReplyControl;
-            else mainSplitView.Content = ThreadControl;
-            IsMain = !IsMain;
-        }
-
-        private void ThreadControl_ThreadClick(object sender, ItemClickEventArgs e)
-        {
-            ThreadView tv = e.ClickedItem as ThreadView;
-            if (tv != null)
-            {
-                IsMain = false;
-                mainSplitView.Content = ReplyControl;
-                var markId = (from mark in MarkControl.markList
-                              where mark.id == tv.threadNo
-                              select mark._id
-                              ).FirstOrDefault();
-                ReplyControl.GetReplyListByID(tv.threadNo, markId);
-            }
-        }
-
-        private void MarkControl_MarkClick(object sender, ItemClickEventArgs e)
-        {
-            ThreadView tv = e.ClickedItem as ThreadView;
-            if (tv != null)
-            {
-                IsMain = false;
-                mainSplitView.Content = ReplyControl;
-                mainNavigationList.SelectedIndex = 1;
-                var tm = tv.Tag as Model.ThreadModel;
-                var id = 1;
-                if (tm != null)
-                    id = tm._id;
-                ReplyControl.GetReplyListByID(tv.threadNo, id);
-            }
-        }       
-
         private void ListBoxItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
             ListBoxItem tapped_item = sender as ListBoxItem;
-            if (tapped_item != null && tapped_item.Tag != null) 
+            if (tapped_item != null && tapped_item.Tag != null)
             {
                 switch (tapped_item.Tag.ToString())
                 {
@@ -229,6 +122,128 @@ namespace Islands.UWP
                     default: break;
                 }
             }
+        }
+
+        private void ThreadControl_ThreadClick(object sender, ItemClickEventArgs e)
+        {
+            ThreadView tv = e.ClickedItem as ThreadView;
+            if (tv != null)
+            {
+                IsMain = false;
+                mainSplitView.Content = ReplyControl;
+                var markId = (from mark in MarkControl.markList
+                              where mark.id == tv.threadNo
+                              select mark._id
+                              ).FirstOrDefault();
+                ReplyControl.GetReplyListByID(tv.threadNo, markId);
+            }
+        }
+
+        private void ReplyControl_MarkSuccess(object sender, Model.ThreadModel t)
+        {
+            MarkControl.AddMark(t);
+        }
+
+        private void Control_ImageTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var image = sender as Image;
+            if (image != null)
+            {
+                ImageControl.imageUrl = image.Tag.ToString();
+                mainNavigationList.SelectedIndex = 5;
+                mainSplitView.Content = ImageControl;
+            }
+        }
+
+        private void SwitchButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsMain) mainSplitView.Content = ReplyControl;
+            else mainSplitView.Content = ThreadControl;
+            IsMain = !IsMain;
+        }
+
+        private void MarkControl_MarkClick(object sender, ItemClickEventArgs e)
+        {
+            ThreadView tv = e.ClickedItem as ThreadView;
+            if (tv != null)
+            {
+                IsMain = false;
+                mainSplitView.Content = ReplyControl;
+                mainNavigationList.SelectedIndex = 1;
+                var tm = tv.Tag as Model.ThreadModel;
+                var id = 1;
+                if (tm != null)
+                    id = tm._id;
+                ReplyControl.GetReplyListByID(tv.threadNo, id);
+            }
+        }
+
+        private void MyReplysControl_MyReplyClick(object sender, ItemClickEventArgs e)
+        {
+            MyReplyView mpv = e.ClickedItem as MyReplyView;
+            if (mpv != null)
+            {
+                IsMain = false;
+                mainSplitView.Content = ReplyControl;
+                mainNavigationList.SelectedIndex = 1;
+                var myreply = mpv.Tag as Model.SendModel;
+                if (myreply != null)
+                    if (myreply.isMain && myreply.islandCode == IslandsCode.Koukuko) ReplyControl.GetReplyListByID(myreply.ThreadId, 0);
+                    else if (!myreply.isMain) ReplyControl.GetReplyListByID(myreply.sendId, 0);
+            }
+        }
+
+        private void SendControl_SendClick(object sender, RoutedEventArgs e)
+        {
+            BackToHome();
+        }
+
+        private void SendControl_Response(bool Success, Model.SendModel send)
+        {
+            if (Success)
+            {
+                Data.Message.ShowMessage("发送成功");
+                using (var conn = Data.Database.GetDbConnection<Model.SendModel>())
+                {
+                    if (conn != null)
+                    {
+                        conn.Insert(send);
+                        MyReplysControl.AddMyReply(send);
+                    }
+                }
+            }
+            else {
+                Data.Message.ShowMessage("发送失败");
+            }
+        }
+
+        private void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsMain)
+            {
+                SendControl.title = ThreadControl.currForum.forumName;
+                SendControl.postModel.Api = PostThreadAPI;
+                SendControl.postModel.Id = ThreadControl.currForum.forumValue;
+            }
+            else {
+                SendControl.title = ReplyControl.currThread;
+                SendControl.postModel.Api = PostReplyAPI;
+                SendControl.postModel.Id = ReplyControl.currThread;
+            }
+            SendControl.postModel.IsMain = IsMain;
+            mainSplitView.Content = SendControl;
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            BackToHome();
+        }
+
+        private void BackToHome()
+        {
+            if (IsMain) mainSplitView.Content = ThreadControl;
+            else mainSplitView.Content = ReplyControl;
+            mainNavigationList.SelectedIndex = 1;
         }
 
         private void ForumsListInit(IslandsCode islandCode, out Model.ForumModel currForum)

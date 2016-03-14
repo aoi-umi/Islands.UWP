@@ -30,13 +30,6 @@ namespace Islands.UWP.Data
         {
             try
             {
-                if (string.IsNullOrEmpty(send.sendContent) && string.IsNullOrEmpty(send.sendImage))
-                {
-                    throw new Exception("内容不能为空");
-                }
-                if (string.IsNullOrEmpty(send.sendContent) && !string.IsNullOrEmpty(send.sendImage))
-                    send.sendContent = "[分享图片]";
-
                 HttpContent postContent;
                 MultipartContent multiContent = new MultipartContent("form-data");
                 StringContent NameContent = new StringContent(send.sendTitle, Encoding.UTF8);

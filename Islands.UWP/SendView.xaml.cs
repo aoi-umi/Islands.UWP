@@ -98,7 +98,6 @@ namespace Islands.UWP
         {
             try
             {
-                OnSendClick(sender, e);
                 var send = new Model.SendModel()
                 {
                     sendTitle = txtSendTitle,
@@ -114,7 +113,16 @@ namespace Islands.UWP
                     CookieValue = postModel.Cookie.CookieValue,
                     sendDateTime = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")                                      
                 };
+
+                if (string.IsNullOrEmpty(send.sendContent) && string.IsNullOrEmpty(send.sendImage))
+                {
+                    throw new Exception("内容不能为空");
+                }
+                if (string.IsNullOrEmpty(send.sendContent) && !string.IsNullOrEmpty(send.sendImage))
+                    send.sendContent = "[分享图片]";
+
                 var res = await Data.Http.PostData(send);
+                OnSendClick(sender, e);
                 bool IsSuccess = false;
                 string ThreadId = "";
                 switch (islandCode)

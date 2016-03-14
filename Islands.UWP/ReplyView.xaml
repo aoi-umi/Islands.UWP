@@ -28,26 +28,28 @@
                 <TextBlock Name="id"
                            Text="No.">
                 </TextBlock>
-                <TextBox Name="txtId" 
+                <TextBlock Name="txtId" 
+                       IsTextSelectionEnabled="True"
                          Text="{x:Bind replyNo}" 
                          Margin="0,0,5,0"
                          RelativePanel.RightOf="id">
-                </TextBox>
+                </TextBlock>
                 <TextBlock Name="userid"
                            Text="ID:"
                            RelativePanel.RightOf="txtId"
                            >
                 </TextBlock>
                 <TextBlock Name="txtUserid" 
-                           Text="{x:Bind replyID}"
+                           Text="{x:Bind replyUid}"
                            RelativePanel.RightOf="userid"
                            >
                 </TextBlock>
-                
+
             </RelativePanel>
-            <TextBox Name="txtContent"
-                     TextWrapping="Wrap"
-                     Text="{x:Bind replyContent}"></TextBox>
+            <ContentControl Name="txtContent"
+                            Content="{x:Bind replyContent}"
+                            >
+            </ContentControl>
             <Image Name="imageBox"  
                    MaxHeight="200" 
                    MaxWidth="200" 

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using Windows.Storage.Provider;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
@@ -35,6 +37,7 @@ namespace Islands.UWP.Data
             }
             return imageUri;
         }
+
         public static async void SetLocalImage(Image image, string path)
         {
             var stream = await ReadFileRandomAccessStreamWithContentTypeAsync(path);
@@ -60,6 +63,31 @@ namespace Islands.UWP.Data
             StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", file);
             var stream = await file.OpenReadAsync();
             return stream;
+        }
+
+        public static async void SaveFile(string urlStr)
+        {
+            var uri = new Uri(urlStr);
+            string filename = Path.GetFileName(urlStr);
+            var savePicker = new FileSavePicker();
+            savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            savePicker.FileTypeChoices.Add("Image", new List<string>() { ".jpg",".jpeg",".png",".bmp",".gif" });
+            savePicker.SuggestedFileName = filename;
+
+            StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                CachedFileManager.DeferUpdates(file);
+                var downloadFile = await StorageFile.CreateStreamedFileFromUriAsync(filename, uri, RandomAccessStreamReference.CreateFromUri(uri));
+                var buffer = await FileIO.ReadBufferAsync(downloadFile);
+                await FileIO.WriteBufferAsync(file, buffer);
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+                if (status == FileUpdateStatus.Failed)
+                {
+                    Message.ShowMessage("保存失败");
+                }
+            }
+
         }
     }
 }

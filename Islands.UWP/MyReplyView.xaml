@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <StackPanel Name="myReplySp" Margin="2">
+        <StackPanel Margin="2">
             <StackPanel>
                 <TextBlock Text="{x:Bind myReplyTitle}"
                            Visibility="{x:Bind myReplyIsHadTitle}">
@@ -28,11 +28,12 @@
                 <TextBlock Name="id"
                            Text="No.">
                 </TextBlock>
-                <TextBox Name="txtId" 
+                <TextBlock Name="txtId" 
+                       IsTextSelectionEnabled="True"
                          Text="{x:Bind myReplyNo}" 
                          Margin="0,0,5,0"
                          RelativePanel.RightOf="id">
-                </TextBox>
+                </TextBlock>
                 <TextBlock Name="userid"
                            Text="ID:"
                            RelativePanel.RightOf="txtId"
@@ -50,9 +51,10 @@
                            RelativePanel.AlignRightWithPanel="True"
                            ></TextBlock>
             </RelativePanel>
-            <TextBox Name="txtContent"
-                     TextWrapping="Wrap"
-                     Text="{x:Bind myReplyContent}"></TextBox>
+            <TextBlock Name="txtContent"
+                       IsTextSelectionEnabled="True"
+                       TextWrapping="Wrap"
+                       Text="{x:Bind myReplyContent}"></TextBlock>
             <Image Name="imageBox"  
                    MaxHeight="200" 
                    MaxWidth="200" 

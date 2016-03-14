@@ -43,7 +43,18 @@
         </RelativePanel>
         <RelativePanel Grid.Row="2"
                        Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
-            <TextBlock></TextBlock>
+            <Button Name="BackButton"
+                    x:FieldModifier="public"
+                    Content="&#xE0D5;"
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="24"
+                    Background="Transparent"></Button>
+            <Button Name="SaveButton"
+                    Content="&#xE105;"
+                    FontFamily="Segoe MDL2 Assets"
+                    RelativePanel.AlignRightWithPanel="True"
+                    FontSize="24"
+                    Background="Transparent"></Button>
         </RelativePanel>
         <WebView Name="ImageWebView"
                   Grid.Row="1">

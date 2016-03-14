@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -10,6 +11,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
@@ -115,15 +117,26 @@ namespace Islands.UWP
                 }
             }
         }
-        public string replyID
+        public string replyUid
         {
             get
             {
                 switch (islandCode)
                 {
                     case IslandsCode.A:
-                    case IslandsCode.Beitai: return reply.userid;
-                    case IslandsCode.Koukuko: return reply.uid;
+                    case IslandsCode.Beitai:
+                        if (reply.admin == "1")
+                        {
+                            txtUserid.Foreground = Config.AdminColor;
+                        }
+                        return reply.userid;
+                    case IslandsCode.Koukuko:
+                        if (reply.uid.IndexOf("<font color=\"red\">") >= 0)
+                        {
+                            txtUserid.Foreground = Config.AdminColor;
+                            reply.uid = Regex.Replace(reply.uid, "</?[^>]*/?>", "");
+                        }
+                        return reply.uid;
                     default: return "";
                 }
             }
@@ -173,7 +186,7 @@ namespace Islands.UWP
                 }
             }
         }
-        public string replyContent
+        public RichTextBlock replyContent
         {
             get
             {
@@ -181,9 +194,18 @@ namespace Islands.UWP
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return reply.content;
-                    default: return "";
+                    case IslandsCode.Koukuko:
+                        var rtb = (RichTextBlock)XamlReader.Load(HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(reply.content, true));
+                        rtb.TextWrapping = TextWrapping.Wrap;
+                        rtb.IsTextSelectionEnabled = true;
+                        return rtb;
+                    default: return new RichTextBlock();
                 }
+            }
+        }
+        public bool IsPo {
+            set {
+                if (value) txtUserid.Foreground = Config.PoColor;
             }
         }
 

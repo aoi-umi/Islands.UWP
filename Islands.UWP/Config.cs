@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace Islands.UWP
 {
@@ -10,6 +12,9 @@ namespace Islands.UWP
     };
     public static class Config
     {
+
+        public static Brush PoColor = new SolidColorBrush(Colors.Blue);
+        public static Brush AdminColor = new SolidColorBrush(Colors.Red);
         public static string dbName = "Islands.db";
         public static class A
         {

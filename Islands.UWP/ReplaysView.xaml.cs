@@ -178,6 +178,7 @@ namespace Islands.UWP
                 {
                     var tv = new ThreadView(top, code) { Tag = top };
                     tv.ImageTapped += Image_ImageTapped;
+                    tv.IsPo = true;
                     replyListView.Items.Add(tv);
                 }
                 replyCount = _replyCount;
@@ -206,6 +207,8 @@ namespace Islands.UWP
                         lastReply = rm;
                     }
                     var rv = new ReplyView(rm, code);
+                    if ((code == IslandsCode.Koukuko && rm.uid == top.uid) || rm.userid == top.userid)
+                        rv.IsPo = true;
                     rv.ImageTapped += Image_ImageTapped;
                     replyListView.Items.Add(rv);
 

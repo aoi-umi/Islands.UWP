@@ -27,18 +27,19 @@
                 <TextBlock Name="id"
                            Text="No.">
                 </TextBlock>
-                <TextBox Name="txtId" 
+                <TextBlock Name="txtId" 
+                           IsTextSelectionEnabled="True"
                          Text="{x:Bind threadNo}" 
                          Margin="0,0,5,0"
                          RelativePanel.RightOf="id">
-                </TextBox>
+                </TextBlock>
                 <TextBlock Name="userid"
                            Text="ID:"
                            RelativePanel.RightOf="txtId"
                            >
                 </TextBlock>
                 <TextBlock Name="txtUserid" 
-                           Text="{x:Bind threadID}"
+                           Text="{x:Bind threadUid}"
                            RelativePanel.RightOf="userid"
                            >
                 </TextBlock>
@@ -53,9 +54,11 @@
                            >
                 </TextBlock>
             </RelativePanel>
-            <TextBox Name="txtContent"
-                     TextWrapping="Wrap"
-                     Text="{x:Bind threadContent}"></TextBox>
+            <ContentControl Name="txtContent"
+                            Content="{x:Bind threadContent}">
+            </ContentControl>
+            <RichTextBlock Name="txtContent2">
+            </RichTextBlock>
             <RelativePanel>
                 <Image Name="imageBox"  
                    MaxHeight="200" 

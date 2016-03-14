@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -10,6 +11,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
@@ -116,15 +118,26 @@ namespace Islands.UWP
                 }
             }
         }
-        public string threadID
+        public string threadUid
         {
             get
             {
                 switch (islandCode)
                 {
                     case IslandsCode.A:
-                    case IslandsCode.Beitai: return thread.userid;
-                    case IslandsCode.Koukuko: return thread.uid;
+                    case IslandsCode.Beitai:
+                        if (thread.admin == "1")
+                        {
+                            txtUserid.Foreground = Config.AdminColor;
+                        }
+                        return thread.userid;
+                    case IslandsCode.Koukuko:
+                        if (thread.uid.IndexOf("<font color=\"red\">") >= 0)
+                        {
+                            txtUserid.Foreground = Config.AdminColor;
+                            thread.uid = Regex.Replace(thread.uid, "</?[^>]*/?>", "");
+                        }
+                        return thread.uid;
                     default: return "";
                 }
             }
@@ -186,7 +199,7 @@ namespace Islands.UWP
                 }
             }
         }
-        public string threadContent
+        public RichTextBlock threadContent
         {
             get
             {
@@ -194,9 +207,26 @@ namespace Islands.UWP
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return thread.content;
-                    default: return "";
+                    case IslandsCode.Koukuko:
+                        var rtb = (RichTextBlock)XamlReader.Load(HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(thread.content, true));
+                        rtb.TextWrapping = TextWrapping.Wrap;
+                        rtb.IsTextSelectionEnabled = true;
+                        return rtb;
+                    default: return new RichTextBlock();
                 }
+            }
+            //set {
+            //    var rtb  = (RichTextBlock)XamlReader.Load(HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(thread.content, true));
+            //    rtb.TextWrapping = TextWrapping.Wrap;
+            //    rtb.IsTextSelectionEnabled = true;
+            //    txtContent.Content = rtb;
+            //}
+        }
+        public bool IsPo
+        {
+            set
+            {
+                if (value) txtUserid.Foreground = Config.PoColor;
             }
         }
 

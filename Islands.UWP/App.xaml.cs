@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Islands.UWP.WinRTExceptions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,7 +34,9 @@ namespace Islands.UWP
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            this.UnhandledException += OnUnhandledException;
         }
+        
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -42,6 +45,8 @@ namespace Islands.UWP
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+
+            EnsureSyncContext();
 
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -103,6 +108,30 @@ namespace Islands.UWP
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            EnsureSyncContext();
+        }
+        
+
+        private void EnsureSyncContext()
+        {
+            var exceptionHandlingSynchronizationContext = ExceptionHandlingSynchronizationContext.Register();
+            exceptionHandlingSynchronizationContext.UnhandledException += OnSynchronizationContextUnhandledException;
+        }
+
+        private void OnSynchronizationContextUnhandledException(object sender, WinRTExceptions.UnhandledExceptionEventArgs args)
+        {
+            args.Handled = true;
+            Data.Message.ShowMessage("未处理错误:" + args.Exception.ToString());
+        }
+
+        private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs args)
+        {
+            args.Handled = true;
+            Data.Message.ShowMessage("未处理错误:" + args.Exception.ToString());
         }
     }
 }
