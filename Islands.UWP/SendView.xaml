@@ -82,44 +82,29 @@
                 </Style>
             </ListView.ItemContainerStyle>
             <ListViewItem Padding="5,0,5,0">
-                <RelativePanel>
-                    <TextBlock Name="SendTitleView"
-                        Text="标题">
-                    </TextBlock>
-                    <TextBox Name="SendTitle"
-                             RelativePanel.RightOf="SendTitleView"
-                             RelativePanel.AlignRightWithPanel="True"
-                             >
-                    </TextBox>
-                </RelativePanel>
+                <TextBox Name="SendTitle"
+                         PlaceholderText="标题">
+                </TextBox>
             </ListViewItem>
             <ListViewItem Padding="5,0,5,0">
-                <RelativePanel>
-                    <TextBlock Name="SendEmailView"
-                        Text="Email">
-                    </TextBlock>
-                    <TextBox Name="SendEmail"
-                             RelativePanel.RightOf="SendEmailView"
-                             RelativePanel.AlignRightWithPanel="True"
-                             >
+                <TextBox Name="SendEmail"
+                         PlaceholderText="Email">
                     </TextBox>
-                </RelativePanel>
             </ListViewItem>
             <ListViewItem Padding="5,0,5,0">
-                <RelativePanel>
-                    <TextBlock Name="SendNameView"
-                        Text="标题">
-                    </TextBlock>
-                    <TextBox Name="SendName"
-                             RelativePanel.RightOf="SendNameView"
-                             RelativePanel.AlignRightWithPanel="True"
-                             >
-                    </TextBox>
-                </RelativePanel>
+                <TextBox Name="SendName"
+                         PlaceholderText="名字">
+                </TextBox>
+            </ListViewItem>
+            <ListViewItem>
+                <ComboBox Name="EmojiBox"
+                          HorizontalAlignment="Stretch"
+                          SelectionChanged="EmojiBox_SelectionChanged">
+                </ComboBox>
             </ListViewItem>
             <ListViewItem Padding="5,0,5,0">
                 <TextBox Name="SendContent"
-                         RelativePanel.AlignRightWithPanel="True"
+                         PlaceholderText="内容"
                          AcceptsReturn="True"
                          TextWrapping="Wrap"
                          MinHeight="200"

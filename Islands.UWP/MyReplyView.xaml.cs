@@ -168,7 +168,7 @@ namespace Islands.UWP
         private void ImageBox_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(myReplyImage))
-                imageBox.Source = new BitmapImage(new Uri("ms-appx:/Assets/luwei.jpg", UriKind.RelativeOrAbsolute));
+                imageBox.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
         }
     }
 }

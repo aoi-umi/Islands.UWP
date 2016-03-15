@@ -77,6 +77,10 @@ namespace Islands.UWP
         public SendView()
         {
             this.InitializeComponent();
+            EmojiBox.Items.Add("颜文字");
+            EmojiBox.SelectedIndex = 0;
+            foreach(var emoji in Config.Emoji)
+                EmojiBox.Items.Add(emoji);
         }
 
         private void EmptyButton_Click(object sender, RoutedEventArgs e)
@@ -98,6 +102,9 @@ namespace Islands.UWP
         {
             try
             {
+                if (string.IsNullOrEmpty(postModel.Id))
+                    throw new Exception("无法回复空串");
+
                 var send = new Model.SendModel()
                 {
                     sendTitle = txtSendTitle,
@@ -150,6 +157,18 @@ namespace Islands.UWP
             }
             catch (Exception ex) {
                 Data.Message.ShowMessage(ex.Message);
+            }
+        }
+
+        private void EmojiBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (EmojiBox.SelectedIndex != 0)
+            {
+                var emoji = EmojiBox.SelectedItem.ToString();
+                var start = SendContent.SelectionStart;
+                SendContent.Text = SendContent.Text.Insert(SendContent.SelectionStart, emoji);
+                SendContent.SelectionStart = start + emoji.Length;
+                EmojiBox.SelectedIndex = 0;
             }
         }
     }

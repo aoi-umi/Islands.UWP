@@ -40,12 +40,19 @@ namespace Islands.UWP.Data
 
         public static async void SetLocalImage(Image image, string path)
         {
-            var stream = await ReadFileRandomAccessStreamWithContentTypeAsync(path);
-            if (stream != null)
+            try
             {
-                var bitmap = new BitmapImage();
-                await bitmap.SetSourceAsync(stream);
-                image.Source = bitmap;
+                var stream = await ReadFileRandomAccessStreamWithContentTypeAsync(path);
+                if (stream != null)
+                {
+                    var bitmap = new BitmapImage();
+                    await bitmap.SetSourceAsync(stream);
+                    image.Source = bitmap;
+                }
+            }
+            catch
+            {
+                image.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
             }
         }
 
@@ -71,20 +78,28 @@ namespace Islands.UWP.Data
             string filename = Path.GetFileName(urlStr);
             var savePicker = new FileSavePicker();
             savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            savePicker.FileTypeChoices.Add("Image", new List<string>() { ".jpg",".jpeg",".png",".bmp",".gif" });
+            savePicker.FileTypeChoices.Add("Image", new List<string>() { ".jpg", ".jpeg", ".png", ".bmp", ".gif" });
             savePicker.SuggestedFileName = filename;
 
+            //StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             StorageFile file = await savePicker.PickSaveFileAsync();
             if (file != null)
             {
                 CachedFileManager.DeferUpdates(file);
                 var downloadFile = await StorageFile.CreateStreamedFileFromUriAsync(filename, uri, RandomAccessStreamReference.CreateFromUri(uri));
-                var buffer = await FileIO.ReadBufferAsync(downloadFile);
-                await FileIO.WriteBufferAsync(file, buffer);
+                var readStream = await downloadFile.OpenReadAsync();
+                var inStream = readStream.AsStreamForRead().AsInputStream();
+                await downloadFile.CopyAndReplaceAsync(file);
+                //var buffer = await FileIO.ReadBufferAsync(downloadFile);
+                //await FileIO.WriteBufferAsync(file, buffer);
                 FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
                 if (status == FileUpdateStatus.Failed)
                 {
-                    Message.ShowMessage("保存失败");
+                    Message.ShowMessage("图片保存失败");
+                }
+                else
+                {
+                    Message.ShowMessage("图片保存成功");
                 }
             }
 

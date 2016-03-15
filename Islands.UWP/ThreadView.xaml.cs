@@ -263,7 +263,7 @@ namespace Islands.UWP
         {
             if (!string.IsNullOrEmpty(threadThumb))
             {
-                imageBox.Source = new BitmapImage(new Uri("ms-appx:/Assets/luwei.jpg", UriKind.RelativeOrAbsolute));
+                imageBox.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
             }
         }
     }
