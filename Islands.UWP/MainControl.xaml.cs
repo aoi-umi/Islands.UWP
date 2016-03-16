@@ -184,12 +184,26 @@ namespace Islands.UWP
             if (mpv != null)
             {
                 IsMain = false;
-                mainSplitView.Content = ReplyControl;
-                mainNavigationList.SelectedIndex = 1;
                 var myreply = mpv.Tag as Model.SendModel;
                 if (myreply != null)
-                    if (myreply.isMain && myreply.islandCode == IslandsCode.Koukuko) ReplyControl.GetReplyListByID(myreply.ThreadId, 0);
-                    else if (!myreply.isMain) ReplyControl.GetReplyListByID(myreply.sendId, 0);
+                {
+                    if (myreply.isMain && myreply.islandCode == IslandsCode.Koukuko)
+                    {
+                        IsMain = false;
+                        BackToHome();
+                        ReplyControl.GetReplyListByID(myreply.ThreadId, 0);
+                    }
+                    else if (!myreply.isMain)
+                    {
+                        IsMain = false;
+                        BackToHome();
+                        ReplyControl.GetReplyListByID(myreply.sendId, 0);
+                    }
+                    else {
+                        Data.Message.ShowMessage("无法跳转到该串");
+                    }
+
+                }
             }
         }
 

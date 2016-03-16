@@ -1,23 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections.ObjectModel;
-using Windows.UI.Popups;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -48,6 +35,7 @@ namespace Islands.UWP
             }
         }
         int replyCount { get; set; }
+        bool IsGetAllReply = false;
 
         string replyId {set { Title.Text= value; } }
         string txtReplyCount { set { ListCount.Text = "(" +value + ")"; } }
@@ -118,6 +106,7 @@ namespace Islands.UWP
         private void _Refresh()
         {
             lastReply = null;
+            IsGetAllReply = false;
             currPage = 1;
             replyListView.Items.Clear();
             try
@@ -141,6 +130,7 @@ namespace Islands.UWP
         private async void GetReplyList(Model.PostRequest req, IslandsCode code)
         {
             if (Loading.IsActive) return;
+            txtReplyCount = "";
             DataLoading();
             string res = "";
             currPage = req.Page;
@@ -184,7 +174,10 @@ namespace Islands.UWP
                 replyCount = _replyCount;
                 txtReplyCount = _replyCount.ToString();
                 if (Replys == null || Replys.Count == 0)
+                {
+                    IsGetAllReply = true;
                     throw new Exception("已经没有了");
+                }
 
                 if((replyListView.Items.Count - 1) % (pageSize + 1) == 0)
                     replyListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
@@ -207,14 +200,17 @@ namespace Islands.UWP
                         lastReply = rm;
                     }
                     var rv = new ReplyView(rm, code);
-                    if ((code == IslandsCode.Koukuko && rm.uid == top.uid) || rm.userid == top.userid)
+                    if ((code == IslandsCode.Koukuko && rm.uid == top.uid) || (code != IslandsCode.Koukuko && rm.userid == top.userid))
                         rv.IsPo = true;
                     rv.ImageTapped += Image_ImageTapped;
                     replyListView.Items.Add(rv);
 
                 }
                 if (Replys.Count < pageSize)
+                {
+                    IsGetAllReply = true;
                     throw new Exception("已经没有了");
+                }
                 ++currPage;
 
             }
@@ -246,7 +242,7 @@ namespace Islands.UWP
         private void ReplyListScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             ScrollViewer sv = (ScrollViewer)sender;
-            if (currPage <= allPage && sv.VerticalOffset > 0 && sv.ActualHeight + sv.VerticalOffset >= sv.ExtentHeight)
+            if (!IsGetAllReply && currPage <= allPage && sv.VerticalOffset > 0 && sv.ActualHeight + sv.VerticalOffset >= sv.ExtentHeight)
             {
                 try
                 {

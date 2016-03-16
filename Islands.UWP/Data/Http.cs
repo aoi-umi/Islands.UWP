@@ -32,7 +32,7 @@ namespace Islands.UWP.Data
             {
                 HttpContent postContent;
                 MultipartContent multiContent = new MultipartContent("form-data");
-                StringContent NameContent = new StringContent(send.sendTitle, Encoding.UTF8);
+                StringContent NameContent = new StringContent(send.sendName, Encoding.UTF8);
                 StringContent EmailContent = new StringContent(send.sendEmail, Encoding.UTF8);
                 StringContent TitleContent = new StringContent(send.sendTitle, Encoding.UTF8);
                 StringContent ContentContent = new StringContent(send.sendContent, Encoding.UTF8);

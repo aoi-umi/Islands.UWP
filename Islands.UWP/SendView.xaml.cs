@@ -31,6 +31,7 @@ namespace Islands.UWP
         void OnSendClick(object sender, RoutedEventArgs e)
         {
             if (Response != null) SendClick(sender, e);
+            this.IsHitTestVisible = true;
         }
 
         public IslandsCode islandCode { get; set; }
@@ -104,7 +105,7 @@ namespace Islands.UWP
             {
                 if (string.IsNullOrEmpty(postModel.Id))
                     throw new Exception("无法回复空串");
-
+                this.IsHitTestVisible = false;
                 var send = new Model.SendModel()
                 {
                     sendTitle = txtSendTitle,
@@ -156,6 +157,7 @@ namespace Islands.UWP
                 OnResponse(IsSuccess, send);
             }
             catch (Exception ex) {
+                this.IsHitTestVisible = true;
                 Data.Message.ShowMessage(ex.Message);
             }
         }
