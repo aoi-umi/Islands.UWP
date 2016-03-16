@@ -43,8 +43,18 @@
         </RelativePanel>
         <RelativePanel Grid.Row="2"
                        Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
+            <Button Name="BackButton"
+                    x:FieldModifier="public"
+                    Content="&#xE0D5;"
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="24"
+                    Margin="0,0,5,0"
+                    Background="Transparent"
+                    Click="EmptyButton_Click">
+            </Button>
             <Button Name="EmptyButton"
                     Content="&#xE107;"
+                    RelativePanel.RightOf="BackButton"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="24"
                     Margin="0,0,5,0"

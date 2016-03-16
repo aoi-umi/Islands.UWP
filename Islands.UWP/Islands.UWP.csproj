@@ -11,7 +11,7 @@
     <AssemblyName>Islands.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
@@ -102,6 +102,12 @@
     <Compile Include="Data\Database.cs" />
     <Compile Include="Data\File.cs" />
     <Compile Include="Data\Message.cs" />
+    <Compile Include="HTMLConverter\htmlcssparser.cs" />
+    <Compile Include="HTMLConverter\htmllexicalanalyzer.cs" />
+    <Compile Include="HTMLConverter\htmlparser.cs" />
+    <Compile Include="HTMLConverter\htmlschema.cs" />
+    <Compile Include="HTMLConverter\htmltokentype.cs" />
+    <Compile Include="HTMLConverter\htmltoxamlconverter.cs" />
     <Compile Include="ImageView.xaml.cs">
       <DependentUpon>ImageView.xaml</DependentUpon>
     </Compile>

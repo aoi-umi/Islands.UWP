@@ -20,9 +20,14 @@ namespace Islands.UWP
     public sealed partial class ImageView : UserControl
     {
         string _imgageUrl { get; set; }
-        public string imageUrl { set {
+        public string imageUrl
+        {
+            set
+            {
                 _imgageUrl = value;
-                ImageWebView.Navigate(new Uri(value)); } }
+                ImageWebView.Navigate(new Uri(value));
+            }
+        }
         public ImageView()
         {
             this.InitializeComponent();

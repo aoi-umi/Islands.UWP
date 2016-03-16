@@ -105,7 +105,6 @@ namespace Islands.UWP
             {
                 if (string.IsNullOrEmpty(postModel.Id))
                     throw new Exception("无法回复空串");
-                this.IsHitTestVisible = false;
                 var send = new Model.SendModel()
                 {
                     sendTitle = txtSendTitle,
@@ -129,8 +128,9 @@ namespace Islands.UWP
                 if (string.IsNullOrEmpty(send.sendContent) && !string.IsNullOrEmpty(send.sendImage))
                     send.sendContent = "[分享图片]";
 
-                var res = await Data.Http.PostData(send);
+                this.IsHitTestVisible = false;
                 OnSendClick(sender, e);
+                var res = await Data.Http.PostData(send);
                 bool IsSuccess = false;
                 string ThreadId = "";
                 switch (islandCode)

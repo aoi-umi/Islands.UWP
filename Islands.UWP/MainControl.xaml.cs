@@ -85,6 +85,7 @@ namespace Islands.UWP
             MarkControl.MarkClick += MarkControl_MarkClick;
             SendControl.Response += SendControl_Response;
             SendControl.SendClick += SendControl_SendClick;
+            SendControl.BackButton.Click += BackButton_Click;
             ImageControl.BackButton.Click += BackButton_Click;
             MyReplysControl.MyReplyClick += MyReplysControl_MyReplyClick;
 
