@@ -82,6 +82,12 @@ namespace Islands.UWP
             EmojiBox.SelectedIndex = 0;
             foreach(var emoji in Config.Emoji)
                 EmojiBox.Items.Add(emoji);
+            SendContent.SelectionChanged += SendContent_SelectionChanged;
+        }
+
+        private void SendContent_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var text = SendContent.Text;
         }
 
         private void EmptyButton_Click(object sender, RoutedEventArgs e)
@@ -168,7 +174,14 @@ namespace Islands.UWP
             {
                 var emoji = EmojiBox.SelectedItem.ToString();
                 var start = SendContent.SelectionStart;
-                SendContent.Text = SendContent.Text.Insert(SendContent.SelectionStart, emoji);
+                var countOfReturn = SendContent.Text.Substring(0, start).Split(new String[]{ "\r\n" }, StringSplitOptions.None).Length;
+                if (countOfReturn > 0) countOfReturn--;
+                start += countOfReturn;
+                var len = SendContent.Text.Length;
+                if (start < len)
+                    SendContent.Text = SendContent.Text.Insert(start, emoji);
+                else
+                    SendContent.Text += emoji;
                 SendContent.SelectionStart = start + emoji.Length;
                 EmojiBox.SelectedIndex = 0;
             }

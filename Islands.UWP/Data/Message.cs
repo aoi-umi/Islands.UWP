@@ -9,5 +9,10 @@ namespace Islands.UWP.Data
         {
             await new MessageDialog(message).ShowAsync();
         }
+
+        public static async void ShowMessage(string message, string title)
+        {
+            await new MessageDialog(message, title).ShowAsync();
+        }
     }
 }

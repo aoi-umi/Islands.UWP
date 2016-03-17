@@ -125,13 +125,13 @@ namespace Islands.UWP
         private void OnSynchronizationContextUnhandledException(object sender, WinRTExceptions.UnhandledExceptionEventArgs args)
         {
             args.Handled = true;
-            Data.Message.ShowMessage("未处理错误:" + args.Exception.ToString());
+            Data.Message.ShowMessage("未处理错误:" + args.Exception.ToString(), "为什么会变成这样呢(´・ω・`)");
         }
 
         private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs args)
         {
             args.Handled = true;
-            Data.Message.ShowMessage("未处理错误:" + args.Exception.ToString());
+            Data.Message.ShowMessage("未处理错误:" + args.Exception.ToString(), "为什么会变成这样呢(´・ω・`)");
         }
     }
 }

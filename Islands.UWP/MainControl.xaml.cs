@@ -228,7 +228,7 @@ namespace Islands.UWP
                 }
             }
             else {
-                Data.Message.ShowMessage("发送失败");
+                Data.Message.ShowMessage("发送失败\n可能原因:\n1.网络原因\n2.内容长度超出范围\n3.图片格式不符");
             }
         }
 
