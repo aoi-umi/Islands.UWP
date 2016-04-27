@@ -1,0 +1,72 @@
+﻿<UserControl
+    x:Class="Islands.UWP.ThreadView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Islands.UWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Grid>
+        <StackPanel Margin="2">
+            <StackPanel>
+                <TextBlock Text="{x:Bind threadTitle}"
+                           Visibility="{x:Bind threadIsHadTitle}">
+                </TextBlock>
+                <TextBlock Text="{x:Bind threadEmail}"
+                           Visibility="{x:Bind threadIsHadEmail}">
+                </TextBlock>
+                <TextBlock Text="{x:Bind threadName}"
+                           Visibility="{x:Bind threadIsHadName}">
+                </TextBlock>
+                <TextBlock Name="txtCreateDate" 
+                           Text="{x:Bind threadCreateDate}"
+                           Margin="0,0,5,0">
+                </TextBlock>
+            </StackPanel>
+            <RelativePanel>
+                <TextBlock Name="id"
+                           Text="No.">
+                </TextBlock>
+                <TextBlock Name="txtId" 
+                           IsTextSelectionEnabled="True"
+                         Text="{x:Bind threadNo}" 
+                         Margin="0,0,5,0"
+                         RelativePanel.RightOf="id">
+                </TextBlock>
+                <TextBlock Name="userid"
+                           Text="ID:"
+                           RelativePanel.RightOf="txtId"
+                           >
+                </TextBlock>
+                <TextBlock Name="txtUserid" 
+                           Text="{x:Bind threadUid}"
+                           RelativePanel.RightOf="userid"
+                           >
+                </TextBlock>
+                <TextBlock Name="replyCount"
+                           Text="回复:"
+                           RelativePanel.LeftOf="txtReplyCount"
+                           >
+                </TextBlock>
+                <TextBlock Name="txtReplyCount"
+                           Text="{x:Bind threadReplyCount}"
+                           RelativePanel.AlignRightWithPanel="True"
+                           >
+                </TextBlock>
+            </RelativePanel>
+            <ContentControl Name="txtContent"
+                            Content="{x:Bind threadContent}">
+            </ContentControl>
+            <RichTextBlock Name="txtContent2">
+            </RichTextBlock>
+            <RelativePanel>
+                <Image Name="imageBox"  
+                   MaxHeight="200" 
+                   MaxWidth="200" 
+                   HorizontalAlignment="Left"
+                   ImageFailed="ImageBox_ImageFailed"/>
+            </RelativePanel>
+            <!--<TextBox Text="{x:Bind threadImage}"></TextBox>-->
+        </StackPanel>
+    </Grid>
+</UserControl>

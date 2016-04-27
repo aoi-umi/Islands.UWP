@@ -1,0 +1,64 @@
+﻿<UserControl
+    x:Class="Islands.UWP.MyReplysView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Islands.UWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="IsReadOnly" Value="True"></Setter>
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Margin" Value="0"></Setter>
+            <Setter Property="Padding" Value="0"></Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <RelativePanel 
+            Grid.Row="0"
+            Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}"
+            >
+            <Button Name="Menu"
+                    Content="&#xE700;"
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="22"
+                    RelativePanel.AlignLeftWithPanel="True"
+                    RelativePanel.AlignVerticalCenterWithPanel="True"
+                    Background="Transparent"
+                    Visibility="Collapsed"
+                    >
+            </Button>
+            <TextBlock Name="Title"
+                       Text="我的回复"
+                       RelativePanel.RightOf="Menu"
+                       FontSize="22">
+            </TextBlock>
+        </RelativePanel>
+        <RelativePanel Grid.Row="2"
+                       Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
+            <TextBlock></TextBlock>
+        </RelativePanel>
+        <ScrollViewer Name="markListScrollViewer"
+                  Grid.Row="1">
+            <ListView Name="myreplyListView"
+                  CanReorderItems="True"
+                  IsItemClickEnabled="True"
+                  SelectionMode="None"
+                  ItemClick="ListView_ItemClick">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Margin" Value="0,0,15,0"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

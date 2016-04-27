@@ -1,0 +1,61 @@
+﻿<UserControl
+    x:Class="Islands.UWP.ReplyView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Islands.UWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <StackPanel Name="threadSp" Margin="2">
+            <StackPanel>
+                <TextBlock Text="{x:Bind replyTitle}"
+                           Visibility="{x:Bind replyIsHadTitle}">
+                </TextBlock>
+                <TextBlock Text="{x:Bind replyEmail}"
+                           Visibility="{x:Bind replyIsHadEmail}">
+                </TextBlock>
+                <TextBlock Text="{x:Bind replyName}"
+                           Visibility="{x:Bind replyIsHadName}">
+                </TextBlock>
+                <TextBlock Name="txtCreateDate" 
+                           Text="{x:Bind replyCreateDate}"
+                           Margin="0,0,5,0">
+                </TextBlock>
+            </StackPanel>
+            <RelativePanel>
+                <TextBlock Name="id"
+                           Text="No.">
+                </TextBlock>
+                <TextBlock Name="txtId" 
+                       IsTextSelectionEnabled="True"
+                         Text="{x:Bind replyNo}" 
+                         Margin="0,0,5,0"
+                         RelativePanel.RightOf="id">
+                </TextBlock>
+                <TextBlock Name="userid"
+                           Text="ID:"
+                           RelativePanel.RightOf="txtId"
+                           >
+                </TextBlock>
+                <TextBlock Name="txtUserid" 
+                           Text="{x:Bind replyUid}"
+                           RelativePanel.RightOf="userid"
+                           >
+                </TextBlock>
+
+            </RelativePanel>
+            <ContentControl Name="txtContent"
+                            Content="{x:Bind replyContent}"
+                            >
+            </ContentControl>
+            <Image Name="imageBox"  
+                   MaxHeight="200" 
+                   MaxWidth="200" 
+                   HorizontalAlignment="Left"
+                   ImageFailed="ImageBox_ImageFailed" />
+            <!--<TextBox Text="{x:Bind thread.Image}"></TextBox>-->
+        </StackPanel>
+    </Grid>
+</UserControl>
