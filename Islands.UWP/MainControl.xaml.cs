@@ -78,15 +78,20 @@ namespace Islands.UWP
             ThreadControl.SwitchButton.Click += SwitchButton_Click;
             ThreadControl.ImageTapped += Control_ImageTapped;
             ThreadControl.SendButton.Click += SendButton_Click;
+
             ReplyControl.SwitchButton.Click += SwitchButton_Click;
             ReplyControl.MarkSuccess += ReplyControl_MarkSuccess;
             ReplyControl.ImageTapped += Control_ImageTapped;
             ReplyControl.SendButton.Click += SendButton_Click;
+
             MarkControl.MarkClick += MarkControl_MarkClick;
+
             SendControl.Response += SendControl_Response;
             SendControl.SendClick += SendControl_SendClick;
             SendControl.BackButton.Click += BackButton_Click;
+
             ImageControl.BackButton.Click += BackButton_Click;
+
             MyReplysControl.MyReplyClick += MyReplysControl_MyReplyClick;
 
             mainSplitView.Content = ThreadControl;
@@ -119,6 +124,9 @@ namespace Islands.UWP
                         break;
                     case "forums":
                         mainSplitView.Content = ForumList;
+                        break;
+                    case "gotothread":
+                        GotoThread();
                         break;
                     default: break;
                 }
@@ -203,7 +211,6 @@ namespace Islands.UWP
                     else {
                         Data.Message.ShowMessage("无法跳转到该串");
                     }
-
                 }
             }
         }
@@ -277,36 +284,59 @@ namespace Islands.UWP
                     forums = Config.B.Forums;
                     break;
             }
+            var groupName = "";
+            Group<Model.ForumModel> group = new Group<Model.ForumModel>();
+            List<Group<Model.ForumModel>> groups = new List<Group<Model.ForumModel>>();
             foreach (var forum in forums) {
                 var split = forum.Split(',');
-                if (string.IsNullOrEmpty(split[1]))
+                if (split[2] == "group")
+                {
+                    groupName = split[0];
+                    group = new Group<Model.ForumModel>() { GroupName = groupName,Models = new List<Model.ForumModel>() };
+                    groups.Add(group);
                     continue;
+                }
                 var f = new Model.ForumModel() {
                     forumName = split[0],
                     forumValue = split[1]
                 };
-                if (ForumList.Items.Count == 0)
+                group.Models.Add(f);
+                if (groups.Count == 1 && group.Models.Count == 1)
                     currForum = f;
-                ForumList.Items.Add(new TextBlock()
-                {
-                    Text = split[0],
-                    Tag = f
-                });
             }
+            forumGroup.Source = groups;
+            forumGroup.ItemsPath = new PropertyPath("Models");
+            forumZoomInView.ItemsSource = forumGroup.View;
+            forumZoomOutView.ItemsSource = forumGroup.View.CollectionGroups;
         }
 
         private void ForumList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var tb = e.ClickedItem as TextBlock;
-            if (e != null) {
-                var f = tb.Tag as Model.ForumModel;
-                if(f != null)
-                {
-                    ThreadControl.RefreshById(f);
-                    mainSplitView.Content = ThreadControl;
-                    mainNavigationList.SelectedIndex = 1;
-                }
+            var f = e.ClickedItem as Model.ForumModel;
+            if (f != null)
+            {
+                mainSplitView.Content = ThreadControl;
+                mainNavigationList.SelectedIndex = 1;
+                ThreadControl.RefreshById(f);
             }
         }
+
+        private async void GotoThread()
+        {
+            var thread = await Data.Message.GotoThreadYesOrNo();
+            if (thread > 0)
+            {
+                IsMain = false;
+                BackToHome();
+                ReplyControl.GetReplyListByID(thread.ToString(), 0);
+            }
+        }
+    }
+
+
+    public class Group<T>
+    {
+        public string GroupName { get; set; }
+        public List<T> Models { get; set; }
     }
 }

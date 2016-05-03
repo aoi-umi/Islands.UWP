@@ -48,7 +48,6 @@
                     RelativePanel.AlignRightWithPanel="True"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="24"
-                    Margin="0,0,5,0"
                     Background="Transparent"
                     Click="RefreshButton_Click">
             </Button>
@@ -56,7 +55,6 @@
                     Content="&#xE734;"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="24"
-                    Margin="0,0,5,0"
                     RelativePanel.LeftOf="RefreshButton"
                     Background="Transparent"
                     Click="MarkButton_Click">
@@ -69,8 +67,15 @@
                     Content="&#xE13C;"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="24"
-                    Margin="0,0,5,0"
                     Background="Transparent">
+            </Button>
+            <Button Name="GotoPageButton"
+                    Content="&#xE0AB;"
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="24"
+                    RelativePanel.RightOf="SwitchButton"
+                    Background="Transparent"
+                    Click="GotoPageButton_Click">
             </Button>
             <Button Name="SendButton"
                     x:FieldModifier="public"
@@ -78,7 +83,6 @@
                     RelativePanel.AlignRightWithPanel="True"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="24"
-                    Margin="0,0,5,0"
                     Background="Transparent">
             </Button>
         </RelativePanel>
@@ -96,7 +100,7 @@
             </ListView>
         </ScrollViewer>
         <ProgressRing Grid.Row="1"
-                      Name="Loading"
+                      Name="ReplyLoading"
                       Width="100"
                       Height="100"
                       IsActive="False">

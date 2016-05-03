@@ -6,41 +6,49 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
-    <Grid>
+    <Grid Padding="0,0,0,5">
         <StackPanel Name="threadSp" Margin="2">
-            <StackPanel>
-                <TextBlock Text="{x:Bind replyTitle}"
-                           Visibility="{x:Bind replyIsHadTitle}">
+            <RelativePanel>
+                <TextBlock Name="title" 
+                           Text="{x:Bind replyTitle}"
+                           Visibility="{x:Bind replyIsHadTitle}"
+                           Foreground="Red">
                 </TextBlock>
-                <TextBlock Text="{x:Bind replyEmail}"
-                           Visibility="{x:Bind replyIsHadEmail}">
+                <TextBlock Name="email" 
+                           Text="{x:Bind replyEmail}"
+                           Visibility="{x:Bind replyIsHadEmail}"
+                           RelativePanel.Below="title"
+                           Foreground="Red">
                 </TextBlock>
-                <TextBlock Text="{x:Bind replyName}"
-                           Visibility="{x:Bind replyIsHadName}">
+                <TextBlock Name="name"
+                           Text="{x:Bind replyName}"
+                           Visibility="{x:Bind replyIsHadName}"
+                           RelativePanel.Below="email"
+                           Foreground="Red">
                 </TextBlock>
                 <TextBlock Name="txtCreateDate" 
                            Text="{x:Bind replyCreateDate}"
+                           RelativePanel.Below="name"
                            Margin="0,0,5,0">
                 </TextBlock>
-            </StackPanel>
-            <RelativePanel>
                 <TextBlock Name="id"
-                           Text="No.">
+                           Text="No."
+                           RelativePanel.LeftOf="txtId">
                 </TextBlock>
                 <TextBlock Name="txtId" 
-                       IsTextSelectionEnabled="True"
-                         Text="{x:Bind replyNo}" 
-                         Margin="0,0,5,0"
-                         RelativePanel.RightOf="id">
+                           IsTextSelectionEnabled="True"
+                           Text="{x:Bind replyNo}" 
+                           Margin="0,0,5,0"
+                           RelativePanel.AlignRightWithPanel="True">
                 </TextBlock>
                 <TextBlock Name="userid"
                            Text="ID:"
-                           RelativePanel.RightOf="txtId"
+                           RelativePanel.Below="txtCreateDate"
                            >
                 </TextBlock>
                 <TextBlock Name="txtUserid" 
                            Text="{x:Bind replyUid}"
+                           RelativePanel.Below="txtCreateDate"
                            RelativePanel.RightOf="userid"
                            >
                 </TextBlock>

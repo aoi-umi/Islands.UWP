@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Windows.UI;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -12,6 +14,12 @@ namespace Islands.UWP
         public MainPage()
         {
             this.InitializeComponent();
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            {
+                StatusBar statusBar = StatusBar.GetForCurrentView();
+                statusBar.ForegroundColor = Colors.White;
+            }
+
             MainControl mainControlA = new MainControl() {
             Host= Config.A.Host,
             PictureHost = Config.A.PictureHost,

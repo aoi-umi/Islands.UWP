@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -208,19 +198,23 @@ namespace Islands.UWP
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
                     case IslandsCode.Koukuko:
-                        var rtb = (RichTextBlock)XamlReader.Load(HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(thread.content, true));
+                        var s = HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(thread.content, true);
+                        Match m = Regex.Match(s, "(<Run Foreground=\"#789922\">)*(&gt;&gt;.*?(\\d+))(</Run>)*");
+                        if (m.Success)
+                        {
+                            for (; m.Success; m = m.NextMatch())
+                            {
+                                s = Regex.Replace(s, m.Groups[0].ToString(), String.Format("<Run Foreground=\"#789922\" Text=\"{0}\" />", m.Groups[2]));
+                            }
+                        }
+                        s = s.Replace("&#xFFFF;", "");
+                        var rtb = (RichTextBlock)XamlReader.Load(s);
                         rtb.TextWrapping = TextWrapping.Wrap;
-                        rtb.IsTextSelectionEnabled = true;
+                        rtb.IsTextSelectionEnabled = IsTextSelectionEnabled;
                         return rtb;
                     default: return new RichTextBlock();
                 }
             }
-            //set {
-            //    var rtb  = (RichTextBlock)XamlReader.Load(HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(thread.content, true));
-            //    rtb.TextWrapping = TextWrapping.Wrap;
-            //    rtb.IsTextSelectionEnabled = true;
-            //    txtContent.Content = rtb;
-            //}
         }
         public bool IsPo
         {
@@ -229,6 +223,7 @@ namespace Islands.UWP
                 if (value) txtUserid.Foreground = Config.PoColor;
             }
         }
+        public bool IsTextSelectionEnabled { get; set; }
 
         Model.ThreadModel thread { get; set; }
         IslandsCode islandCode { get; set; }

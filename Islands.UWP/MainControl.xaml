@@ -6,7 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" Loaded="UserControl_Loaded">
-
+    <UserControl.Resources>
+        <CollectionViewSource x:Name="forumGroup" IsSourceGrouped="True"/>
+    </UserControl.Resources>
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <SplitView Name="mainSplitView" CompactPaneLength="35" OpenPaneLength="100" DisplayMode="CompactOverlay">
             <SplitView.Pane>
@@ -115,13 +118,54 @@
                                        Margin="12,0,0,0"/>
                         </StackPanel>
                     </ListBoxItem>
+                    <ListBoxItem Tag="gotothread" Tapped="ListBoxItem_Tapped" Name="gotothreadItem">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE8AD;" 
+                                       FontSize="12" 
+                                       FontFamily="Segoe MDL2 Assets"
+                                       TextAlignment="Center"
+                                       Padding="0,4,0,0"/>
+                            <TextBlock Text="跳转" 
+                                       FontSize="12"
+                                       FontFamily="微软雅黑"
+                                       Margin="12,0,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
                 </ListBox>
             </SplitView.Pane>
             <SplitView.Content>
-                <ListView Name="ForumList"
-                  IsItemClickEnabled="True"
-                          ItemClick="ForumList_ItemClick">
-                </ListView>
+                <SemanticZoom Name="ForumList">
+                    <SemanticZoom.ZoomedInView>
+                        <ListView Name="forumZoomInView"
+                                  IsItemClickEnabled="True"
+                                  ItemsSource="{Binding Source={StaticResource forumGroup}}"
+                                  ItemClick="ForumList_ItemClick">
+                            <ListView.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding GroupName}" />
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ListView.GroupStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding forumName}" />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </SemanticZoom.ZoomedInView>
+                    <SemanticZoom.ZoomedOutView>
+                        <ListView Name="forumZoomOutView">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Group.GroupName}"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </SemanticZoom.ZoomedOutView>
+                </SemanticZoom>
                 <!--<local:ThreadsView></local:ThreadsView>-->
             </SplitView.Content>
         </SplitView>

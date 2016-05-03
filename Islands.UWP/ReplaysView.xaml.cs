@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.IO;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -12,6 +11,13 @@ namespace Islands.UWP
 {
     public sealed partial class ReplysView : UserControl
     {
+
+        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
+        public event ImageTappedEventHandler ImageTapped;
+
+        public delegate void MarkSuccessEventHandler(Object sender, Model.ThreadModel t);
+        public event MarkSuccessEventHandler MarkSuccess;
+
         public PostModel postModel;
         public IslandsCode islandCode;
         string message {
@@ -31,14 +37,14 @@ namespace Islands.UWP
             get
             {
                 if (replyCount == 0) return 0;
-                return replyCount / (pageSize + 1) + 1;
+                return replyCount / pageSize + (replyCount % pageSize > 0 ? 1 : 0);
             }
         }
         int replyCount { get; set; }
         bool IsGetAllReply = false;
 
         string replyId {set { Title.Text= value; } }
-        string txtReplyCount { set { ListCount.Text = "(" +value + ")"; } }
+        string txtReplyCount { set { ListCount.Text = "(" +value + "," + allPage + "P)"; } }
         public int pageSize { get; set; }
         public class PostModel
         {
@@ -69,12 +75,12 @@ namespace Islands.UWP
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            _Refresh();
+            _Refresh(1);
         }
 
         private void DataLoading()
         {
-            Loading.IsActive = true;
+            ReplyLoading.IsActive = true;
             IsHitTestVisible = false;
             replyListView.Items.Remove(ReplyStatusBox);
             message = "点我加载";
@@ -82,7 +88,7 @@ namespace Islands.UWP
         private void DataLoaded()
         {
             replyListView.Items.Add(ReplyStatusBox);
-            Loading.IsActive = false;
+            ReplyLoading.IsActive = false;
             IsHitTestVisible = true;
         }
 
@@ -95,7 +101,7 @@ namespace Islands.UWP
                 this.markId = markId;
                 replyId = threadId;
                 postModel.ReplyID = threadId;
-                _Refresh();
+                _Refresh(1);
             }
             catch (Exception ex)
             {
@@ -103,12 +109,16 @@ namespace Islands.UWP
             }
         }
 
-        private void _Refresh()
+        private void _Refresh(int page)
         {
             lastReply = null;
             IsGetAllReply = false;
-            currPage = 1;
-            replyListView.Items.Clear();
+            replyCount = 0;
+            currPage = page;
+            for (var i = replyListView.Items.Count - 1; i >= 0; i--)
+            {
+                replyListView.Items.RemoveAt(i);
+            }
             try
             {
                 GetReplyList(new Model.PostRequest()
@@ -129,44 +139,46 @@ namespace Islands.UWP
         Model.ReplyModel lastReply = null;
         private async void GetReplyList(Model.PostRequest req, IslandsCode code)
         {
-            if (Loading.IsActive) return;
-            txtReplyCount = "";
+            if (ReplyLoading.IsActive) return;
+            txtReplyCount = "0";
             DataLoading();
             string res = "";
             currPage = req.Page;
             try
             {
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
+                JObject jObj;
+                Data.Json.TryDeserializeObject(res, out jObj);
+                if (jObj == null) {
+                    res = $"{{\"error\":{res}}}";
+                    jObj = (JObject)JsonConvert.DeserializeObject(res);
+                    throw new Exception(jObj["error"].ToString());
+                }
 
-                StringReader sr;
-                JsonSerializer serializer= new JsonSerializer();
-                JObject jObj = (JObject)JsonConvert.DeserializeObject(res);
                 top = null;
                 JArray Replys = null;
                 switch (code)
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
-                        sr = new StringReader(res);
-                        top = (Model.ThreadModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ThreadModel));
+                        top = Data.Json.Deserialize<Model.ThreadModel>(res);
                         if (jObj["replys"].HasValues)
                             Replys = JArray.Parse(jObj["replys"].ToString());
                         break;
                     case IslandsCode.Koukuko:
-                        sr = new StringReader(jObj["threads"].ToString());
-                        top = (Model.ThreadModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ThreadModel));
+                        top = Data.Json.Deserialize<Model.ThreadModel>(jObj["threads"].ToString());
                         if (jObj["replys"].HasValues)
                             Replys = JArray.Parse(jObj["replys"].ToString());
                         break;
                 }
                 top.islandCode = code;
-                top._id = markId;
+                top._id = markId;                
 
                 int _replyCount;
                 int.TryParse(top.replyCount, out _replyCount);
                 if (replyListView.Items.Count == 0 && top != null)
                 {
-                    var tv = new ThreadView(top, code) { Tag = top };
+                    var tv = new ThreadView(top, code) { Tag = top, IsTextSelectionEnabled = true };
                     tv.ImageTapped += Image_ImageTapped;
                     tv.IsPo = true;
                     replyListView.Items.Add(tv);
@@ -183,8 +195,7 @@ namespace Islands.UWP
                     replyListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
                 foreach (var reply in Replys)
                 {
-                    sr = new StringReader(reply.ToString());
-                    Model.ReplyModel rm = (Model.ReplyModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ReplyModel));
+                    Model.ReplyModel rm = Data.Json.Deserialize<Model.ReplyModel>(reply.ToString());
                     if (lastReply == null && Replys.IndexOf(reply) == Replys.Count - 1)
                         lastReply = rm;
                     else if (lastReply != null)
@@ -206,7 +217,7 @@ namespace Islands.UWP
                     replyListView.Items.Add(rv);
 
                 }
-                if (Replys.Count < pageSize)
+                if (Replys.Count < pageSize || (currPage - 1) * pageSize + Replys.Count == replyCount)
                 {
                     IsGetAllReply = true;
                     throw new Exception("已经没有了");
@@ -225,14 +236,12 @@ namespace Islands.UWP
 
         }
 
-        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
-        public event ImageTappedEventHandler ImageTapped;
-
-        void OnTapped(Object sender, TappedRoutedEventArgs e)
+        private void OnTapped(Object sender, TappedRoutedEventArgs e)
         {
             if (ImageTapped != null)
                 ImageTapped(sender, e);
         }
+
         private void Image_ImageTapped(object sender, TappedRoutedEventArgs e)
         {
             OnTapped(sender, e);
@@ -262,10 +271,7 @@ namespace Islands.UWP
             }
         }
 
-        public delegate void MarkSuccessEventHandler(Object sender, Model.ThreadModel t);
-        public event MarkSuccessEventHandler MarkSuccess;
-
-        void OnMarkSuccess()
+        private void OnMarkSuccess()
         {
             if (this.MarkSuccess != null)
                 this.MarkSuccess(this, top);
@@ -294,6 +300,13 @@ namespace Islands.UWP
             {
                 Data.Message.ShowMessage(ex.Message);
             }
+        }
+
+        private async void GotoPageButton_Click(object sender, RoutedEventArgs e)
+        {
+            var page = await Data.Message.GotoPageYesOrNo();
+            if (page > 0)
+                _Refresh(page);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Islands.UWP
                 OnItemClick(e);
         }
 
-        void OnItemClick(ItemClickEventArgs e)
+        private void OnItemClick(ItemClickEventArgs e)
         {
             if (this.MyReplyClick != null)
                 this.MyReplyClick(this, e);

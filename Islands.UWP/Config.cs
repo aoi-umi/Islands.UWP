@@ -110,8 +110,8 @@ namespace Islands.UWP
         #endregion
         public static class A
         {
-            public static string Host = "http://h.nimingban.com";
-            public static string PictureHost = "http://h-nimingban-com.n1.yun.tf:8999/Public/Upload/";
+            public static string Host = "https://h.nimingban.com";
+            public static string PictureHost = "http://img1.nimingban.com/";
             public static string GetThreadAPI = "{0}/Api/showf/id/{1}/page/{2}";
             public static string GetReplyAPI = "{0}/Api/thread/id/{1}/page/{2}";
             public static string GetRefAPI = "{0}/Api/ref?id={1}";

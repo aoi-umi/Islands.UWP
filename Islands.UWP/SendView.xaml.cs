@@ -174,14 +174,7 @@ namespace Islands.UWP
             {
                 var emoji = EmojiBox.SelectedItem.ToString();
                 var start = SendContent.SelectionStart;
-                var countOfReturn = SendContent.Text.Substring(0, start).Split(new String[]{ "\r\n" }, StringSplitOptions.None).Length;
-                if (countOfReturn > 0) countOfReturn--;
-                start += countOfReturn;
-                var len = SendContent.Text.Length;
-                if (start < len)
-                    SendContent.Text = SendContent.Text.Insert(start, emoji);
-                else
-                    SendContent.Text += emoji;
+                SendContent.Text = SendContent.Text.Insert(start, emoji);
                 SendContent.SelectionStart = start + emoji.Length;
                 EmojiBox.SelectedIndex = 0;
             }

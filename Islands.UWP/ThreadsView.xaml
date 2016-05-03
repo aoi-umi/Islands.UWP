@@ -8,7 +8,6 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="TextBox">
-            <Setter Property="IsReadOnly" Value="True"></Setter>
             <Setter Property="Background" Value="Transparent"></Setter>
             <Setter Property="BorderThickness" Value="0"></Setter>
             <Setter Property="Margin" Value="0"></Setter>
@@ -44,7 +43,6 @@
                     RelativePanel.AlignRightWithPanel="True"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="24"
-                    Margin="0,0,5,0"
                     Background="Transparent"
                     Click="RefreshButton_Click">
             </Button>
@@ -56,8 +54,15 @@
                     Content="&#xE13C;"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="24"
-                    Margin="0,0,5,0"
                     Background="Transparent">
+            </Button>
+            <Button Name="GotoPageButton"
+                    Content="&#xE0AB;"
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="24"
+                    RelativePanel.RightOf="SwitchButton"
+                    Background="Transparent"
+                    Click="GotoPageButton_Click">
             </Button>
             <Button Name="SendButton"
                     x:FieldModifier="public"
@@ -65,14 +70,12 @@
                     RelativePanel.AlignRightWithPanel="True"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="24"
-                    Margin="0,0,5,0"
                     Background="Transparent">
             </Button>
         </RelativePanel>
         <ScrollViewer Name="threadListScrollViewer"
                   Grid.Row="1">
         <ListView Name="threadListView"
-                  CanReorderItems="True"
                   IsItemClickEnabled="True"
                   SelectionMode="None"
                   ItemClick="ListView_ItemClick">
@@ -85,7 +88,7 @@
             </ListView>
         </ScrollViewer>
         <ProgressRing Grid.Row="1"
-                      Name="Loading"
+                      Name="ThreadLoading"
                       Width="100"
                       Height="100"
                       IsActive="False">

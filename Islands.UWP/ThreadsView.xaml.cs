@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections.ObjectModel;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -47,7 +36,6 @@ namespace Islands.UWP
         string _Title { set { Title.Text = value; } }
         int currPage { get; set; }
         string message { set { ThreadStatusBox.Text = value; } }
-
         private ObservableCollection<Model.ThreadModel> _list = new ObservableCollection<Model.ThreadModel>();
 
         public ThreadsView()
@@ -57,7 +45,7 @@ namespace Islands.UWP
             ThreadStatusBox.Tapped += ThreadStatusBox_Tapped;
             threadListView.Items.Add(ThreadStatusBox);
             if (IsInitRefresh)
-                _Refresh();
+                _Refresh(1);
         }
 
         public Model.ForumModel currForum { get; set; }
@@ -65,7 +53,7 @@ namespace Islands.UWP
             currForum = forum;
             postModel.ThreadID = forum.forumValue;
             _Title = forum.forumName;
-            _Refresh();
+            _Refresh(1);
         }
 
         private void ThreadStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
@@ -81,13 +69,13 @@ namespace Islands.UWP
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            _Refresh();
+            _Refresh(1);
         }
 
         private void DataLoading()
         {
             
-            Loading.IsActive = true;
+            ThreadLoading.IsActive = true;
             IsHitTestVisible = false;
             threadListView.Items.Remove(ThreadStatusBox);
             message = "点我加载";
@@ -95,21 +83,25 @@ namespace Islands.UWP
         private void DataLoaded()
         {
             threadListView.Items.Add(ThreadStatusBox);
-            Loading.IsActive = false;
+            ThreadLoading.IsActive = false;
             IsHitTestVisible = true;
         }
 
-        private void _Refresh()
+        private void _Refresh(int page)
         {
-            currPage = 1;
-            threadListView.Items.Clear();
+            currPage = page;     
             try
-            {
+            {                
+                for (var i = threadListView.Items.Count - 1; i >= 0; i--)
+                {
+                    threadListView.Items.RemoveAt(i);
+                }
                 GetThreadList(new Model.PostRequest()
                 {
                     API = postModel.GetThreadAPI,
                     Host = postModel.Host,
-                    ID = postModel.ThreadID
+                    ID = postModel.ThreadID,
+                    Page = page
                 }, islandCode);
             }
             catch (Exception ex)
@@ -130,7 +122,7 @@ namespace Islands.UWP
 
         private async void GetThreadList(Model.PostRequest req, IslandsCode code)
         {
-            if (Loading.IsActive) return;
+            if (ThreadLoading.IsActive) return;
             DataLoading();
             string res = "";
             try
@@ -152,15 +144,12 @@ namespace Islands.UWP
                     throw new Exception("什么也没有");
                 threadListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
                 foreach (var thread in Threads) {
-                    StringReader sr = new StringReader(thread.ToString());
-                    JsonSerializer serializer = new JsonSerializer();
-                    Model.ThreadModel tm = (Model.ThreadModel)serializer.Deserialize(new JsonTextReader(sr), typeof(Model.ThreadModel));
+                    var tm = Data.Json.Deserialize<Model.ThreadModel>(thread.ToString());
                     var tv = new ThreadView(tm, code);
                     tv.ImageTapped += Tv_ImageTapped;
                     threadListView.Items.Add(tv);
                 }
                 currPage = req.Page;
-
             }
             catch (Exception ex)
             {
@@ -214,6 +203,13 @@ namespace Islands.UWP
                     Debug.WriteLine(ex.ToString());
                 }
             }
+        }
+
+        private async void GotoPageButton_Click(object sender, RoutedEventArgs e)
+        {
+            var page = await Data.Message.GotoPageYesOrNo();
+            if (page > 0)
+                _Refresh(page);
         }
     }
 }

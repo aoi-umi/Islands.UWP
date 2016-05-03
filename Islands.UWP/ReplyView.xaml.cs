@@ -10,6 +10,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
@@ -195,14 +196,34 @@ namespace Islands.UWP
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
                     case IslandsCode.Koukuko:
-                        var rtb = (RichTextBlock)XamlReader.Load(HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(reply.content, true));
+                        var s = HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(reply.content, true);
+                        Match m = Regex.Match(s, "(<Run Foreground=\"#789922\">)*(&gt;&gt;.*?(\\d+))(</Run>)*");
+                        if (m.Success)
+                        {
+                            for (; m.Success; m = m.NextMatch())
+                            {
+                                s = Regex.Replace(s, m.Groups[0].ToString(), String.Format("<Run Foreground=\"#789922\" Text=\"{0}\" />", m.Groups[2]));
+                            }
+                        }
+                        s = s.Replace("&#xFFFF;", "");
+                        var rtb = (RichTextBlock)XamlReader.Load(s);
                         rtb.TextWrapping = TextWrapping.Wrap;
                         rtb.IsTextSelectionEnabled = true;
+                        rtb.Tapped += Rtb_Tapped;
                         return rtb;
                     default: return new RichTextBlock();
                 }
             }
         }
+
+        private void Rtb_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            RichTextBlock rtb = sender as RichTextBlock;
+            if (rtb != null)
+            {
+            }
+        }
+
         public bool IsPo {
             set {
                 if (value) txtUserid.Foreground = Config.PoColor;
