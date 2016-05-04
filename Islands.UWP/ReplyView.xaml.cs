@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -202,25 +203,77 @@ namespace Islands.UWP
                         {
                             for (; m.Success; m = m.NextMatch())
                             {
-                                s = Regex.Replace(s, m.Groups[0].ToString(), String.Format("<Run Foreground=\"#789922\" Text=\"{0}\" />", m.Groups[2]));
+                                s = Regex.Replace(s, m.Groups[0].ToString(), String.Format("<Hyperlink UnderlineStyle=\"None\" Foreground=\"#789922\">{0}</Hyperlink>", m.Groups[2]));
                             }
                         }
                         s = s.Replace("&#xFFFF;", "");
                         var rtb = (RichTextBlock)XamlReader.Load(s);
                         rtb.TextWrapping = TextWrapping.Wrap;
                         rtb.IsTextSelectionEnabled = true;
-                        rtb.Tapped += Rtb_Tapped;
+                        rtb.IsTapEnabled = true;
+                        foreach(var block in rtb.Blocks)
+                        {
+                            Paragraph p = block as Paragraph;
+                            if (p != null)
+                            {
+                                foreach (var inline in p.Inlines)
+                                {
+                                    Hyperlink h = inline as Hyperlink;
+                                    if (h != null && h.UnderlineStyle == UnderlineStyle.None) {
+                                        h.Click += Ref_Click;
+                                    }
+                                }
+                            }
+                        }
                         return rtb;
                     default: return new RichTextBlock();
                 }
             }
         }
 
-        private void Rtb_Tapped(object sender, TappedRoutedEventArgs e)
+        private async void Ref_Click(Hyperlink sender, HyperlinkClickEventArgs args)
         {
-            RichTextBlock rtb = sender as RichTextBlock;
-            if (rtb != null)
+            Hyperlink h = sender as Hyperlink;
+            if (h != null && h.Inlines.Count > 0)
             {
+                Run r = h.Inlines[0] as Run;
+                if (r != null)
+                {
+                    string id = r.Text.ToLower().Replace(">>", "").Replace("no.", "");
+                    string req = "";
+                    switch (islandCode)
+                    {
+                        case IslandsCode.A: req = String.Format(Config.A.GetRefAPI, Config.A.Host, id); break;
+                        case IslandsCode.Koukuko: req = String.Format(Config.K.GetRefAPI, Config.K.Host, id); break;
+                        case IslandsCode.Beitai: req = String.Format(Config.B.GetRefAPI, Config.B.Host, id); break;
+                    }
+                    string res = await Data.Http.GetData(req);
+                    JObject jObj;
+                    Data.Json.TryDeserializeObject(res, out jObj);
+                    try
+                    {
+                        if (jObj == null)
+                        {
+                            res = $"{{\"error\":{res}}}";
+                            Data.Json.TryDeserializeObject(res, out jObj);
+                            string err = jObj["error"].ToString();
+                            if (islandCode == IslandsCode.Beitai) err = "木有API(;´Д`) ";
+                            throw new Exception(err);
+                        }
+                        if (islandCode == IslandsCode.Koukuko)
+                        {
+                            res = jObj["data"].ToString();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Data.Message.ShowMessage(ex.Message);
+                        return;
+                    }
+                    Model.ReplyModel rm = Data.Json.Deserialize<Model.ReplyModel>(res);
+                    ReplyView reply = new ReplyView(rm, islandCode);
+                    await Data.Message.ShowRef(r.Text, reply);
+                }
             }
         }
 

@@ -70,5 +70,18 @@ namespace Islands.UWP.Data
             else
                 return 0;
         }
+
+        public static async Task<int> ShowRef(string title, object content)
+        {
+            var dialog = new ContentDialog()
+            {
+                Title = title,
+                Content = content,
+                FullSizeDesired = true,
+                PrimaryButtonText = "关闭"
+            };
+            ContentDialogResult result = await dialog.ShowAsync();
+            return 0;
+        }
     }
 }

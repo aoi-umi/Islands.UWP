@@ -68,8 +68,6 @@
             <ContentControl Name="txtContent"
                             Content="{x:Bind threadContent}">
             </ContentControl>
-            <RichTextBlock Name="txtContent2">
-            </RichTextBlock>
             <RelativePanel>
                 <Image Name="imageBox"  
                    MaxHeight="200" 
