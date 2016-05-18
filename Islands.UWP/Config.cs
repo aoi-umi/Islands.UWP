@@ -15,6 +15,8 @@ namespace Islands.UWP
     {
         public static Brush PoColor = new SolidColorBrush(Colors.Blue);
         public static Brush AdminColor = new SolidColorBrush(Colors.Red);
+        public static Brush ErrorColor = new SolidColorBrush(Colors.Gray);
+        public static Brush SelectedColor = new SolidColorBrush(Colors.AliceBlue);
         public static string dbName = "Islands.db";
         public static string FailedImageUri = "ms-appx:/Assets/luwei.jpg";
         #region 颜文字
@@ -108,6 +110,15 @@ namespace Islands.UWP
             "(´∀((☆ミつ"
         };
         #endregion
+
+        public static List<string> ErrorMessage = new List<string>() {
+            "为什么会变成这样呢(´・ω・`)",
+            "ギリギリeye ( ﾟ∀。)",
+            "my little pony ( ﾟ∀。)",
+            "出错也好，崩溃也好，明明是我先的ﾟ(つд`ﾟ)",
+            "仙客来根雕",
+            "Excuse 咪(´・ω・`)？",
+        };
         public static class A
         {
             public static string Host = "https://h.nimingban.com";

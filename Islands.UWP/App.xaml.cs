@@ -1,19 +1,9 @@
 ﻿using Islands.UWP.WinRTExceptions;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace Islands.UWP
@@ -125,13 +115,14 @@ namespace Islands.UWP
         private void OnSynchronizationContextUnhandledException(object sender, WinRTExceptions.UnhandledExceptionEventArgs args)
         {
             args.Handled = true;
-            Data.Message.ShowMessage("未处理错误:" + args.Exception.ToString(), "为什么会变成这样呢(´・ω・`)");
+            Data.Message.ShowMessage("未处理错误:" + args.Exception.ToString(), Data.Message.GetRandomErrorMessage());
         }
 
         private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs args)
         {
             args.Handled = true;
-            Data.Message.ShowMessage("未处理错误:" + args.Exception.ToString(), "为什么会变成这样呢(´・ω・`)");
+            int n = new Random().Next(0, Config.ErrorMessage.Count);
+            Data.Message.ShowMessage("未处理错误:" + args.Exception.ToString(), Data.Message.GetRandomErrorMessage());
         }
     }
 }

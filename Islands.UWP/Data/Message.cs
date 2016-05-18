@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace Islands.UWP.Data
 {
@@ -19,14 +20,16 @@ namespace Islands.UWP.Data
 
         public static async Task<int> GotoPageYesOrNo()
         {
-            TextBox inputBox = new TextBox();
-            var dialog = new ContentDialog()
+            InputScope inputScope = new InputScope();
+            inputScope.Names.Add(new InputScopeName() { NameValue = InputScopeNameValue.Number });
+            TextBox inputBox = new TextBox() { InputScope = inputScope }; 
+             var dialog = new ContentDialog()
             {
                 Title = "输入页数",
                 Content = inputBox,
                 FullSizeDesired = false,
                 PrimaryButtonText = "跳页",
-                SecondaryButtonText = "取消"
+                SecondaryButtonText = "取消",                
             };
             ContentDialogResult result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
@@ -46,7 +49,9 @@ namespace Islands.UWP.Data
 
         public static async Task<int> GotoThreadYesOrNo()
         {
-            TextBox inputBox = new TextBox();
+            InputScope inputScope = new InputScope();
+            inputScope.Names.Add(new InputScopeName() { NameValue = InputScopeNameValue.Number });
+            TextBox inputBox = new TextBox() { InputScope = inputScope };
             var dialog = new ContentDialog()
             {
                 Title = "输入串号",
@@ -73,15 +78,23 @@ namespace Islands.UWP.Data
 
         public static async Task<int> ShowRef(string title, object content)
         {
+            ScrollViewer sv = new ScrollViewer() {MaxHeight = 500, VerticalScrollBarVisibility = ScrollBarVisibility.Auto};
+            sv.Content = content;
             var dialog = new ContentDialog()
             {
                 Title = title,
-                Content = content,
+                Content = sv,               
                 FullSizeDesired = true,
                 PrimaryButtonText = "关闭"
             };
             ContentDialogResult result = await dialog.ShowAsync();
             return 0;
+        }
+
+        public static string GetRandomErrorMessage()
+        {
+            int n = new Random().Next(0, Config.ErrorMessage.Count);
+            return Config.ErrorMessage[n];
         }
     }
 }

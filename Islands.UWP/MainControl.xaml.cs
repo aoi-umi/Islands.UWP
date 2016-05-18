@@ -39,11 +39,10 @@ namespace Islands.UWP
             ForumsListInit(IslandCode, out currForum);
             ThreadControl = new ThreadsView()
             {
-                postModel = new ThreadsView.PostModel
-                {
+                postReq = new Model.PostRequest() {
                     Host = Host,
-                    GetThreadAPI = GetThreadAPI,
-                    ThreadID = currForum.forumValue
+                    API = GetThreadAPI,
+                    ID = currForum.forumValue
                 },
                 islandCode = IslandCode,
                 currForum = currForum,
@@ -52,11 +51,10 @@ namespace Islands.UWP
 
             ReplyControl = new ReplysView()
             {
-                postModel = new ReplysView.PostModel
-                {
+                postReq = new Model.PostRequest {
                     Host = Host,
-                    GetReplyAPI = GetReplyAPI,
-                    ReplyID = "0"
+                    API = GetReplyAPI,
+                    ID = "0"
                 },
                 islandCode = IslandCode,
                 pageSize = PageSize
@@ -85,6 +83,7 @@ namespace Islands.UWP
             ReplyControl.SendButton.Click += SendButton_Click;
 
             MarkControl.MarkClick += MarkControl_MarkClick;
+            MarkControl.BackButton.Click += BackButton_Click;
 
             SendControl.Response += SendControl_Response;
             SendControl.SendClick += SendControl_SendClick;
@@ -93,6 +92,9 @@ namespace Islands.UWP
             ImageControl.BackButton.Click += BackButton_Click;
 
             MyReplysControl.MyReplyClick += MyReplysControl_MyReplyClick;
+            MyReplysControl.BackButton.Click += BackButton_Click;
+
+            BackButton.Click += BackButton_Click;
 
             mainSplitView.Content = ThreadControl;
         }

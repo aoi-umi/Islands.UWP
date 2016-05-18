@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -60,8 +61,13 @@ namespace Islands.UWP
         }
         string txtSendContent
         {
-            get { return SendContent.Text; }
-            set { SendContent.Text = value; }
+            get
+            {
+                string outString;
+                SendContent.Document.GetText(TextGetOptions.None, out outString);
+                return outString.Trim();
+            }
+            set { SendContent.Document.SetText(TextSetOptions.None, value); }
         }
         string txtImageUri
         {
@@ -81,13 +87,7 @@ namespace Islands.UWP
             EmojiBox.Items.Add("颜文字");
             EmojiBox.SelectedIndex = 0;
             foreach(var emoji in Config.Emoji)
-                EmojiBox.Items.Add(emoji);
-            SendContent.SelectionChanged += SendContent_SelectionChanged;
-        }
-
-        private void SendContent_SelectionChanged(object sender, RoutedEventArgs e)
-        {
-            var text = SendContent.Text;
+                EmojiBox.Items.Add(emoji);            
         }
 
         private void EmptyButton_Click(object sender, RoutedEventArgs e)
@@ -134,7 +134,7 @@ namespace Islands.UWP
                 if (string.IsNullOrEmpty(send.sendContent) && !string.IsNullOrEmpty(send.sendImage))
                     send.sendContent = "[分享图片]";
 
-                this.IsHitTestVisible = false;
+                IsHitTestVisible = false;
                 OnSendClick(sender, e);
                 var res = await Data.Http.PostData(send);
                 bool IsSuccess = false;
@@ -173,11 +173,27 @@ namespace Islands.UWP
             if (EmojiBox.SelectedIndex != 0)
             {
                 var emoji = EmojiBox.SelectedItem.ToString();
-                var start = SendContent.SelectionStart;
-                SendContent.Text = SendContent.Text.Insert(start, emoji);
-                SendContent.SelectionStart = start + emoji.Length;
+                var start = SendContent.Document.Selection.StartPosition;
+                SendContent.Document.Selection.SetText(TextSetOptions.None, emoji);                
+                SendContent.Document.Selection.StartPosition = start + emoji.Length;
                 EmojiBox.SelectedIndex = 0;
             }
+        }
+
+        private void RefButton_Click(object sender, RoutedEventArgs e)
+        {
+            SendContent.Document.Selection.SetText(TextSetOptions.None, ">>No.");
+        }
+
+        private void SendContent_GotFocus(object sender, RoutedEventArgs e)
+        {
+            //Bottom.Height = this.ActualHeight / 2;
+            
+        }
+
+        private void SendContent_LostFocus(object sender, RoutedEventArgs e)
+        {
+            //Bottom.ClearValue(HeightProperty);
         }
     }
 }

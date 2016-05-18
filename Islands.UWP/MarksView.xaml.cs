@@ -1,22 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections.ObjectModel;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -24,13 +9,6 @@ namespace Islands.UWP
 {
     public sealed partial class MarksView : UserControl
     {
-        public delegate void MarkClickEventHandler(Object sender, ItemClickEventArgs e);
-        public event MarkClickEventHandler MarkClick;
-        public List<Model.ThreadModel> markList { get; set; }
-        IslandsCode islandCode { get; set; }
-        string markCount { set {
-                Title.Text = "收藏(" + value + ")";
-            } }
         public MarksView(IslandsCode islandCode)
         {
             this.InitializeComponent();
@@ -38,19 +16,48 @@ namespace Islands.UWP
             InitMarkList(islandCode);
         }
 
+        public delegate void MarkClickEventHandler(Object sender, ItemClickEventArgs e);
+        public event MarkClickEventHandler MarkClick;
+        public List<Model.ThreadModel> markList { get; set; }
+
+        IslandsCode islandCode { get; set; }
+
+        string markCount
+        {
+            set
+            {
+                Title.Text = "收藏(" + value + ")";
+            }
+        }
+
+        bool IsCancelButtonVisible
+        {
+            set
+            {
+                CancelButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                BackButton.Visibility = !value ? Visibility.Visible : Visibility.Collapsed;
+            }
+            get
+            {
+                return CancelButton.Visibility == Visibility.Visible ? true : false;
+            }
+        }
+
         public void AddMark(Model.ThreadModel tm)
         {
             markList.Insert(0, tm);
-            markListView.Items.Insert(0, new ThreadView(tm, islandCode) { Tag = tm });
+            markListView.Items.Insert(0, new ThreadView(tm, islandCode) { Tag = tm, Background = null });
             markCount = markList.Count.ToString();
         }
 
         private void InitMarkList(IslandsCode islandCode)
         {
-            markList = GetMarkList(islandCode);
-            foreach (var remark in markList)
+            markListView.Items.Clear();
+            markList = Data.Database.GetMarkList(islandCode);
+            foreach (var mark in markList)
             {
-                markListView.Items.Add(new ThreadView(remark, islandCode));
+                ThreadView t = new ThreadView(mark, islandCode) { Background = null };
+                markListView.Items.Add(t);
             }
             markCount = markList.Count.ToString();
         }
@@ -59,25 +66,56 @@ namespace Islands.UWP
         {
             ThreadView tv = e.ClickedItem as ThreadView;
             if (tv != null)
-                OnItemClick(e);
-        }
-
-        void OnItemClick(ItemClickEventArgs e)
-        {
-            if (this.MarkClick != null)
-                this.MarkClick(this, e);
-        }
-
-        private List<Model.ThreadModel> GetMarkList(IslandsCode islandCode)
-        {
-            using (var conn = Data.Database.GetDbConnection<Model.ThreadModel>())
             {
-                if(conn != null)
-                    return (from mark in conn.Table<Model.ThreadModel>()
-                        where mark.islandCode == islandCode
-                        orderby mark._id descending
-                        select mark).ToList();
-                return new List<Model.ThreadModel>();
+                if (tv.IsCheckboxDisplay) {
+                    tv.IsSelected = !tv.IsSelected;
+                    if (tv.IsSelected) tv.Background = Config.SelectedColor;
+                    else tv.Background = null;                                  
+                }
+                else OnItemClick(e);
+            }
+        }
+
+        private void OnItemClick(ItemClickEventArgs e)
+        {
+            if (MarkClick != null)
+                MarkClick(this, e);
+        }        
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            int count = 0;
+            foreach (var item in markListView.Items)
+            {
+                ThreadView t = item as ThreadView;
+                if (t != null)
+                {
+                    if (!IsCancelButtonVisible) t.IsCheckboxDisplay = true;
+                    else {
+                        if (t.IsSelected && Data.Database.Delete(t.thread)) { ++count; }
+                    }
+                }
+            }
+            if (IsCancelButtonVisible) {                
+                Data.Message.ShowMessage($"成功删除{count}项");
+                if (count > 0) InitMarkList(islandCode);
+                else HideCheckbox();
+            }
+            IsCancelButtonVisible = !IsCancelButtonVisible;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            IsCancelButtonVisible = false;
+            HideCheckbox();
+        }
+
+        private void HideCheckbox()
+        {
+            foreach (var item in markListView.Items)
+            {
+                var view = item as ThreadView;
+                if (view != null && view.IsCheckboxDisplay) view.IsCheckboxDisplay = false;
             }
         }
     }

@@ -12,6 +12,10 @@
         </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
         <Pivot>
             <PivotItem Name="pivotItemA" Header="A" Margin="0">
                 <local:MainControl />

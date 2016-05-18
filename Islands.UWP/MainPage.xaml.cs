@@ -17,7 +17,7 @@ namespace Islands.UWP
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
                 StatusBar statusBar = StatusBar.GetForCurrentView();
-                statusBar.ForegroundColor = Colors.White;
+                statusBar.ForegroundColor = Colors.White;                
             }
 
             MainControl mainControlA = new MainControl() {

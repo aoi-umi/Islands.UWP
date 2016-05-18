@@ -90,11 +90,13 @@
                   Grid.Row="1">
         <ListView Name="replyListView"
                   CanReorderItems="True"
-                  SelectionMode="None">
+                  SelectionMode="None"
+                  AllowDrop="False">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="Margin" Value="0,0,15,0"/>
+                        <Setter Property="Margin" Value="0,0,14,0"/>
+                        <Setter Property="Padding" Value="0"/>
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Text.RegularExpressions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media.Imaging;
@@ -12,6 +14,21 @@ namespace Islands.UWP
 {
     public sealed partial class ThreadView : UserControl
     {
+        public ThreadView(Model.ThreadModel thread, IslandsCode islandCode)
+        {
+            InitializeComponent();
+            this.thread = thread;
+            this.islandCode = islandCode;
+            if (!string.IsNullOrEmpty(this.threadThumb))
+            {
+                imageBox.Source = new BitmapImage(new Uri(this.threadThumb));
+                imageBox.Tag = this.threadImage;
+                imageBox.Tapped += ImageBox_Tapped;
+                imageBox.PointerPressed += ImageBox_PointerPressed;
+            }
+        }
+
+        public Model.ThreadModel thread { get; set; }
         public Visibility threadIsHadTitle
         {
             get
@@ -92,7 +109,6 @@ namespace Islands.UWP
                 }
             }
         }
-
         public string threadCreateDate
         {
             get
@@ -193,29 +209,22 @@ namespace Islands.UWP
         {
             get
             {
-                switch (islandCode)
+                string host = string.Empty;
+                if (rtb == null)
                 {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko:
-                        var s = HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(thread.content, true);
-                        Match m = Regex.Match(s, "(<Run Foreground=\"#789922\">)*(&gt;&gt;.*?(\\d+))(</Run>)*");
-                        if (m.Success)
-                        {
-                            for (; m.Success; m = m.NextMatch())
-                            {
-                                s = Regex.Replace(s, m.Groups[0].ToString(), String.Format("<Run Foreground=\"#789922\" Text=\"{0}\" />", m.Groups[2]));
-                            }
-                        }
-                        s = s.Replace("&#xFFFF;", "");
-                        var rtb = (RichTextBlock)XamlReader.Load(s);
-                        rtb.TextWrapping = TextWrapping.Wrap;
-                        rtb.IsTextSelectionEnabled = IsTextSelectionEnabled;
-                        return rtb;
-                    default: return new RichTextBlock();
+                    switch (islandCode)
+                    {
+                        case IslandsCode.A:host = Config.A.Host; break;
+                        case IslandsCode.Beitai: host = Config.B.Host; break;
+                        case IslandsCode.Koukuko: host = Config.K.Host; break;
+                        default: rtb = new RichTextBlock(); break;
+                    }
+                    if(!string.IsNullOrEmpty(host)) rtb = ContentConvert(host);
                 }
+                return rtb;
             }
         }
+
         public bool IsPo
         {
             set
@@ -224,27 +233,120 @@ namespace Islands.UWP
             }
         }
         public bool IsTextSelectionEnabled { get; set; }
-
-        Model.ThreadModel thread { get; set; }
-        IslandsCode islandCode { get; set; }
-        public ThreadView(Model.ThreadModel thread, IslandsCode islandCode)
+        public bool IsCheckboxDisplay
         {
-            this.InitializeComponent();
-            this.thread = thread;
-            this.islandCode = islandCode;
-            if (!string.IsNullOrEmpty(this.threadThumb))
+            set
             {
-                imageBox.Source = new BitmapImage(new Uri(this.threadThumb));
-                imageBox.Tag = this.threadImage;
-                imageBox.Tapped += ImageBox_Tapped;
+                if (value) IsSelectedBox.Visibility = Visibility.Visible;
+                else {
+                    IsSelectedBox.Visibility = Visibility.Collapsed;
+                    IsSelected = false;
+                    Background = null;
+                }
             }
-            
+            get { return IsSelectedBox.Visibility == Visibility.Visible ? true : false; }
         }
+        public bool IsSelected { set { IsSelectedBox.IsChecked = value; } get { return (bool)IsSelectedBox.IsChecked; } }
 
         public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
         public event ImageTappedEventHandler ImageTapped;
 
-        void OnTapped(Object sender,TappedRoutedEventArgs e) {
+        private RichTextBlock rtb;
+        private IslandsCode islandCode { get; set; }
+        private RichTextBlock ContentConvert(string Host)
+        {
+            try
+            {
+                //补全host
+                string s = thread.content.FixHost(Host);
+                //链接处理
+                s = s.FixLinkTag();
+                s = HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(s, true);
+                //引用处理
+                s = s.FixRef();
+                s = s.Replace("&#xFFFF;", "");
+                rtb = (RichTextBlock)XamlReader.Load(s);
+            }
+            catch (Exception ex)
+            {
+                rtb = new RichTextBlock();
+                Paragraph p = new Paragraph();
+                p.Inlines.Add(new Run() { Text = thread.content });
+                p.Inlines.Add(new Run() { Text = "\r\n*转换失败:" + ex.Message, Foreground = Config.ErrorColor });
+                rtb.Blocks.Add(p);
+            }
+            rtb.TextWrapping = TextWrapping.Wrap;
+            rtb.IsTextSelectionEnabled = IsTextSelectionEnabled;
+            if (IsTextSelectionEnabled)
+            {
+                foreach (var block in rtb.Blocks)
+                {
+                    Paragraph p = block as Paragraph;
+                    if (p != null)
+                    {
+                        foreach (var inline in p.Inlines)
+                        {
+                            Hyperlink h = inline as Hyperlink;
+                            if (h != null)
+                            {
+                                if (h.UnderlineStyle == UnderlineStyle.None) h.Click += Ref_Click;
+                            }
+                        }
+                    }
+                }
+            }
+            return rtb;
+        }
+
+        private async void Ref_Click(Hyperlink sender, HyperlinkClickEventArgs args)
+        {
+            Hyperlink h = sender as Hyperlink;
+            if (h != null && h.Inlines.Count > 0)
+            {
+                Run r = h.Inlines[0] as Run;
+                if (r != null)
+                {
+                    string id = r.Text.ToLower().Replace(">>", "").Replace("no.", "");
+                    
+                    //用api
+                    string req = "";
+                    try
+                    {
+                        switch (islandCode)
+                        {
+                            case IslandsCode.A: req = String.Format(Config.A.GetRefAPI, Config.A.Host, id); break;
+                            case IslandsCode.Koukuko: req = String.Format(Config.K.GetRefAPI, Config.K.Host, id); break;
+                            case IslandsCode.Beitai: throw new Exception("获取失败(;´Д`)"); break;
+                        }
+                        string res = await Data.Http.GetData(req);
+                        JObject jObj;
+                        Data.Json.TryDeserializeObject(res, out jObj);
+
+                        if (jObj == null)
+                        {
+                            res = $"{{\"error\":{res}}}";
+                            Data.Json.TryDeserializeObject(res, out jObj);
+                            string err = jObj["error"].ToString();
+                            throw new Exception(err);
+                        }
+                        if (islandCode == IslandsCode.Koukuko)
+                        {
+                            res = jObj["data"].ToString();
+                        }
+                        Model.ReplyModel rm = Data.Json.Deserialize<Model.ReplyModel>(res);
+                        ReplyView reply = new ReplyView(rm, islandCode) { Margin = new Thickness(0, 0, 5, 0) };
+                        await Data.Message.ShowRef(r.Text, reply);
+                    }
+                    catch (Exception ex)
+                    {
+                        Data.Message.ShowMessage(ex.Message);
+                        return;
+                    }
+                }
+            }
+        }
+                       
+        private void OnTapped(Object sender,TappedRoutedEventArgs e) {
             if (ImageTapped != null)
                 ImageTapped(sender, e);
         }
@@ -260,6 +362,11 @@ namespace Islands.UWP
             {
                 imageBox.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
             }
+        }
+
+        private void ImageBox_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

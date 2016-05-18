@@ -154,8 +154,25 @@ namespace Islands.UWP
             }
         }
 
-        Model.SendModel myReply {get; set; }
+        public bool IsCheckboxDisplay
+        {
+            set
+            {
+                if (value) IsSelectedBox.Visibility = Visibility.Visible;
+                else {
+                    IsSelectedBox.Visibility = Visibility.Collapsed;
+                    IsSelected = false;
+                    Background = null;
+                }
+            }
+            get { return IsSelectedBox.Visibility == Visibility.Visible ? true : false; }
+        }
+        public bool IsSelected { set { IsSelectedBox.IsChecked = value; } get { return (bool)IsSelectedBox.IsChecked; } }
+
+        public Model.SendModel myReply {get; set; }
+
         IslandsCode islandCode { get; set; }
+
         public MyReplyView(Model.SendModel myReply, IslandsCode islandCode)
         {
             this.InitializeComponent();

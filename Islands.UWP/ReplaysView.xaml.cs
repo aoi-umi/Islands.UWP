@@ -11,40 +11,16 @@ namespace Islands.UWP
 {
     public sealed partial class ReplysView : UserControl
     {
-
-        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
-        public event ImageTappedEventHandler ImageTapped;
-
-        public delegate void MarkSuccessEventHandler(Object sender, Model.ThreadModel t);
-        public event MarkSuccessEventHandler MarkSuccess;
-
-        public PostModel postModel;
+        public ReplysView()
+        {
+            InitializeComponent();
+            replyListView.Items.Add(ReplyStatusBox);
+            replyListScrollViewer.ViewChanged += ReplyListScrollViewer_ViewChanged;
+            ReplyStatusBox.Tapped += ReplyStatusBox_Tapped;
+        }
+        
+        public Model.PostRequest postReq;
         public IslandsCode islandCode;
-        string message {
-            set {
-                ReplyStatusBox.Text = value;
-            }
-        }
-        TextBlock ReplyStatusBox = new TextBlock()
-        {
-            Text = "还未看过任何串(つд⊂)",
-            HorizontalAlignment = HorizontalAlignment.Center
-        };
-        int markId { get; set; }
-        int currPage { get; set; }
-        int allPage
-        {
-            get
-            {
-                if (replyCount == 0) return 0;
-                return replyCount / pageSize + (replyCount % pageSize > 0 ? 1 : 0);
-            }
-        }
-        int replyCount { get; set; }
-        bool IsGetAllReply = false;
-
-        string replyId {set { Title.Text= value; } }
-        string txtReplyCount { set { ListCount.Text = "(" +value + "," + allPage + "P)"; } }
         public int pageSize { get; set; }
         public class PostModel
         {
@@ -53,24 +29,62 @@ namespace Islands.UWP
             public string GetReplyAPI { get; set; }
             public PostModel() { }
         }
-        
-        public ReplysView()
+        public string currThread { get; set; }
+
+        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
+        public event ImageTappedEventHandler ImageTapped;
+        public delegate void MarkSuccessEventHandler(Object sender, Model.ThreadModel t);
+        public event MarkSuccessEventHandler MarkSuccess;
+
+        public void GetReplyListByID(string threadId, int markId)
         {
-            this.InitializeComponent();
-            replyListView.Items.Add(ReplyStatusBox);
-            replyListScrollViewer.ViewChanged += ReplyListScrollViewer_ViewChanged;
-            ReplyStatusBox.Tapped += ReplyStatusBox_Tapped;
+            currThread = threadId;
+            try
+            {
+                this.markId = markId;
+                replyId = threadId;
+                postReq.ID = threadId;
+                _Refresh(1);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+            }
         }
+
+        private string message
+        {
+            set
+            {
+                ReplyStatusBox.Text = value;
+            }
+        }
+        private TextBlock ReplyStatusBox = new TextBlock()
+        {
+            Text = "还未看过任何串(つд⊂)",
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+        private int markId { get; set; }
+        private int currPage { get; set; }
+        private int allPage
+        {
+            get
+            {
+                if (replyCount == 0) return 0;
+                return replyCount / pageSize + (replyCount % pageSize > 0 ? 1 : 0);
+            }
+        }
+        private int replyCount { get; set; }
+        private bool IsGetAllReply = false;
+        private string replyId {set { Title.Text= value; } }
+        private string txtReplyCount { set { ListCount.Text = "(" +value + "," + allPage + "P)"; } }
+        private Model.ThreadModel top = null;
+        private Model.ReplyModel lastReply = null;
 
         private void ReplyStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            GetReplyList(new Model.PostRequest()
-            {
-                API = postModel.GetReplyAPI,
-                Host = postModel.Host,
-                ID = postModel.ReplyID,
-                Page = currPage
-            }, islandCode);
+            postReq.Page = currPage;
+            GetReplyList(postReq, islandCode);
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -85,28 +99,12 @@ namespace Islands.UWP
             replyListView.Items.Remove(ReplyStatusBox);
             message = "点我加载";
         }
+
         private void DataLoaded()
         {
             replyListView.Items.Add(ReplyStatusBox);
             ReplyLoading.IsActive = false;
             IsHitTestVisible = true;
-        }
-
-        public string currThread { get; set; }
-        public void GetReplyListByID(string threadId, int markId)
-        {
-            currThread = threadId;
-            try
-            {
-                this.markId = markId;
-                replyId = threadId;
-                postModel.ReplyID = threadId;
-                _Refresh(1);
-            }
-            catch (Exception ex)
-            {
-                message = ex.Message;
-            }
         }
 
         private void _Refresh(int page)
@@ -121,13 +119,8 @@ namespace Islands.UWP
             }
             try
             {
-                GetReplyList(new Model.PostRequest()
-                {
-                    API = postModel.GetReplyAPI,
-                    Host = postModel.Host,
-                    ID = postModel.ReplyID,
-                    Page = currPage
-                }, islandCode);
+                postReq.Page = currPage;
+                GetReplyList(postReq, islandCode);
             }
             catch (Exception ex)
             {
@@ -135,8 +128,6 @@ namespace Islands.UWP
             }
         }
 
-        Model.ThreadModel top = null;
-        Model.ReplyModel lastReply = null;
         private async void GetReplyList(Model.PostRequest req, IslandsCode code)
         {
             if (ReplyLoading.IsActive) return;
@@ -148,12 +139,7 @@ namespace Islands.UWP
             {
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
                 JObject jObj;
-                Data.Json.TryDeserializeObject(res, out jObj);
-                if (jObj == null) {
-                    res = $"{{\"error\":{res}}}";
-                    jObj = (JObject)JsonConvert.DeserializeObject(res);
-                    throw new Exception(jObj["error"].ToString());
-                }
+                if (!Data.Json.TryDeserializeObject(res, out jObj)) throw new Exception(res.UnicodeDencode());                
 
                 top = null;
                 JArray Replys = null;
@@ -163,12 +149,12 @@ namespace Islands.UWP
                     case IslandsCode.Beitai:
                         top = Data.Json.Deserialize<Model.ThreadModel>(res);
                         if (jObj["replys"].HasValues)
-                            Replys = JArray.Parse(jObj["replys"].ToString());
+                            Replys = Data.Json.Deserialize<JArray>(jObj["replys"].ToString());
                         break;
                     case IslandsCode.Koukuko:
                         top = Data.Json.Deserialize<Model.ThreadModel>(jObj["threads"].ToString());
                         if (jObj["replys"].HasValues)
-                            Replys = JArray.Parse(jObj["replys"].ToString());
+                            Replys = Data.Json.Deserialize<JArray>(jObj["replys"].ToString());
                         break;
                 }
                 top.islandCode = code;
@@ -178,7 +164,7 @@ namespace Islands.UWP
                 int.TryParse(top.replyCount, out _replyCount);
                 if (replyListView.Items.Count == 0 && top != null)
                 {
-                    var tv = new ThreadView(top, code) { Tag = top, IsTextSelectionEnabled = true };
+                    var tv = new ThreadView(top, code) { Tag = top, IsTextSelectionEnabled = true,Background = null };
                     tv.ImageTapped += Image_ImageTapped;
                     tv.IsPo = true;
                     replyListView.Items.Add(tv);
@@ -236,17 +222,6 @@ namespace Islands.UWP
 
         }
 
-        private void OnTapped(Object sender, TappedRoutedEventArgs e)
-        {
-            if (ImageTapped != null)
-                ImageTapped(sender, e);
-        }
-
-        private void Image_ImageTapped(object sender, TappedRoutedEventArgs e)
-        {
-            OnTapped(sender, e);
-        }
-
         //滑动刷新
         private void ReplyListScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
@@ -255,14 +230,9 @@ namespace Islands.UWP
             {
                 try
                 {
-                    sv.ChangeView(null,sv.VerticalOffset - 1,null);
-                    GetReplyList(new Model.PostRequest()
-                    {
-                        API = postModel.GetReplyAPI,
-                        Host = postModel.Host,
-                        ID = postModel.ReplyID,
-                        Page = currPage
-                    }, islandCode);
+                    sv.ChangeView(null, sv.VerticalOffset - 1, null);
+                    postReq.Page = currPage;
+                    GetReplyList(postReq, islandCode);
                 }
                 catch (Exception ex)
                 {
@@ -271,12 +241,21 @@ namespace Islands.UWP
             }
         }
 
-        private void OnMarkSuccess()
+        private async void GotoPageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.MarkSuccess != null)
-                this.MarkSuccess(this, top);
+            var page = await Data.Message.GotoPageYesOrNo();
+            if (page > 0)
+                _Refresh(page);
         }
 
+        //点击图片
+        private void Image_ImageTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (ImageTapped != null)
+                ImageTapped(sender, e);
+        }
+
+        //点击收藏
         private void MarkButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -302,11 +281,10 @@ namespace Islands.UWP
             }
         }
 
-        private async void GotoPageButton_Click(object sender, RoutedEventArgs e)
+        private void OnMarkSuccess()
         {
-            var page = await Data.Message.GotoPageYesOrNo();
-            if (page > 0)
-                _Refresh(page);
+            if (this.MarkSuccess != null)
+                this.MarkSuccess(this, top);
         }
     }
 }

@@ -74,15 +74,17 @@
             </Button>
         </RelativePanel>
         <ScrollViewer Name="threadListScrollViewer"
-                  Grid.Row="1">
+                      Grid.Row="1">
         <ListView Name="threadListView"
                   IsItemClickEnabled="True"
                   SelectionMode="None"
+                  AllowDrop="False"                  
                   ItemClick="ListView_ItemClick">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="Margin" Value="0,0,15,0"/>
+                        <Setter Property="Margin" Value="0,0,14,0"/>
+                        <Setter Property="Padding" Value="0"/>
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>

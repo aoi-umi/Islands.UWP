@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -16,6 +17,20 @@ namespace Islands.UWP
         string myReplyCount { set {
                 Title.Text = "我的回复(" + value + ")";
             } }
+
+        bool IsCancelButtonVisible
+        {
+            set
+            {
+                CancelButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                BackButton.Visibility = !value ? Visibility.Visible : Visibility.Collapsed;
+            }
+            get
+            {
+                return CancelButton.Visibility == Visibility.Visible ? true : false;
+            }
+        }
+
         public MyReplysView(IslandsCode islandCode)
         {
             this.InitializeComponent();
@@ -32,7 +47,8 @@ namespace Islands.UWP
 
         private void InitMyReplyList(IslandsCode islandCode)
         {
-            myReplyList = GetMyReplyList(islandCode);
+            myreplyListView.Items.Clear();
+            myReplyList = Data.Database.GetMyReplyList(islandCode);
             foreach (var myreply in myReplyList)
             {
                 myreplyListView.Items.Add(new MyReplyView(myreply, islandCode) { Tag = myreply });
@@ -42,27 +58,59 @@ namespace Islands.UWP
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            MyReplyView mpv = e.ClickedItem as MyReplyView;
-            if (mpv != null)
-                OnItemClick(e);
+            MyReplyView view = e.ClickedItem as MyReplyView;
+            if (view != null)
+            {
+                if (view.IsCheckboxDisplay)
+                {
+                    view.IsSelected = !view.IsSelected;
+                    if (view.IsSelected) view.Background = Config.SelectedColor;
+                    else view.Background = null;
+                }
+                else OnItemClick(e);
+            }
         }
 
         private void OnItemClick(ItemClickEventArgs e)
         {
-            if (this.MyReplyClick != null)
-                this.MyReplyClick(this, e);
+            if (MyReplyClick != null) MyReplyClick(this, e);
         }
 
-        private List<Model.SendModel> GetMyReplyList(IslandsCode islandCode)
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            using (var conn = Data.Database.GetDbConnection<Model.SendModel>())
+            int count = 0;
+            foreach (var item in myreplyListView.Items)
             {
-                if(conn != null)
-                    return (from send in conn.Table<Model.SendModel>()
-                        where send.islandCode == islandCode
-                        orderby send._id descending
-                        select send).ToList();
-                return new List<Model.SendModel>();
+                MyReplyView t = item as MyReplyView;
+                if (t != null)
+                {
+                    if (!IsCancelButtonVisible) t.IsCheckboxDisplay = true;
+                    else {
+                        if (t.IsSelected && Data.Database.Delete(t.myReply)) { ++count; }
+                    }
+                }
+            }
+            if (IsCancelButtonVisible)
+            {
+                Data.Message.ShowMessage($"成功删除{count}项");
+                if (count > 0) InitMyReplyList(islandCode);
+                else HideCheckbox();
+            }
+            IsCancelButtonVisible = !IsCancelButtonVisible;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            IsCancelButtonVisible = false;
+            HideCheckbox();
+        }
+
+        private void HideCheckbox()
+        {
+            foreach (var item in myreplyListView.Items)
+            {
+                MyReplyView view = item as MyReplyView;
+                if (view != null && view.IsCheckboxDisplay) view.IsCheckboxDisplay = false;
             }
         }
     }

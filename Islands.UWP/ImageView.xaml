@@ -45,7 +45,7 @@
                        Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
             <Button Name="BackButton"
                     x:FieldModifier="public"
-                    Content="&#xE0D5;"
+                    Content="&#xE80F;"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="24"
                     Background="Transparent"></Button>

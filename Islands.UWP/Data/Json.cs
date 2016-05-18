@@ -9,8 +9,8 @@ namespace Islands.UWP.Data
         public static T Deserialize<T>(string json)
         {
             T model = default(T);
-            var sr = new StringReader(json);
-            var serializer = new JsonSerializer();
+            StringReader sr = new StringReader(json);
+            JsonSerializer serializer = new JsonSerializer();
             model = (T)serializer.Deserialize(new JsonTextReader(sr), typeof(T));
             return model;
         }
@@ -28,5 +28,19 @@ namespace Islands.UWP.Data
                 return false;
             }
         }
+
+        public static bool TryDeserialize<T>(string json, out T Object)
+        {
+            Object = default(T);
+            try
+            {
+                Object = (T)JsonConvert.DeserializeObject(json);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }        
     }
 }
