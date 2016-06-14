@@ -2,8 +2,10 @@
 using Newtonsoft.Json.Linq;
 using System;
 using Windows.UI.Text;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -11,6 +13,18 @@ namespace Islands.UWP
 {
     public sealed partial class SendView : UserControl
     {
+        public SendView()
+        {
+            this.InitializeComponent();
+            EmojiBox.Items.Add("颜文字");
+            EmojiBox.SelectedIndex = 0;
+            foreach (var emoji in Config.Emoji)
+                EmojiBox.Items.Add(emoji);
+            var i = InputPane.GetForCurrentView();
+            InputPane.GetForCurrentView().Showing += SendView_Showing;
+            InputPane.GetForCurrentView().Hiding += SendView_Hiding;
+        }
+
         public class PostModel {
             public IslandsCode islandCode { get; set; }
             public bool IsMain { get; set; }
@@ -19,20 +33,6 @@ namespace Islands.UWP
             public string Id { get; set; }
             public string Api { get; set; }
             public PostModel() { }
-        }
-        public delegate void ResponseEventHandler(bool Success, Model.SendModel send);
-        public event ResponseEventHandler Response;
-        void OnResponse(bool Success, Model.SendModel send)
-        {
-            if (Response != null) Response(Success, send);
-        }
-
-        public delegate void SendClickEventHandler(object sender, RoutedEventArgs e);
-        public event SendClickEventHandler SendClick;
-        void OnSendClick(object sender, RoutedEventArgs e)
-        {
-            if (Response != null) SendClick(sender, e);
-            this.IsHitTestVisible = true;
         }
 
         public IslandsCode islandCode { get; set; }
@@ -43,23 +43,30 @@ namespace Islands.UWP
                 Title.Text = "发送(" + value + ")";
             }
         }
+        public PostModel postModel { get; set; }
 
-        string txtSendTitle
+        public delegate void ResponseEventHandler(bool Success, Model.SendModel send);
+        public event ResponseEventHandler Response;
+
+        public delegate void SendClickEventHandler(object sender, RoutedEventArgs e);
+        public event SendClickEventHandler SendClick;
+
+        private string txtSendTitle
         {
             get { return SendTitle.Text; }
             set { SendTitle.Text = value; }
         }
-        string txtSendEmail
+        private string txtSendEmail
         {
             get { return SendEmail.Text; }
             set { SendEmail.Text = value; }
         }
-        string txtSendName
+        private string txtSendName
         {
             get { return SendName.Text; }
             set { SendName.Text = value; }
         }
-        string txtSendContent
+        private string txtSendContent
         {
             get
             {
@@ -69,7 +76,7 @@ namespace Islands.UWP
             }
             set { SendContent.Document.SetText(TextSetOptions.None, value); }
         }
-        string txtImageUri
+        private string txtImageUri
         {
             get { return SendImageStr.Text; }
             set
@@ -80,14 +87,15 @@ namespace Islands.UWP
             }
         }
 
-        public PostModel postModel { get; set; }
-        public SendView()
+        private void OnResponse(bool Success, Model.SendModel send)
         {
-            this.InitializeComponent();
-            EmojiBox.Items.Add("颜文字");
-            EmojiBox.SelectedIndex = 0;
-            foreach(var emoji in Config.Emoji)
-                EmojiBox.Items.Add(emoji);            
+            if (Response != null) Response(Success, send);
+        }
+
+        private void OnSendClick(object sender, RoutedEventArgs e)
+        {
+            if (Response != null) SendClick(sender, e);
+            this.IsHitTestVisible = true;
         }
 
         private void EmptyButton_Click(object sender, RoutedEventArgs e)
@@ -151,7 +159,7 @@ namespace Islands.UWP
                         if (jobj["success"].ToString().ToLower() == "true")
                         {
                             IsSuccess = true;
-                            ThreadId = jobj["threadsId"].ToString();
+                            if(jobj["threadsId"] != null) ThreadId = jobj["threadsId"].ToString();
                         }
                         break;
                 }
@@ -185,15 +193,14 @@ namespace Islands.UWP
             SendContent.Document.Selection.SetText(TextSetOptions.None, ">>No.");
         }
 
-        private void SendContent_GotFocus(object sender, RoutedEventArgs e)
+        private void SendView_Hiding(InputPane sender, InputPaneVisibilityEventArgs args)
         {
-            //Bottom.Height = this.ActualHeight / 2;
-            
+            Rect.Height = 0;
         }
 
-        private void SendContent_LostFocus(object sender, RoutedEventArgs e)
+        private void SendView_Showing(InputPane sender, InputPaneVisibilityEventArgs args)
         {
-            //Bottom.ClearValue(HeightProperty);
+            Rect.Height = sender.OccludedRect.Height;
         }
     }
 }

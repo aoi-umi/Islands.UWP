@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -13,16 +14,25 @@ namespace Islands.UWP
         {
             this.InitializeComponent();
             this.islandCode = islandCode;
+            this.DataContext = MainPage.Global;
             InitMarkList(islandCode);
         }
 
-        public delegate void MarkClickEventHandler(Object sender, ItemClickEventArgs e);
-        public event MarkClickEventHandler MarkClick;
         public List<Model.ThreadModel> markList { get; set; }
 
-        IslandsCode islandCode { get; set; }
+        public delegate void MarkClickEventHandler(Object sender, ItemClickEventArgs e);
+        public event MarkClickEventHandler MarkClick;
 
-        string markCount
+        public void AddMark(Model.ThreadModel tm)
+        {
+            markList.Insert(0, tm);
+            markListView.Items.Insert(0, new ThreadView(tm, islandCode) { Tag = tm });
+            markCount = markList.Count.ToString();
+        }
+
+        private IslandsCode islandCode { get; set; }
+
+        private string markCount
         {
             set
             {
@@ -30,7 +40,7 @@ namespace Islands.UWP
             }
         }
 
-        bool IsCancelButtonVisible
+        private bool IsCancelButtonVisible
         {
             set
             {
@@ -43,20 +53,14 @@ namespace Islands.UWP
             }
         }
 
-        public void AddMark(Model.ThreadModel tm)
-        {
-            markList.Insert(0, tm);
-            markListView.Items.Insert(0, new ThreadView(tm, islandCode) { Tag = tm, Background = null });
-            markCount = markList.Count.ToString();
-        }
-
         private void InitMarkList(IslandsCode islandCode)
         {
             markListView.Items.Clear();
             markList = Data.Database.GetMarkList(islandCode);
             foreach (var mark in markList)
             {
-                ThreadView t = new ThreadView(mark, islandCode) { Background = null };
+                ThreadView t = new ThreadView(mark, islandCode);
+                t.NoImage = true;
                 markListView.Items.Add(t);
             }
             markCount = markList.Count.ToString();

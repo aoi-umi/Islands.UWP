@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -8,17 +9,48 @@ using Windows.UI.Xaml.Controls;
 
 namespace Islands.UWP
 {
-    public sealed partial class MyReplysView : UserControl
+    public sealed partial class MyReplysView : UserControl,INotifyPropertyChanged
     {
+
+        public MyReplysView(IslandsCode islandCode)
+        {
+            this.InitializeComponent();
+            this.islandCode = islandCode;
+            InitMyReplyList(islandCode);
+            DataContext = this;
+        }
+
+        public List<Model.SendModel> myReplyList { get; set; }
+        public double TitleFontSize
+        {
+            get { double value = (double)GetValue(TitleFontSizeProperty); return value == 0 ? 1 : value; }
+            set { SetValue(TitleFontSizeProperty, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TitleFontSize")); }
+        }
+        public static readonly DependencyProperty TitleFontSizeProperty = DependencyProperty.Register("TitleFontSize", typeof(double), typeof(MyReplysView), null);
+        public double ContentFontSize
+        {
+            get { double value = (double)GetValue(ContentFontSizeProperty); return value == 0 ? 1 : value; }
+            set { SetValue(ContentFontSizeProperty, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ContentFontSize")); }
+        }
+        public static readonly DependencyProperty ContentFontSizeProperty = DependencyProperty.Register("ContentFontSize", typeof(double), typeof(MyReplysView), null);
+        public event PropertyChangedEventHandler PropertyChanged;
         public delegate void MyReplyClickEventHandler(Object sender, ItemClickEventArgs e);
         public event MyReplyClickEventHandler MyReplyClick;
-        public List<Model.SendModel> myReplyList { get; set; }
-        IslandsCode islandCode { get; set; }
-        string myReplyCount { set {
+
+        public void AddMyReply(Model.SendModel sm)
+        {
+            myReplyList.Insert(0, sm);
+            myreplyListView.Items.Insert(0, new MyReplyView(sm, islandCode) { Tag = sm });
+            myReplyCount = myReplyList.Count.ToString();
+        }
+
+        private IslandsCode islandCode { get; set; }
+
+        private string myReplyCount { set {
                 Title.Text = "我的回复(" + value + ")";
             } }
 
-        bool IsCancelButtonVisible
+        private bool IsCancelButtonVisible
         {
             set
             {
@@ -29,20 +61,6 @@ namespace Islands.UWP
             {
                 return CancelButton.Visibility == Visibility.Visible ? true : false;
             }
-        }
-
-        public MyReplysView(IslandsCode islandCode)
-        {
-            this.InitializeComponent();
-            this.islandCode = islandCode;
-            InitMyReplyList(islandCode);
-        }
-
-        public void AddMyReply(Model.SendModel sm)
-        {
-            myReplyList.Insert(0, sm);
-            myreplyListView.Items.Insert(0, new MyReplyView(sm, islandCode) { Tag = sm });
-            myReplyCount = myReplyList.Count.ToString();
         }
 
         private void InitMyReplyList(IslandsCode islandCode)

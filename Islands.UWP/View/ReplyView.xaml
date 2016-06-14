@@ -13,48 +13,52 @@
                            IsTextSelectionEnabled="True"
                            Text="{x:Bind replyTitle}"
                            Visibility="{x:Bind replyIsHadTitle}"
-                           Foreground="Red">
+                           Foreground="Red"
+                           FontSize="{Binding TitleFontSize}">
                 </TextBlock>
                 <TextBlock Name="email" 
                            IsTextSelectionEnabled="True"
                            Text="{x:Bind replyEmail}"
                            Visibility="{x:Bind replyIsHadEmail}"
                            RelativePanel.Below="title"
-                           Foreground="Red">
+                           Foreground="Red"
+                           FontSize="{Binding TitleFontSize}">
                 </TextBlock>
                 <TextBlock Name="name"
                            IsTextSelectionEnabled="True"
                            Text="{x:Bind replyName}"
                            Visibility="{x:Bind replyIsHadName}"
                            RelativePanel.Below="email"
-                           Foreground="Red">
+                           Foreground="Red"
+                           FontSize="{Binding TitleFontSize}">
                 </TextBlock>
                 <TextBlock Name="txtCreateDate" 
                            IsTextSelectionEnabled="True"
                            Text="{x:Bind replyCreateDate}"
                            RelativePanel.Below="name"
-                           Margin="0,0,5,0">
+                           FontSize="{Binding TitleFontSize}">
                 </TextBlock>
                 <TextBlock Name="id"
                            Text="No."
-                           RelativePanel.LeftOf="txtId">
+                           RelativePanel.LeftOf="txtId"
+                           FontSize="{Binding TitleFontSize}">
                 </TextBlock>
                 <TextBlock Name="txtId" 
                            IsTextSelectionEnabled="True"
                            Text="{x:Bind replyNo}" 
-                           Margin="0,0,5,0"
-                           RelativePanel.AlignRightWithPanel="True">
+                           RelativePanel.AlignRightWithPanel="True"
+                           FontSize="{Binding TitleFontSize}">
                 </TextBlock>
-                <TextBlock Name="userid"
+                <!--<TextBlock Name="userid"
                            Text="ID:"
                            RelativePanel.Below="txtCreateDate"
                            >
-                </TextBlock>
+                </TextBlock>-->
                 <TextBlock Name="txtUserid" 
                            IsTextSelectionEnabled="True"
                            Text="{x:Bind replyUid}"
                            RelativePanel.Below="txtCreateDate"
-                           RelativePanel.RightOf="userid"
+                           FontSize="{Binding TitleFontSize}"
                            >
                 </TextBlock>
 
@@ -63,6 +67,11 @@
                             Content="{x:Bind replyContent}"
                             >
             </ContentControl>
+            <Button Name="ShowImageButton" 
+                        Background="Transparent" 
+                        Foreground="{ThemeResource HyperlinkForegroundThemeBrush}"
+                        Click="ShowImage_Click"
+                        Visibility="Collapsed">显示图片</Button>
             <Image Name="imageBox"  
                    MaxHeight="200" 
                    MaxWidth="200" 

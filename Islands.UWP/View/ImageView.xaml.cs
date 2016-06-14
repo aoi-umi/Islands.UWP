@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -19,12 +8,13 @@ namespace Islands.UWP
 {
     public sealed partial class ImageView : UserControl
     {
-        string _imgageUrl { get; set; }
+        private string _imgageUrl { get; set; }
         public string imageUrl
         {
             set
             {
                 _imgageUrl = value;
+                ImageWebView.NavigateToString("<html></html>");
                 ImageWebView.Navigate(new Uri(value));
             }
         }
@@ -41,7 +31,8 @@ namespace Islands.UWP
                 Data.Message.ShowMessage("链接为空");
             }
             else {
-                Data.File.SaveFile(_imgageUrl);
+                if (MainPage.Global.IsAskEachTime) Data.File.SaveFile(_imgageUrl);
+                else Data.File.SaveFileWithoutDialog(_imgageUrl);
             }
         }
 

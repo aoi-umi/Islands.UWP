@@ -1,70 +1,66 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace Islands.UWP
 {
-    public sealed partial class ReplyView : UserControl
+    public sealed partial class ThreadView : UserControl
     {
-        public ReplyView(Model.ReplyModel reply, IslandsCode islandCode)
+        public ThreadView(Model.ThreadModel thread, IslandsCode islandCode)
         {
             InitializeComponent();
-            this.reply = reply;
+            DataContext = MainPage.Global;
+            this.thread = thread;
             this.islandCode = islandCode;
-            if (!string.IsNullOrEmpty(this.replyThumb))
+            NoImage = MainPage.Global.NoImage;
+            if (!string.IsNullOrEmpty(this.threadThumb))
             {
-                imageBox.Source = new BitmapImage(new Uri(this.replyThumb));
-                imageBox.Tag = replyImage;
+                imageBox.Tag = this.threadImage;
                 imageBox.Tapped += ImageBox_Tapped;
+                imageBox.PointerPressed += ImageBox_PointerPressed;
+            }
+        }        
+
+        public Model.ThreadModel thread { get; set; }
+        public Visibility threadIsHadTitle
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(threadTitle) && threadTitle != "标题:" && threadTitle != "无标题")
+                    return Visibility.Visible;
+                return Visibility.Collapsed;
+            }
+        }
+        public Visibility threadIsHadEmail
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(threadEmail) && threadEmail != "email:")
+                    return Visibility.Visible;
+                return Visibility.Collapsed;
+            }
+        }
+        public Visibility threadIsHadName
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(threadName) && threadName != "名字:" && threadName != "无名氏")
+                    return Visibility.Visible;
+                return Visibility.Collapsed;
             }
         }
 
-        public Visibility replyIsHadTitle
-        {
-            get
-            {
-                if (replyTitle != "标题:" && replyTitle != "标题:无标题")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-        public Visibility replyIsHadEmail
-        {
-            get
-            {
-                if (replyEmail != "email:")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-        public Visibility replyIsHadName
-        {
-            get
-            {
-                if (replyName != "名字:" && replyName != "名字:无名氏")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-        public string replyTitle
+        public string threadTitle
         {
             get
             {
@@ -72,12 +68,12 @@ namespace Islands.UWP
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return "标题:" + reply.title;
+                    case IslandsCode.Koukuko: return /*"标题:" +*/ thread.title;
                     default: return "";
                 }
             }
         }
-        public string replyEmail
+        public string threadEmail
         {
             get
             {
@@ -85,12 +81,12 @@ namespace Islands.UWP
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return "email:" + reply.email;
+                    case IslandsCode.Koukuko: return /*"email:" +*/ thread.email;
                     default: return "";
                 }
             }
         }
-        public string replyName
+        public string threadName
         {
             get
             {
@@ -98,12 +94,12 @@ namespace Islands.UWP
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return "名字:" + reply.name;
+                    case IslandsCode.Koukuko: return /*"名字:" +*/ thread.name;
                     default: return "";
                 }
             }
         }
-        public string replyNo
+        public string threadNo
         {
             get
             {
@@ -111,27 +107,27 @@ namespace Islands.UWP
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return reply.id;
+                    case IslandsCode.Koukuko: return thread.id;
                     default: return "";
                 }
             }
         }
-        public string replyCreateDate
+        public string threadCreateDate
         {
             get
             {
                 switch (islandCode)
                 {
                     case IslandsCode.A:
-                    case IslandsCode.Beitai: return reply.now;
+                    case IslandsCode.Beitai: return thread.now;
                     case IslandsCode.Koukuko:
                         DateTime dt = new DateTime(1970, 1, 1).ToLocalTime();
-                        return dt.AddMilliseconds(Convert.ToDouble(reply.createdAt)).ToString("yyyy-MM-dd hh:mm:ss");
+                        return dt.AddMilliseconds(Convert.ToDouble(thread.createdAt)).ToString("yyyy-MM-dd HH:mm:ss");
                     default: return "";
                 }
             }
         }
-        public string replyUid
+        public string threadUid
         {
             get
             {
@@ -139,81 +135,94 @@ namespace Islands.UWP
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
-                        if (reply.admin == "1")
+                        if (thread.admin == "1")
                         {
                             txtUserid.Foreground = Config.AdminColor;
                         }
-                        return reply.userid;
+                        return thread.userid;
                     case IslandsCode.Koukuko:
-                        if (reply.uid.IndexOf("<font color=\"red\">") >= 0)
+                        if (thread.uid.IndexOf("<font color=\"red\">") >= 0)
                         {
                             txtUserid.Foreground = Config.AdminColor;
-                            reply.uid = Regex.Replace(reply.uid, "</?[^>]*/?>", "");
+                            thread.uid = Regex.Replace(thread.uid, "</?[^>]*/?>", "");
                         }
-                        return reply.uid;
+                        return thread.uid;
                     default: return "";
                 }
             }
         }
-        public string replyThumb
+        public string threadReplyCount
         {
             get
             {
                 switch (islandCode)
                 {
                     case IslandsCode.A:
-                        if (string.IsNullOrEmpty(reply.img))
-                            return "";
-                        return (Config.A.PictureHost + "thumb/" + reply.img + reply.ext);
                     case IslandsCode.Beitai:
-                        if (string.IsNullOrEmpty(reply.img))
-                            return "";
-                        return (Config.B.PictureHost + reply.img + "_t" + reply.ext);
-                    case IslandsCode.Koukuko:
-                        if (string.IsNullOrEmpty(reply.thumb))
-                            return "";
-                        return (Config.K.PictureHost + reply.thumb);
+                    case IslandsCode.Koukuko: return thread.replyCount;
                     default: return "";
                 }
             }
         }
-        public string replyImage
+        public string threadThumb
         {
             get
             {
                 switch (islandCode)
                 {
                     case IslandsCode.A:
-                        if (string.IsNullOrEmpty(reply.img))
+                        if (string.IsNullOrEmpty(thread.img))
                             return "";
-                        return (Config.A.PictureHost + "image/" + reply.img + reply.ext);
+                        return (Config.A.PictureHost + "thumb/" + thread.img + thread.ext);
                     case IslandsCode.Beitai:
-                        if (string.IsNullOrEmpty(reply.img))
+                        if (string.IsNullOrEmpty(thread.img))
                             return "";
-                        return (Config.B.PictureHost + reply.img + reply.ext);
+                        return (Config.B.PictureHost + thread.img + "_t" + thread.ext);
                     case IslandsCode.Koukuko:
-                        if (string.IsNullOrEmpty(reply.image))
+                        if (string.IsNullOrEmpty(thread.thumb))
                             return "";
-                        return (Config.K.PictureHost + reply.image);
+                        return (Config.K.PictureHost + thread.thumb);
                     default: return "";
                 }
             }
         }
-        public RichTextBlock replyContent
+        public string threadImage
         {
             get
             {
+                switch (islandCode)
+                {
+                    case IslandsCode.A:
+                        if (string.IsNullOrEmpty(thread.img))
+                            return "";
+                        return (Config.A.PictureHost + "image/" + thread.img + thread.ext);
+                    case IslandsCode.Beitai:
+                        if (string.IsNullOrEmpty(thread.img))
+                            return "";
+                        return (Config.B.PictureHost + thread.img + thread.ext);
+                    case IslandsCode.Koukuko:
+                        if (string.IsNullOrEmpty(thread.image))
+                            return "";
+                        return (Config.K.PictureHost + thread.image);
+                    default: return "";
+                }
+            }
+        }
+        public RichTextBlock threadContent
+        {
+            get
+            {
+                string host = string.Empty;
                 if (rtb == null)
                 {
-                    string host = string.Empty;
                     switch (islandCode)
                     {
-                        case IslandsCode.A: host = Config.A.Host; break;
+                        case IslandsCode.A:host = Config.A.Host; break;
                         case IslandsCode.Beitai: host = Config.B.Host; break;
-                        case IslandsCode.Koukuko:host = Config.K.Host; break;
+                        case IslandsCode.Koukuko: host = Config.K.Host; break;
                         default: rtb = new RichTextBlock(); break;
                     }
-                    if (!string.IsNullOrEmpty(host)) rtb = ContentConvert(host);
+                    if(!string.IsNullOrEmpty(host)) rtb = ContentConvert(host);
                 }
                 return rtb;
             }
@@ -226,22 +235,66 @@ namespace Islands.UWP
                 if (value) txtUserid.Foreground = Config.PoColor;
             }
         }
+        public bool IsTextSelectionEnabled { get; set; }
+        public bool IsCheckboxDisplay
+        {
+            set
+            {
+                if (value) IsSelectedBox.Visibility = Visibility.Visible;
+                else {
+                    IsSelectedBox.Visibility = Visibility.Collapsed;
+                    IsSelected = false;
+                    Background = null;
+                }
+            }
+            get { return IsSelectedBox.Visibility == Visibility.Visible ? true : false; }
+        }
+        public bool IsSelected { set { IsSelectedBox.IsChecked = value; } get { return (bool)IsSelectedBox.IsChecked; } }
+        public bool NoImage
+        {
+            get
+            {
+                return ShowImageButton.Visibility == Visibility.Visible ? true : false;
+            }
+            set
+            {
+                if (!string.IsNullOrEmpty(this.threadThumb))
+                {
+                    if (value)
+                    {
+                        ShowImageButton.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        ShowImageButton.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+        }
 
         public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
         public event ImageTappedEventHandler ImageTapped;
 
-        private Model.ReplyModel reply { get; set; }
-        private IslandsCode islandCode { get; set; }
+        public void ShowImage()
+        {
+            if (!string.IsNullOrEmpty(this.threadThumb))
+            {
+                NoImage = false;
+                imageBox.Source = new BitmapImage(new Uri(this.threadThumb));
+            }
+        }
+        
         private RichTextBlock rtb;
-
+        private IslandsCode islandCode { get; set; }
         private RichTextBlock ContentConvert(string Host)
         {
             try
             {
                 //补全host
-                string s = reply.content.FixHost(Host);
+                string s = thread.content.FixHost(Host);
                 //链接处理
                 s = s.FixLinkTag();
+                //if (islandCode == IslandsCode.Koukuko) s = Regex.Replace(s, "\\[ref tid=\"(\\d+)\"/\\]", "&gt;&gt;No.$1");
                 s = HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(s, true);
                 //引用处理
                 s = s.FixRef();
@@ -252,24 +305,28 @@ namespace Islands.UWP
             {
                 rtb = new RichTextBlock();
                 Paragraph p = new Paragraph();
-                p.Inlines.Add(new Run() { Text = reply.content });
+                p.Inlines.Add(new Run() { Text = thread.content });
                 p.Inlines.Add(new Run() { Text = "\r\n*转换失败:" + ex.Message, Foreground = Config.ErrorColor });
                 rtb.Blocks.Add(p);
             }
+            Binding b = new Binding() { Source = this.DataContext, Path = new PropertyPath("ContentFontSize") };
+            BindingOperations.SetBinding(rtb, RichTextBlock.FontSizeProperty, b);
             rtb.TextWrapping = TextWrapping.Wrap;
-            rtb.IsTextSelectionEnabled = true;
-            rtb.IsTapEnabled = true;
-            foreach (var block in rtb.Blocks)
+            rtb.IsTextSelectionEnabled = IsTextSelectionEnabled;
+            if (IsTextSelectionEnabled)
             {
-                Paragraph p = block as Paragraph;
-                if (p != null)
+                foreach (var block in rtb.Blocks)
                 {
-                    foreach (var inline in p.Inlines)
+                    Paragraph p = block as Paragraph;
+                    if (p != null)
                     {
-                        Hyperlink h = inline as Hyperlink;
-                        if (h != null && h.UnderlineStyle == UnderlineStyle.None)
+                        foreach (var inline in p.Inlines)
                         {
-                            h.Click += Ref_Click;
+                            Hyperlink h = inline as Hyperlink;
+                            if (h != null)
+                            {
+                                if (h.UnderlineStyle == UnderlineStyle.None) h.Click += Ref_Click;
+                            }
                         }
                     }
                 }
@@ -286,30 +343,7 @@ namespace Islands.UWP
                 if (r != null)
                 {
                     string id = r.Text.ToLower().Replace(">>", "").Replace("no.", "");
-
-                    //从list寻找
-                    ListView lv = this.Parent as ListView;
-                    if (lv != null)
-                    {
-                        foreach (var lvi in lv.Items)
-                        {
-                            ThreadView tv = lvi as ThreadView;
-                            if (tv != null && tv.thread != null && tv.thread.id == id)
-                            {
-                                ThreadView thread = new ThreadView(tv.thread, islandCode) { Margin = new Thickness(0, 0, 5, 0), Background = null, IsTextSelectionEnabled = true };
-                                await Data.Message.ShowRef(r.Text, thread);
-                                return;
-                            }
-                            ReplyView rv = lvi as ReplyView;
-                            if (rv != null && rv.reply != null && rv.reply.id == id)
-                            {
-                                ReplyView reply = new ReplyView(rv.reply, islandCode) { Margin = new Thickness(0, 0, 5, 0) };
-                                await Data.Message.ShowRef(r.Text, reply);
-                                return;
-                            }
-                        }
-                    }
-
+                    
                     //用api
                     string req = "";
                     try
@@ -348,21 +382,28 @@ namespace Islands.UWP
             }
         }
 
-        private void OnTapped(Object sender, TappedRoutedEventArgs e)
+        private void ImageBox_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (ImageTapped != null)
                 ImageTapped(sender, e);
         }
 
-        private void ImageBox_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            OnTapped(sender, e);
-        }
-
         private void ImageBox_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(replyImage))
+            if (!string.IsNullOrEmpty(threadThumb))
+            {
                 imageBox.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
+            }
+        }
+
+        private void ImageBox_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void ShowImage_Click(object sender, RoutedEventArgs e)
+        {
+            ShowImage();
         }
     }
 }

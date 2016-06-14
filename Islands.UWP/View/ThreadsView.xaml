@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Islands.UWP.MarksView"
+    x:Class="Islands.UWP.ThreadsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Islands.UWP"
@@ -8,90 +8,86 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="TextBox">
-            <Setter Property="IsReadOnly" Value="True"></Setter>
             <Setter Property="Background" Value="Transparent"></Setter>
             <Setter Property="BorderThickness" Value="0"></Setter>
             <Setter Property="Margin" Value="0"></Setter>
             <Setter Property="Padding" Value="0"></Setter>
         </Style>
+        <local:IsShowMenuButtonConverter x:Key="IsShowMenuButtonConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+        <Slider Visibility="Collapsed" Grid.Row="3" Name="slider" Minimum="1" Value="12"></Slider>
         <RelativePanel 
             Grid.Row="0"
-            Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}"
-            >
+            Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
             <Button Name="Menu"
                     Content="&#xE700;"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="22"
                     RelativePanel.AlignLeftWithPanel="True"
-                    RelativePanel.AlignVerticalCenterWithPanel="True"
                     Background="Transparent"
-                    Visibility="Collapsed"
-                    >
+                    Click="Menu_Click"
+                    Visibility="{Binding IsHideMenu, Converter={StaticResource IsShowMenuButtonConverter}}">
             </Button>
             <TextBlock Name="Title"
-                       Text="收藏"
+                       Text=""
                        RelativePanel.RightOf="Menu"
                        FontSize="22">
             </TextBlock>
+            <Button Name="RefreshButton"
+                    Content="&#xE117;"
+                    RelativePanel.AlignRightWithPanel="True"
+                    Style="{StaticResource NavButton}"
+                    Click="RefreshButton_Click">
+            </Button>
         </RelativePanel>
         <RelativePanel Grid.Row="2"
                        Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
-            <Button Name="BackButton"
-                        x:FieldModifier="public"
-                        Content="&#xE80F;"
-                        FontFamily="Segoe MDL2 Assets"
-                        FontSize="24"
-                        Margin="0,0,5,0"
-                        Background="Transparent">
+            <Button Name="SwitchButton"
+                    x:FieldModifier="public"
+                    Content="&#xE13C;"
+                    Style="{StaticResource NavButton}">
             </Button>
-            <Button Name="DeleteButton"
-                    Content="&#xE107;"
+            <Button Name="GotoPageButton"
+                    Content="&#xE0AB;"
+                    Style="{StaticResource NavButton}"
+                    RelativePanel.RightOf="SwitchButton"
+                    Click="GotoPageButton_Click">
+            </Button>
+            <Button Name="SendButton"
+                    x:FieldModifier="public"
+                    Content="&#xE724;"
                     RelativePanel.AlignRightWithPanel="True"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="24"
-                    Margin="0,0,5,0"
-                    Background="Transparent"
-                    Click="DeleteButton_Click">
+                    Style="{StaticResource NavButton}">
             </Button>
-            <Button Name="CancelButton"
-                    Content="&#xE10A;"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="24"
-                    Margin="0,0,5,0"
-                    Background="Transparent"
-                    Visibility="Collapsed"
-                    Click="CancelButton_Click">
-            </Button>
-            <TextBlock></TextBlock>
         </RelativePanel>
-        <ScrollViewer Name="markListScrollViewer"
-                  Grid.Row="1">
-            <ListView Name="markListView"
-                  CanReorderItems="True"
+        <ScrollViewer Name="threadListScrollViewer"
+                      Grid.Row="1">
+        <ListView Name="threadListView"
                   IsItemClickEnabled="True"
                   SelectionMode="None"
+                  AllowDrop="False"                  
                   ItemClick="ListView_ItemClick">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="Margin" Value="0,0,14,0"/>
-                        <Setter Property="Padding" Value="0"></Setter>
+                        <Setter Property="Padding" Value="0"/>
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
         </ScrollViewer>
+        <Grid Background="Black" Opacity="{Binding MaskOpacity}" Grid.Row="0" Grid.RowSpan="3"  IsHitTestVisible="False"></Grid>
         <ProgressRing Grid.Row="1"
-                      Name="MarkLoading"
+                      Name="ThreadLoading"
                       Width="100"
                       Height="100"
                       IsActive="False">
-        </ProgressRing>
-    </Grid>
+        </ProgressRing></Grid>
 </UserControl>

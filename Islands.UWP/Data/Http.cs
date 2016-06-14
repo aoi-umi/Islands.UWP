@@ -30,12 +30,16 @@ namespace Islands.UWP.Data
         {
             try
             {
+                string sendId = send.sendId;
+                string groupId = send.sendId.Substring(sendId.IndexOf("#") + 1);
+                send.sendId = sendId.Replace("#" + groupId, "");              
                 HttpContent postContent;
                 MultipartContent multiContent = new MultipartContent("form-data");
                 StringContent NameContent = new StringContent(send.sendName, Encoding.UTF8);
                 StringContent EmailContent = new StringContent(send.sendEmail, Encoding.UTF8);
                 StringContent TitleContent = new StringContent(send.sendTitle, Encoding.UTF8);
                 StringContent ContentContent = new StringContent(send.sendContent, Encoding.UTF8);
+                StringContent ForumContent = new StringContent(groupId, Encoding.UTF8);
                 StringContent FidOrRestoContent = new StringContent(send.sendId, Encoding.UTF8);
 
                 if (send.isMain)
@@ -47,8 +51,11 @@ namespace Islands.UWP.Data
                 EmailContent.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("form-data;name=\"email\"");
                 TitleContent.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("form-data;name=\"title\"");
                 ContentContent.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("form-data;name=\"content\"");
+                ForumContent.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("form-data;name=\"forum\"");
                 if (send.islandCode == IslandsCode.A || send.islandCode == IslandsCode.Beitai)
                     multiContent.Add(FidOrRestoContent);
+                else if (send.islandCode == IslandsCode.Koukuko && send.isMain)
+                    multiContent.Add(ForumContent);
 
                 multiContent.Add(NameContent);
                 multiContent.Add(EmailContent);

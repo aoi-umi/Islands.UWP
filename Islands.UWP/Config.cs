@@ -11,14 +11,28 @@ namespace Islands.UWP
         Beitai = 2
     };
 
+    public static class Settings
+    {
+        public const string NightMode = "NightMode";
+        public const string TitleFontSize = "TitleFontSize";
+        public const string ContentFontSize = "ContentFontSize";
+        public const string MaskOpacity = "MaskOpacity";
+        public const string IsAskEachTime = "IsAskEachTime";
+        public const string BackgroundImagePath = "BackgroundImagePath";
+        public const string NoImage = "NoImage";
+        public const string IsHideMenu = "IsHideMenu";
+    }
+
     public static class Config
     {
         public static Brush PoColor = new SolidColorBrush(Colors.Blue);
         public static Brush AdminColor = new SolidColorBrush(Colors.Red);
         public static Brush ErrorColor = new SolidColorBrush(Colors.Gray);
-        public static Brush SelectedColor = new SolidColorBrush(Colors.AliceBlue);
+        public static Brush SelectedColor = new SolidColorBrush(Colors.LightGray);
         public static string dbName = "Islands.db";
+        public static string ConnectDatabaseError = "连接数据库失败";
         public static string FailedImageUri = "ms-appx:/Assets/luwei.jpg";
+        //App.Current.Resources["SystemListLowColor"];
         #region 颜文字
         public static List<string> Emoji = new List<string>() {
             "|∀ﾟ",
@@ -210,7 +224,7 @@ namespace Islands.UWP
         }
         public static class K
         {
-            public static string Host = "http://kukuku.cc";
+            public static string Host = "http://h.koukuko.com";
             public static string PictureHost = "http://static.koukuko.com/h";
             public static string GetThreadAPI = "{0}/api/{1}?page={2}";
             public static string GetReplyAPI = "{0}/api/t/{1}?page={2}";
@@ -221,66 +235,67 @@ namespace Islands.UWP
             #region 板块
             public static List<string> Forums = new List<string>() {
                 "综合,,group",
-                "综合版1,综合版1,1",
-                "欢乐恶搞,欢乐恶搞,1",
-                "推理,推理,1",
-                "技术讨论,技术宅,1",
-                "美食,料理,1",
-                "喵版,貓版,1",
-                "音乐,音乐,1",
-                "体育,体育,1",
-                "军武,军武,1",
-                "模型,模型,1",
-                "考试,考试,1",
-                "数码,数码,1",
-                "日记,日记,1",
-                "速报,速报,1",
-                "都市怪谈,都市怪谈,1",
+                "综合版1,综合版1,4",
+                "欢乐恶搞,欢乐恶搞,20",
+                "推理,推理,11",
+                "技术讨论,技术宅,30",
+                "美食,料理,32",
+                "喵版,貓版,40",
+                "音乐,音乐,35",
+                "体育,体育,33",
+                "军武,军武,37",
+                "模型,模型,39",
+                "考试,考试,56",
+                "数码,数码,75",
+                "日记,日记,89",
+                "速报,速报,83",
+                "都市怪谈,都市怪谈,81",
 
                 "二次元,,group",
-                "动画,动画,1",
-                "漫画,漫画,1",
-                "美漫,美漫,1",
-                "轻小说,轻小说,1",
-                "小说,小说,1",
-                "二次创作,二次创作,1",
-                "VOCALOID,VOCALOID,1",
-                "东方,东方Project,1",
-                "辣鸡,辣鸡,1",
+                "动画,动画,14",
+                "漫画,漫画,12",
+                "美漫,美漫,90",
+                "轻小说,轻小说,87",
+                "小说,小说,19",
+                "二次创作,二次创作,17",
+                "VOCALOID,VOCALOID,6",
+                "东方,东方Project,5",
+                "辣鸡,辣鸡,95",
 
                 "游戏,,group",
-                "游戏综合版,游戏,1",
-                "EVE,EVE,1",
-                "DNF,DNF,1",
-                "战争雷霆,战争雷霆,1",
-                "百万亚瑟王,扩散性百万亚瑟王,1",
-                "LOL,LOL,1",
-                "DOTA,DOTA,1",
-                "MC,Minecraft,1",
-                "音游,MUG,1",
-                "MUGEN,MUGEN,1",
-                "WOT,WOT,1",
-                "WOW,WOW,1",
-                "D3,D3,1",
-                "卡牌桌游,卡牌桌游,1",
-                "炉石传说,炉石传说,1",
-                "怪物猎人,怪物猎人,1",
-                "口袋妖怪,口袋妖怪,1",
-                "索尼,索尼,1",
-                "任天堂,任天堂,1",
-                "日麻,日麻,1",
-                "舰娘,舰娘,1",
-                "LL,LoveLive,1",
+                "游戏综合版,游戏,2",
+                "EVE,EVE,73",
+                "DNF,DNF,72",
+                "战争雷霆,战争雷霆,86",
+                "百万亚瑟王,扩散性百万亚瑟王,63",
+                "LOL,LOL,22",
+                "DOTA,DOTA,70",
+                "MC,Minecraft,10",
+                "音游,MUG,34",
+                "MUGEN,MUGEN,48",
+                "WOT,WOT,51",
+                "WOW,WOW,44",
+                "D3,D3,23",
+                "卡牌桌游,卡牌桌游,45",
+                "炉石传说,炉石传说,80",
+                "怪物猎人,怪物猎人,28",
+                "口袋妖怪,口袋妖怪,38",
+                "索尼,索尼,24",
+                "任天堂,任天堂,25",
+                "日麻,日麻,92",
+                "舰娘,舰娘,93",
+                "LL,LoveLive,97",
+                "辐射,辐射,96",
 
                 "三次元,,group",
-                "AKB48,AKB,1",
-                "眼科,COSPLAY,1",
-                "影视,影视,1",
-                "摄影,摄影,1",
-                "声优,声优,1",
+                "AKB48,AKB,16",
+                "眼科,COSPLAY,13",
+                "影视,影视,31",
+                "摄影,摄影,54",
+                "声优,声优,55",
 
                 "其他,,group",
-                "询问2,询问2,1"
+                "询问2,询问2,36"
             };
             #endregion
         }

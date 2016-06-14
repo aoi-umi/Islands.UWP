@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -15,10 +14,12 @@ namespace Islands.UWP
     {
         public ThreadsView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            DataContext = MainPage.Global;
+            string DeviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;//Windows.Desktop Windows.Mobile
             threadListScrollViewer.ViewChanged += ThreadListScrollViewer_ViewChanged;
             ThreadStatusBox.Tapped += ThreadStatusBox_Tapped;
-            threadListView.Items.Add(ThreadStatusBox);
+            threadListView.Items.Add(ThreadStatusBox); 
             if (IsInitRefresh)
                 _Refresh(1);
         }
@@ -29,11 +30,13 @@ namespace Islands.UWP
         
         public string initTitle { set { Title.Text = value; } }
         public Model.ForumModel currForum { get; set; }
-
+        
         public delegate void ThreadClickEventHandler(Object sender, ItemClickEventArgs e);
         public event ThreadClickEventHandler ThreadClick;
         public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
         public event ImageTappedEventHandler ImageTapped;
+        public delegate void MenuClickEventHandler(Object sender, RoutedEventArgs e);
+        public event MenuClickEventHandler MenuClick;
 
         public void RefreshById(Model.ForumModel forum)
         {
@@ -146,8 +149,9 @@ namespace Islands.UWP
                 {
                     var tm = Data.Json.Deserialize<Model.ThreadModel>(thread.ToString());
                     var tv = new ThreadView(tm, code);
+
                     tv.ImageTapped += Image_ImageTapped;
-                    if (i % 2 == 1) tv.Background = null;
+                    if (!MainPage.Global.NoImage) tv.ShowImage();
                     threadListView.Items.Add(tv);
                     ++i;
                 }
@@ -176,13 +180,10 @@ namespace Islands.UWP
         {
             ThreadView tv = e.ClickedItem as ThreadView;
             if (tv != null)
-                OnItemClick(e);
-        }
-
-        private void OnItemClick(ItemClickEventArgs e)
-        {
-            if (ThreadClick != null)
-                ThreadClick(this, e);
+            {
+                if (ThreadClick != null)
+                    ThreadClick(sender, e);
+            }
         }
 
         //点击图片
@@ -191,5 +192,10 @@ namespace Islands.UWP
             if (ImageTapped != null)
                 ImageTapped(sender, e);
         }
-    }
+
+        private void Menu_Click(object sender, RoutedEventArgs e)
+        {
+            if (MenuClick != null) MenuClick(sender, e);
+        }        
+    }   
 }

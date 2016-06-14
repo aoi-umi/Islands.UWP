@@ -20,6 +20,16 @@ namespace Islands.UWP
 {
     public sealed partial class MyReplyView : UserControl
     {
+
+        public MyReplyView(Model.SendModel myReply, IslandsCode islandCode)
+        {
+            this.InitializeComponent();
+            this.myReply = myReply;
+            this.islandCode = islandCode;
+            if (!string.IsNullOrEmpty(myReplyImage))
+                Data.File.SetLocalImage(imageBox, myReplyImage);
+        }
+
         public Visibility myReplyIsHadTitle
         {
             get
@@ -171,16 +181,7 @@ namespace Islands.UWP
 
         public Model.SendModel myReply {get; set; }
 
-        IslandsCode islandCode { get; set; }
-
-        public MyReplyView(Model.SendModel myReply, IslandsCode islandCode)
-        {
-            this.InitializeComponent();
-            this.myReply = myReply;
-            this.islandCode = islandCode;
-            if(!string.IsNullOrEmpty(myReplyImage))
-                Data.File.SetLocalImage(imageBox, myReplyImage);
-        }
+        private IslandsCode islandCode { get; set; }
 
         private void ImageBox_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {

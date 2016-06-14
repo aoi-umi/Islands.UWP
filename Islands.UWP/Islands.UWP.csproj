@@ -19,7 +19,7 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>Islands.UWP_StoreKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>13F30BA3F95E5F662A570D7A4B30F050604E3476</PackageCertificateThumbprint>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|arm</AppxBundlePlatforms>
   </PropertyGroup>
@@ -104,6 +104,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converter.cs" />
     <Compile Include="Data\Database.cs" />
     <Compile Include="Data\Extension.cs" />
     <Compile Include="Data\File.cs" />
@@ -115,48 +116,52 @@
     <Compile Include="HTMLConverter\htmlschema.cs" />
     <Compile Include="HTMLConverter\htmltokentype.cs" />
     <Compile Include="HTMLConverter\htmltoxamlconverter.cs" />
-    <Compile Include="ImageView.xaml.cs">
+    <Compile Include="View\ImageView.xaml.cs">
       <DependentUpon>ImageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\ResponseModel.cs" />
     <Compile Include="Model\SendModel.cs" />
-    <Compile Include="MyReplysView.xaml.cs">
+    <Compile Include="Model\SettingModel.cs" />
+    <Compile Include="MyGlobal.cs" />
+    <Compile Include="View\MyReplysView.xaml.cs">
       <DependentUpon>MyReplysView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MyReplyView.xaml.cs">
+    <Compile Include="View\MyReplyView.xaml.cs">
       <DependentUpon>MyReplyView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SendView.xaml.cs">
+    <Compile Include="View\SendView.xaml.cs">
       <DependentUpon>SendView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\ForumModel.cs" />
     <Compile Include="Model\ThreadModel.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="ReplaysView.xaml.cs">
+    <Compile Include="View\ReplaysView.xaml.cs">
       <DependentUpon>ReplaysView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\ReplyModel.cs" />
-    <Compile Include="ReplyView.xaml.cs">
+    <Compile Include="View\ReplyView.xaml.cs">
       <DependentUpon>ReplyView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MarksView.xaml.cs">
+    <Compile Include="View\MarksView.xaml.cs">
       <DependentUpon>MarksView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ThreadsView.xaml.cs">
+    <Compile Include="View\SettingView.xaml.cs">
+      <DependentUpon>SettingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ThreadsView.xaml.cs">
       <DependentUpon>ThreadsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\Http.cs" />
-    <Compile Include="MainControl.xaml.cs">
+    <Compile Include="View\MainControl.xaml.cs">
       <DependentUpon>MainControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\CookieModel.cs" />
     <Compile Include="Model\PostRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ThreadView.xaml.cs">
+    <Compile Include="View\ThreadView.xaml.cs">
       <DependentUpon>ThreadView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WinRTExceptions\ExceptionHandlingSynchronizationContext.cs" />
@@ -184,39 +189,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="ImageView.xaml">
+    <Page Include="View\ImageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MyReplysView.xaml">
+    <Page Include="View\MyReplysView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MyReplyView.xaml">
+    <Page Include="View\MyReplyView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SendView.xaml">
+    <Page Include="View\SendView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ReplaysView.xaml">
+    <Page Include="View\ReplaysView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ReplyView.xaml">
+    <Page Include="View\ReplyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MarksView.xaml">
+    <Page Include="View\MarksView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ThreadsView.xaml">
+    <Page Include="View\SettingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainControl.xaml">
+    <Page Include="View\ThreadsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -224,7 +233,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ThreadView.xaml">
+    <Page Include="View\ThreadView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

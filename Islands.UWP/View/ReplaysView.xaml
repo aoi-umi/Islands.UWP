@@ -14,6 +14,7 @@
             <Setter Property="Margin" Value="0"></Setter>
             <Setter Property="Padding" Value="0"></Setter>
         </Style>
+        <local:IsShowMenuButtonConverter x:Key="IsShowMenuButtonConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -23,17 +24,13 @@
         </Grid.RowDefinitions>
         <RelativePanel 
             Grid.Row="0"
-            Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}"
-            >
+            Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
             <Button Name="Menu"
                     Content="&#xE700;"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="24"
                     RelativePanel.AlignLeftWithPanel="True"
-                    RelativePanel.AlignVerticalCenterWithPanel="True"
-                    Background="Transparent"
-                    Visibility="Collapsed"
-                    >
+                    Click="Menu_Click"
+                    Style="{StaticResource NavButton}"
+                    Visibility="{Binding IsHideMenu, Converter={StaticResource IsShowMenuButtonConverter}}">
             </Button>
             <TextBlock Name="Title"
                        RelativePanel.RightOf="Menu"
@@ -45,18 +42,14 @@
             </TextBlock>
             <Button Name="RefreshButton"
                     Content="&#xE117;"
-                    RelativePanel.AlignRightWithPanel="True"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="24"
-                    Background="Transparent"
+                    RelativePanel.AlignRightWithPanel="True"                    
+                    Style="{StaticResource NavButton}"
                     Click="RefreshButton_Click">
             </Button>
             <Button Name="MarkButton"
                     Content="&#xE734;"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="24"
+                    Style="{StaticResource NavButton}"
                     RelativePanel.LeftOf="RefreshButton"
-                    Background="Transparent"
                     Click="MarkButton_Click">
                 </Button>
         </RelativePanel>
@@ -65,25 +58,19 @@
             <Button Name="SwitchButton"
                     x:FieldModifier="public"
                     Content="&#xE13C;"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="24"
-                    Background="Transparent">
+                    Style="{StaticResource NavButton}">
             </Button>
             <Button Name="GotoPageButton"
                     Content="&#xE0AB;"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="24"
+                    Style="{StaticResource NavButton}"
                     RelativePanel.RightOf="SwitchButton"
-                    Background="Transparent"
                     Click="GotoPageButton_Click">
             </Button>
             <Button Name="SendButton"
                     x:FieldModifier="public"
                     Content="&#xE724;"
                     RelativePanel.AlignRightWithPanel="True"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="24"
-                    Background="Transparent">
+                    Style="{StaticResource NavButton}">
             </Button>
         </RelativePanel>
         <ScrollViewer Name="replyListScrollViewer"
@@ -101,6 +88,7 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </ScrollViewer>
+        <Grid Background="Black" Opacity="{Binding MaskOpacity}" Grid.Row="0" Grid.RowSpan="3" IsHitTestVisible="False"></Grid>
         <ProgressRing Grid.Row="1"
                       Name="ReplyLoading"
                       Width="100"

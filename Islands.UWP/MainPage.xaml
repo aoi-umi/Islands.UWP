@@ -5,7 +5,7 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" >
     <Page.Resources>
         <Style TargetType="Pivot">
             <Setter Property="FontSize" Value="10"></Setter>
@@ -16,6 +16,7 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
+        <Image Name="BackgroundImage" Stretch="UniformToFill" Opacity="0.5"/>
         <Pivot>
             <PivotItem Name="pivotItemA" Header="A" Margin="0">
                 <local:MainControl />
@@ -27,5 +28,6 @@
                 <local:MainControl />
             </PivotItem>
         </Pivot>
+        <local:SettingView x:Name="SettingControl"  Visibility="Collapsed"/>
     </Grid>
 </Page>

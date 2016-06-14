@@ -18,11 +18,9 @@
             >
             <Button Name="Menu"
                     Content="&#xE700;"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="22"
                     RelativePanel.AlignLeftWithPanel="True"
                     RelativePanel.AlignVerticalCenterWithPanel="True"
-                    Background="Transparent"
+                    Style="{StaticResource NavButton}"
                     Visibility="Collapsed"
                     >
             </Button>
@@ -34,10 +32,7 @@
             <Button Name="RefreshButton"
                     Content="&#xE117;"
                     RelativePanel.AlignRightWithPanel="True"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="24"
-                    Margin="0,0,5,0"
-                    Background="Transparent"
+                    Style="{StaticResource NavButton}"
                     Click="RefreshButton_Click">
             </Button>
         </RelativePanel>
@@ -46,15 +41,11 @@
             <Button Name="BackButton"
                     x:FieldModifier="public"
                     Content="&#xE80F;"
-                    FontFamily="Segoe MDL2 Assets"
-                    FontSize="24"
-                    Background="Transparent"></Button>
+                    Style="{StaticResource NavButton}"></Button>
             <Button Name="SaveButton"
                     Content="&#xE105;"
-                    FontFamily="Segoe MDL2 Assets"
                     RelativePanel.AlignRightWithPanel="True"
-                    FontSize="24"
-                    Background="Transparent"></Button>
+                    Style="{StaticResource NavButton}"></Button>
         </RelativePanel>
         <WebView Name="ImageWebView"
                   Grid.Row="1">

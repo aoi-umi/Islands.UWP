@@ -17,15 +17,15 @@ namespace Islands.UWP.Data
         public static async Task<string> SetLocalImage(Image image)
         {
             var imageUri = "";
-            FileOpenPicker openFile = new FileOpenPicker();
-            openFile.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-            openFile.ViewMode = PickerViewMode.List;
-            openFile.FileTypeFilter.Add(".jpg");
-            openFile.FileTypeFilter.Add(".jpeg");
-            openFile.FileTypeFilter.Add(".bmp");
-            openFile.FileTypeFilter.Add(".gif");
-            openFile.FileTypeFilter.Add(".png");
-            StorageFile file = await openFile.PickSingleFileAsync();
+            FileOpenPicker Picker = new FileOpenPicker();
+            Picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            Picker.ViewMode = PickerViewMode.List;
+            Picker.FileTypeFilter.Add(".jpg");
+            Picker.FileTypeFilter.Add(".jpeg");
+            Picker.FileTypeFilter.Add(".bmp");
+            Picker.FileTypeFilter.Add(".gif");
+            Picker.FileTypeFilter.Add(".png");
+            StorageFile file = await Picker.PickSingleFileAsync();
             if (file != null)
             {
                 StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", file);
@@ -36,6 +36,15 @@ namespace Islands.UWP.Data
                 imageUri = file.Path;
             }
             return imageUri;
+        }
+
+        public static async Task<string> SetPath()
+        {
+            FolderPicker Picker = new FolderPicker();
+            Picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            Picker.FileTypeFilter.Add(".");
+            StorageFolder Folder = await Picker.PickSingleFolderAsync();
+            return Folder.Path;
         }
 
         public static async void SetLocalImage(Image image, string path)
@@ -92,6 +101,33 @@ namespace Islands.UWP.Data
                 await downloadFile.CopyAndReplaceAsync(file);
                 //var buffer = await FileIO.ReadBufferAsync(downloadFile);
                 //await FileIO.WriteBufferAsync(file, buffer);
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+                if (status == FileUpdateStatus.Failed)
+                {
+                    Message.ShowMessage("图片保存失败");
+                }
+                else
+                {
+                    Message.ShowMessage("图片保存成功");
+                }
+            }
+
+        }
+
+        public static async void SaveFileWithoutDialog(string urlStr)
+        {
+            var uri = new Uri(urlStr);
+            string filename = Path.GetFileName(urlStr);
+            var savePicker = new FileSavePicker();
+            StorageFolder folder = KnownFolders.SavedPictures;
+            StorageFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+            if (file != null)
+            {
+                CachedFileManager.DeferUpdates(file);
+                var downloadFile = await StorageFile.CreateStreamedFileFromUriAsync(filename, uri, RandomAccessStreamReference.CreateFromUri(uri));
+                var readStream = await downloadFile.OpenReadAsync();
+                var inStream = readStream.AsStreamForRead().AsInputStream();
+                await downloadFile.CopyAndReplaceAsync(file);
                 FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
                 if (status == FileUpdateStatus.Failed)
                 {

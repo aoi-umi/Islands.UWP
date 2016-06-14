@@ -2,6 +2,7 @@
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -22,11 +23,25 @@ namespace Islands.UWP
             Microsoft.ApplicationInsights.WindowsAppInitializer.InitializeAsync(
                 Microsoft.ApplicationInsights.WindowsCollectors.Metadata |
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
-            this.UnhandledException += OnUnhandledException;
+            InitializeComponent();
+            Suspending += OnSuspending;
+            UnhandledException += OnUnhandledException;
+
+            string DeviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;//Windows.Desktop Windows.Mobile
+
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+            
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            {
+                Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+            }
         }
-        
+
+        private void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -123,6 +138,6 @@ namespace Islands.UWP
             args.Handled = true;
             int n = new Random().Next(0, Config.ErrorMessage.Count);
             Data.Message.ShowMessage("未处理错误:" + args.Exception.ToString(), Data.Message.GetRandomErrorMessage());
-        }
+        }        
     }
 }

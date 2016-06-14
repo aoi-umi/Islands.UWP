@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -14,6 +14,7 @@ namespace Islands.UWP
         public ReplysView()
         {
             InitializeComponent();
+            this.DataContext = MainPage.Global;
             replyListView.Items.Add(ReplyStatusBox);
             replyListScrollViewer.ViewChanged += ReplyListScrollViewer_ViewChanged;
             ReplyStatusBox.Tapped += ReplyStatusBox_Tapped;
@@ -22,19 +23,14 @@ namespace Islands.UWP
         public Model.PostRequest postReq;
         public IslandsCode islandCode;
         public int pageSize { get; set; }
-        public class PostModel
-        {
-            public string ReplyID { get; set; }
-            public string Host { get; set; }
-            public string GetReplyAPI { get; set; }
-            public PostModel() { }
-        }
-        public string currThread { get; set; }
+        public string currThread { get; set; }      
 
         public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
         public event ImageTappedEventHandler ImageTapped;
         public delegate void MarkSuccessEventHandler(Object sender, Model.ThreadModel t);
         public event MarkSuccessEventHandler MarkSuccess;
+        public delegate void MenuClickEventHandler(Object sender, RoutedEventArgs e);
+        public event MenuClickEventHandler MenuClick;
 
         public void GetReplyListByID(string threadId, int markId)
         {
@@ -137,6 +133,7 @@ namespace Islands.UWP
             currPage = req.Page;
             try
             {
+                if (string.IsNullOrEmpty(req.ID)) throw new Exception("串号为空");
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
                 JObject jObj;
                 if (!Data.Json.TryDeserializeObject(res, out jObj)) throw new Exception(res.UnicodeDencode());                
@@ -152,6 +149,7 @@ namespace Islands.UWP
                             Replys = Data.Json.Deserialize<JArray>(jObj["replys"].ToString());
                         break;
                     case IslandsCode.Koukuko:
+                        if (jObj["success"].ToString().ToLower() != "true") throw new Exception(jObj["message"].ToString());
                         top = Data.Json.Deserialize<Model.ThreadModel>(jObj["threads"].ToString());
                         if (jObj["replys"].HasValues)
                             Replys = Data.Json.Deserialize<JArray>(jObj["replys"].ToString());
@@ -167,6 +165,7 @@ namespace Islands.UWP
                     var tv = new ThreadView(top, code) { Tag = top, IsTextSelectionEnabled = true,Background = null };
                     tv.ImageTapped += Image_ImageTapped;
                     tv.IsPo = true;
+                    if(!MainPage.Global.NoImage) tv.ShowImage();
                     replyListView.Items.Add(tv);
                 }
                 replyCount = _replyCount;
@@ -182,6 +181,7 @@ namespace Islands.UWP
                 foreach (var reply in Replys)
                 {
                     Model.ReplyModel rm = Data.Json.Deserialize<Model.ReplyModel>(reply.ToString());
+                    int index = Replys.IndexOf(reply);
                     if (lastReply == null && Replys.IndexOf(reply) == Replys.Count - 1)
                         lastReply = rm;
                     else if (lastReply != null)
@@ -190,9 +190,9 @@ namespace Islands.UWP
                         {
                             case IslandsCode.A:
                             case IslandsCode.Beitai:
-                                if (String.Compare(rm.now, lastReply.now) <= 0) continue; break;
+                                if (String.Compare(rm.id, lastReply.id) <= 0) continue; break;
                             case IslandsCode.Koukuko:
-                                if (String.Compare(rm.createdAt, lastReply.createdAt) <= 0) continue; break;
+                                if (String.Compare(rm.id, lastReply.id) <= 0) continue; break;
                         }
                         lastReply = rm;
                     }
@@ -267,12 +267,9 @@ namespace Islands.UWP
                 }
                 if (top != null)
                 {
-                    using (var conn = Data.Database.GetDbConnection<Model.ThreadModel>())
-                    {
-                        conn.Insert(top);
-                        OnMarkSuccess();
-                        Data.Message.ShowMessage("收藏成功");
-                    }
+                    Data.Database.Insert(top);
+                    OnMarkSuccess();
+                    Data.Message.ShowMessage("收藏成功");
                 }
             }
             catch (Exception ex)
@@ -285,6 +282,11 @@ namespace Islands.UWP
         {
             if (this.MarkSuccess != null)
                 this.MarkSuccess(this, top);
+        }
+
+        private void Menu_Click(object sender, RoutedEventArgs e)
+        {
+            if (MenuClick != null) MenuClick(sender, e);
         }
     }
 }
