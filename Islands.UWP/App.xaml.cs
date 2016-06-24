@@ -26,11 +26,8 @@ namespace Islands.UWP
             InitializeComponent();
             Suspending += OnSuspending;
             UnhandledException += OnUnhandledException;
-
-            string DeviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;//Windows.Desktop Windows.Mobile
-
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
             
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
                 Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
@@ -48,9 +45,14 @@ namespace Islands.UWP
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
-
+            //string DeviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;//Windows.Desktop Windows.Mobile
+            //if (DeviceFamily == "Windows.Mobile")
+            //{
+            //    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+            //    //await StatusBar.GetForCurrentView().ShowAsync();
+            //}
             EnsureSyncContext();
 
 #if DEBUG

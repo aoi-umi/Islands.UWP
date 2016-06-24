@@ -39,7 +39,6 @@ namespace Islands.UWP
             mainControlA.Init();
             pivotItemA.Content = mainControlA;
 
-
             MainControl mainControlK = new MainControl()
             {
                 Host = Config.K.Host,

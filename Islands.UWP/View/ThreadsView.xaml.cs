@@ -19,7 +19,8 @@ namespace Islands.UWP
             string DeviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;//Windows.Desktop Windows.Mobile
             threadListScrollViewer.ViewChanged += ThreadListScrollViewer_ViewChanged;
             ThreadStatusBox.Tapped += ThreadStatusBox_Tapped;
-            threadListView.Items.Add(ThreadStatusBox); 
+            threadListView.Items.Add(ThreadStatusBox);
+            currPage = 1;
             if (IsInitRefresh)
                 _Refresh(1);
         }
@@ -57,7 +58,7 @@ namespace Islands.UWP
 
         private void ThreadStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            postReq.Page = currPage + 1;
+            postReq.Page = currPage;
             GetThreadList(postReq, islandCode);
         }
 
@@ -110,7 +111,7 @@ namespace Islands.UWP
                 try
                 {
                     sv.ChangeView(null, sv.VerticalOffset - 1, null);
-                    postReq.Page = currPage + 1;
+                    postReq.Page = currPage;
                     GetThreadList(postReq, islandCode);
                 }
                 catch (Exception ex)
@@ -144,7 +145,6 @@ namespace Islands.UWP
                 if (Threads.Count == 0)
                     throw new Exception("什么也没有");
                 threadListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
-                int i = 0;
                 foreach (var thread in Threads)
                 {
                     var tm = Data.Json.Deserialize<Model.ThreadModel>(thread.ToString());
@@ -153,9 +153,8 @@ namespace Islands.UWP
                     tv.ImageTapped += Image_ImageTapped;
                     if (!MainPage.Global.NoImage) tv.ShowImage();
                     threadListView.Items.Add(tv);
-                    ++i;
                 }
-                currPage = req.Page;
+                ++currPage;
             }
             catch (Exception ex)
             {

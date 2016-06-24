@@ -186,14 +186,17 @@ namespace Islands.UWP
                         lastReply = rm;
                     else if (lastReply != null)
                     {
-                        switch (code)
-                        {
-                            case IslandsCode.A:
-                            case IslandsCode.Beitai:
-                                if (String.Compare(rm.id, lastReply.id) <= 0) continue; break;
-                            case IslandsCode.Koukuko:
-                                if (String.Compare(rm.id, lastReply.id) <= 0) continue; break;
-                        }
+                        int currId, lastId;
+                        int.TryParse(rm.id, out currId);
+                        int.TryParse(lastReply.id, out lastId);
+                        //switch (code)
+                        //{
+                        //    case IslandsCode.A:
+                        //    case IslandsCode.Beitai:
+                        //    case IslandsCode.Koukuko:
+                        //        if (rm.id.Length < lastReply.id.Length || String.Compare(rm.id, lastReply.id) <= 0) continue; break;
+                        //}
+                        if (currId <= lastId) continue;
                         lastReply = rm;
                     }
                     var rv = new ReplyView(rm, code);
