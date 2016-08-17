@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -136,36 +138,39 @@ namespace Islands.UWP
                 if (string.IsNullOrEmpty(req.ID)) throw new Exception("串号为空");
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
                 JObject jObj;
-                if (!Data.Json.TryDeserializeObject(res, out jObj)) throw new Exception(res.UnicodeDencode());                
+                if (!Data.Json.TryDeserializeObject(res, out jObj)) throw new Exception(res.UnicodeDencode());
 
+                List<Model.ReplyModel> Replys = null;
                 top = null;
-                JArray Replys = null;
                 switch (code)
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
                         top = Data.Json.Deserialize<Model.ThreadModel>(res);
-                        if (jObj["replys"].HasValues)
-                            Replys = Data.Json.Deserialize<JArray>(jObj["replys"].ToString());
+                        Model.ABReplyQueryResponse abResModel = Data.Json.Deserialize<Model.ABReplyQueryResponse>(res);
+                        if(abResModel != null) Replys = abResModel.replys;                        
                         break;
                     case IslandsCode.Koukuko:
-                        if (jObj["success"].ToString().ToLower() != "true") throw new Exception(jObj["message"].ToString());
-                        top = Data.Json.Deserialize<Model.ThreadModel>(jObj["threads"].ToString());
-                        if (jObj["replys"].HasValues)
-                            Replys = Data.Json.Deserialize<JArray>(jObj["replys"].ToString());
+                        Model.KReplyQueryResponse kResModel = Data.Json.Deserialize<Model.KReplyQueryResponse>(res);
+                        if (kResModel != null)
+                        {
+                            if (!kResModel.success) throw new Exception(kResModel.message);
+                            top = kResModel.threads;
+                            Replys = kResModel.replys;
+                        }                        
                         break;
                 }
                 top.islandCode = code;
-                top._id = markId;                
+                top._id = markId;
 
                 int _replyCount;
                 int.TryParse(top.replyCount, out _replyCount);
                 if (replyListView.Items.Count == 0 && top != null)
                 {
-                    var tv = new ThreadView(top, code) { Tag = top, IsTextSelectionEnabled = true,Background = null };
+                    var tv = new ThreadView(top, code) { Tag = top, IsTextSelectionEnabled = true, Background = null };
                     tv.ImageTapped += Image_ImageTapped;
                     tv.IsPo = true;
-                    if(!MainPage.Global.NoImage) tv.ShowImage();
+                    if (!MainPage.Global.NoImage) tv.ShowImage();
                     replyListView.Items.Add(tv);
                 }
                 replyCount = _replyCount;
@@ -175,32 +180,26 @@ namespace Islands.UWP
                     IsGetAllReply = true;
                     throw new Exception("已经没有了");
                 }
+                //Replys = Replys.OrderBy(x=>x.id);
 
-                if((replyListView.Items.Count - 1) % (pageSize + 1) == 0)
+                if ((replyListView.Items.Count - 1) % (pageSize + 1) == 0)
                     replyListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
+
+                Replys = Replys.OrderBy(x => x.id).ToList();
                 foreach (var reply in Replys)
                 {
-                    Model.ReplyModel rm = Data.Json.Deserialize<Model.ReplyModel>(reply.ToString());
-                    int index = Replys.IndexOf(reply);
                     if (lastReply == null && Replys.IndexOf(reply) == Replys.Count - 1)
-                        lastReply = rm;
+                        lastReply = reply;
                     else if (lastReply != null)
                     {
                         int currId, lastId;
-                        int.TryParse(rm.id, out currId);
+                        int.TryParse(reply.id, out currId);
                         int.TryParse(lastReply.id, out lastId);
-                        //switch (code)
-                        //{
-                        //    case IslandsCode.A:
-                        //    case IslandsCode.Beitai:
-                        //    case IslandsCode.Koukuko:
-                        //        if (rm.id.Length < lastReply.id.Length || String.Compare(rm.id, lastReply.id) <= 0) continue; break;
-                        //}
                         if (currId <= lastId) continue;
-                        lastReply = rm;
+                        lastReply = reply;
                     }
-                    var rv = new ReplyView(rm, code);
-                    if ((code == IslandsCode.Koukuko && rm.uid == top.uid) || (code != IslandsCode.Koukuko && rm.userid == top.userid))
+                    var rv = new ReplyView(reply, code);
+                    if ((code == IslandsCode.Koukuko && reply.uid == top.uid) || (code != IslandsCode.Koukuko && reply.userid == top.userid))
                         rv.IsPo = true;
                     rv.ImageTapped += Image_ImageTapped;
                     replyListView.Items.Add(rv);

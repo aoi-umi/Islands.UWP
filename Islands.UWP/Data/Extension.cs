@@ -47,5 +47,10 @@ namespace Islands.UWP
         {
             return Regex.Replace(str, "(<Run Foreground=\"#789922\">)?(&gt;&gt;.*?(\\d+))(.*?</Run>)?", "<Hyperlink UnderlineStyle =\"None\" Foreground=\"#789922\">$2</Hyperlink>");
         }
+
+        public static string FixEntity(this string str)
+        {
+            return Regex.Replace(str, "xff.{2};", "&#$0");
+        }
     }
 }

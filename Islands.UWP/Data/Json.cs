@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 
 namespace Islands.UWP.Data
@@ -37,7 +38,7 @@ namespace Islands.UWP.Data
                 Object = (T)JsonConvert.DeserializeObject(json);
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
                 return false;
             }

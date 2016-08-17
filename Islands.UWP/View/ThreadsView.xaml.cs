@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -129,27 +130,30 @@ namespace Islands.UWP
             try
             {
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
-                JArray Threads;
+                List<Model.ThreadModel> Threads = null;
                 switch (code)
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
-                        if (!Data.Json.TryDeserialize<JArray>(res, out Threads)) throw new Exception(res.UnicodeDencode());
+                        JArray ja = null;
+                        if (!Data.Json.TryDeserialize(res, out ja)) throw new Exception(res.UnicodeDencode());
+                        if (ja != null) {
+                            Threads = ja.ToObject<List<Model.ThreadModel>>();
+                        }
                         break;
                     case IslandsCode.Koukuko:
-                        JObject jObj = Data.Json.Deserialize<JObject>(res);
-                        Threads = Data.Json.Deserialize<JArray>(jObj["data"]["threads"].ToString());
+                        Model.KThreadQueryResponse kRes = Data.Json.Deserialize<Model.KThreadQueryResponse>(res);
+                        if (kRes != null && kRes.data != null) {
+                            Threads = kRes.data.threads;
+                        }
                         break;
-                    default: Threads = new JArray(); break;
                 }
-                if (Threads.Count == 0)
+                if (Threads == null || Threads.Count == 0)
                     throw new Exception("什么也没有");
                 threadListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
                 foreach (var thread in Threads)
                 {
-                    var tm = Data.Json.Deserialize<Model.ThreadModel>(thread.ToString());
-                    var tv = new ThreadView(tm, code);
-
+                    var tv = new ThreadView(thread, code);
                     tv.ImageTapped += Image_ImageTapped;
                     if (!MainPage.Global.NoImage) tv.ShowImage();
                     threadListView.Items.Add(tv);

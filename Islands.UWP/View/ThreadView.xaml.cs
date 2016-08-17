@@ -299,7 +299,7 @@ namespace Islands.UWP
                 //引用处理
                 s = s.FixRef();
                 s = s.Replace("&#xFFFF;", "");
-                if (islandCode == IslandsCode.Koukuko) s = Regex.Replace(s, "xff.{2};", "&#$0");
+                if (islandCode == IslandsCode.Koukuko) s = s.FixEntity();
                 rtb = (RichTextBlock)XamlReader.Load(s);
             }
             catch (Exception ex)
