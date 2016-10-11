@@ -28,11 +28,14 @@ namespace Islands.UWP.Data
             StorageFile file = await Picker.PickSingleFileAsync();
             if (file != null)
             {
-                StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", file);
-                var bitmap = new BitmapImage();
-                var stream = await file.OpenReadAsync();
-                await bitmap.SetSourceAsync(stream);
-                image.Source = bitmap;
+                if (image != null)
+                {
+                    StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", file);
+                    var bitmap = new BitmapImage();
+                    var stream = await file.OpenReadAsync();
+                    await bitmap.SetSourceAsync(stream);
+                    image.Source = bitmap;
+                }
                 imageUri = file.Path;
             }
             return imageUri;

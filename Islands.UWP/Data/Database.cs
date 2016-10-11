@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
 
 
@@ -25,7 +26,7 @@ namespace Islands.UWP.Data
         public static int Insert<T>(T model)
         {
             int result = 0;
-            using (var conn = GetDbConnection<T>())
+            using (var conn = GetDbConnection<T>(DbPath))
             {
                 if (conn == null) throw new Exception(Config.ConnectDatabaseError);
                 result = conn.Insert(model);
@@ -33,10 +34,23 @@ namespace Islands.UWP.Data
             }
         }
 
+        public static async Task<int> InsertAsync<T>(T model)
+        {
+            int result = 0;
+            await Task.Run(()=> {
+                using (var conn = GetDbConnection<T>(DbPath))
+                {
+                    if (conn == null) throw new Exception(Config.ConnectDatabaseError);
+                    result = conn.Insert(model);
+                }
+            });
+            return result;
+        }
+
         public static int Update<T>(T model)
         {
             int result = 0;
-            using (var conn = GetDbConnection<T>())
+            using (var conn = GetDbConnection<T>(DbPath))
             {
                 if (conn == null) throw new Exception(Config.ConnectDatabaseError);
                 result = conn.Update(model);
@@ -44,9 +58,22 @@ namespace Islands.UWP.Data
             }
         }
 
+        public static async Task<int> UpdateAsync<T>(T model)
+        {
+            int result = 0;
+            await Task.Run(() => {
+                using (var conn = GetDbConnection<T>(DbPath))
+                {
+                    if (conn == null) throw new Exception(Config.ConnectDatabaseError);
+                    result = conn.Update(model);
+                }
+            });
+            return result;
+        }
+
         public static bool Delete<T>(T model)
         {
-            using (var conn = GetDbConnection<T>())
+            using (var conn = GetDbConnection<T>(DbPath))
             {
                 if (conn == null) return false;
                 conn.Delete(model);
@@ -56,12 +83,12 @@ namespace Islands.UWP.Data
 
         public static List<Model.SendModel> GetMyReplyList(IslandsCode islandCode)
         {
-            using (var conn = GetDbConnection<Model.SendModel>())
+            using (var conn = GetDbConnection<Model.SendModel>(DbPath))
             {
                 if (conn != null)
                     return (from model in conn.Table<Model.SendModel>()
-                            where model.islandCode == islandCode
-                            orderby model._id descending
+                            where islandCode == IslandsCode.All || model.islandCode == islandCode
+                            orderby model.sendDateTime descending
                             select model).ToList();
                 return new List<Model.SendModel>();
             }
@@ -69,11 +96,11 @@ namespace Islands.UWP.Data
 
         public static List<Model.ThreadModel> GetMarkList(IslandsCode islandCode)
         {
-            using (var conn = GetDbConnection<Model.ThreadModel>())
+            using (var conn = GetDbConnection<Model.ThreadModel>(DbPath))
             {
                 if (conn != null)
                     return (from model in conn.Table<Model.ThreadModel>()
-                            where model.islandCode == islandCode
+                            where islandCode == IslandsCode.All || model.islandCode == islandCode
                             orderby model._id descending
                             select model).ToList();
 
@@ -83,7 +110,7 @@ namespace Islands.UWP.Data
 
         public static List<Model.SettingModel> GetSettingList(IslandsCode islandCode)
         {           
-            using (var conn = GetDbConnection<Model.SettingModel>())
+            using (var conn = GetDbConnection<Model.SettingModel>(DbPath))
             {
                 if (conn != null)
                     return (from model in conn.Table<Model.SettingModel>()
@@ -96,13 +123,48 @@ namespace Islands.UWP.Data
             }
         }
 
-        private readonly static string DbPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, Config.dbName);
+        public static int RoamingInsert<T>(T model)
+        {
+            int result = 0;
+            using (var conn = GetDbConnection<T>(RoamingDbPath))
+            {
+                if (conn == null) throw new Exception(Config.ConnectDatabaseError);
+                result = conn.Insert(model);
+            }
+            return result;
+        }
 
-        private static SQLiteConnection GetDbConnection<T>()
+        public static List<Model.SendModel> RoamingGetMyReplyList()
+        {
+            using (var conn = GetDbConnection<Model.SendModel>(RoamingDbPath))
+            {
+                if (conn != null)
+                    return (from model in conn.Table<Model.SendModel>()
+                            select model).ToList();
+                return new List<Model.SendModel>();
+            }
+        }
+
+        public static List<Model.ThreadModel> RoamingGetMarkList()
+        {
+            using (var conn = GetDbConnection<Model.ThreadModel>(RoamingDbPath))
+            {
+                if (conn != null)
+                    return (from model in conn.Table<Model.ThreadModel>()
+                            select model).ToList();
+
+                return new List<Model.ThreadModel>();
+            }
+        }
+
+        private readonly static string DbPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, Config.dbName);
+        private readonly static string RoamingDbPath = Path.Combine(ApplicationData.Current.RoamingFolder.Path, Config.dbName);
+
+        private static SQLiteConnection GetDbConnection<T>(string dbPath)
         {
             try
             {
-                var conn = new SQLiteConnection(new SQLitePlatformWinRT(), DbPath);
+                var conn = new SQLiteConnection(new SQLitePlatformWinRT(), dbPath);
                 conn.CreateTable<T>();
                 return conn;
             }

@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -162,22 +151,7 @@ namespace Islands.UWP
                     default: return "";
                 }
             }
-        }
-
-        public bool IsCheckboxDisplay
-        {
-            set
-            {
-                if (value) IsSelectedBox.Visibility = Visibility.Visible;
-                else {
-                    IsSelectedBox.Visibility = Visibility.Collapsed;
-                    IsSelected = false;
-                    Background = null;
-                }
-            }
-            get { return IsSelectedBox.Visibility == Visibility.Visible ? true : false; }
-        }
-        public bool IsSelected { set { IsSelectedBox.IsChecked = value; } get { return (bool)IsSelectedBox.IsChecked; } }
+        }        
 
         public Model.SendModel myReply {get; set; }
 

@@ -5,7 +5,15 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:uaBeh="using:UmiAoi.UWP.Behaviors"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <MenuFlyout x:Key="ImageMenuFlyout">
+            <MenuFlyoutItem Text="copy" Click="MenuFlyoutCopyImage_Click"/>
+        </MenuFlyout>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -47,8 +55,21 @@
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}"></Button>
         </RelativePanel>
-        <WebView Name="ImageWebView"
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+            <Image Name="ImageWebView"
+               Grid.Row="1" FlyoutBase.AttachedFlyout="{StaticResource ImageMenuFlyout}" 
+                   Holding="Image_Holding" RightTapped="Image_RightTapped">
+                <Interactivity:Interaction.Behaviors>
+                    <uaBeh:GestureBehavior/>
+                </Interactivity:Interaction.Behaviors>
+            </Image>
+            <!--<WebView Name="ImageWebView"
                   Grid.Row="1">
-        </WebView>
+        </WebView>-->
+        </ScrollViewer>
+        <ProgressRing 
+            Grid.Row="1" Name="LoadingView"
+            Width="100" Height="100" IsActive="False"/>
     </Grid>
 </UserControl>

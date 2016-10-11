@@ -15,15 +15,21 @@ namespace Islands.UWP
     {
         public MainPage()
         {
-            this.InitializeComponent();
-            //CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            DataContext = Global;
+            ApplicationView.GetForCurrentView().ExitFullScreenMode();
+            //Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
                 StatusBar statusBar = StatusBar.GetForCurrentView();
                 statusBar.ForegroundColor = Colors.White;
+                statusBar.BackgroundColor = Colors.Black;
+                statusBar.BackgroundOpacity = 1;
+                // 在全屏状态下，是否显示系统 UI，比如标题栏和任务栏                
+                //view.ExitFullScreenMode();
+                //statusBar.BackgroundColor = Colors.Transparent;
             }
 
+            this.InitializeComponent();
+            DataContext = Global;
             MainControl mainControlA = new MainControl()
             {
                 Host = Config.A.Host,
@@ -75,6 +81,7 @@ namespace Islands.UWP
             
             SettingControl.BackButtonClicked += BackButton_Clicked;
             SettingControl.NightModelToggled += SettingControl_NightModelToggled;
+            SettingControl.BackgroundImagePathChanged += SettingControl_BackgroundImagePathChanged;
 
             InitSetting();
         }
@@ -94,19 +101,25 @@ namespace Islands.UWP
 
         private void SettingTapped(object sender, TappedRoutedEventArgs e)
         {
+            mainPivot.Visibility = Visibility.Collapsed;
             SettingControl.Visibility = Visibility.Visible;
         }
 
         private void BackButton_Clicked(object sender, RoutedEventArgs e)
-        {            
+        {
+            mainPivot.Visibility = Visibility.Visible;
             SettingControl.Visibility = Visibility.Collapsed;
-            SetBackgroundImage(MainPage.Global.BackgroundImagePath);
         }
 
         private void SettingControl_NightModelToggled(object sender, RoutedEventArgs e)
         {
             if (SettingControl.NightModelIsOn) RequestedTheme = ElementTheme.Dark;
             else RequestedTheme = ElementTheme.Light;
+        }
+
+        private void SettingControl_BackgroundImagePathChanged(object sender, RoutedEventArgs e)
+        {
+            SetBackgroundImage(MainPage.Global.BackgroundImagePath);
         }
     }
     

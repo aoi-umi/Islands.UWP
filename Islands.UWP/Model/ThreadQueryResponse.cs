@@ -18,6 +18,6 @@ namespace Islands.UWP.Model
 
     public class KThreadQueryResObj
     {
-        public List<ThreadModel> threads;
+        public List<ThreadResponseModel> threads;
     }
 }

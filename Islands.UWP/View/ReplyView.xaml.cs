@@ -246,10 +246,12 @@ namespace Islands.UWP
                     if (value)
                     {
                         ShowImageButton.Visibility = Visibility.Visible;
+                        LoadingView.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
                         ShowImageButton.Visibility = Visibility.Collapsed;
+                        LoadingView.Visibility = Visibility.Visible;
                     }
                 }
             }
@@ -384,13 +386,18 @@ namespace Islands.UWP
         private void ImageBox_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(replyImage))
+            {
                 imageBox.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
+                LoadingView.IsActive = false;
+            }
         }
 
         private void ShowImage()
         {
             if (!string.IsNullOrEmpty(this.replyThumb))
             {
+                LoadingView.Visibility = Visibility.Visible;
+                LoadingView.IsActive = true;
                 NoImage = false;
                 imageBox.Source = new BitmapImage(new Uri(this.replyThumb));
             }
@@ -399,6 +406,11 @@ namespace Islands.UWP
         private void ShowImage_Click(object sender, RoutedEventArgs e)
         {
             ShowImage();
+        }
+
+        private void ImageBox_ImageOpened(object sender, RoutedEventArgs e)
+        {
+            LoadingView.IsActive = false;
         }
     }
 }

@@ -67,16 +67,21 @@
                             Content="{x:Bind replyContent}"
                             >
             </ContentControl>
-            <Button Name="ShowImageButton" 
+            <RelativePanel>
+                <Button Name="ShowImageButton" 
                         Background="Transparent" 
                         Foreground="{ThemeResource HyperlinkForegroundThemeBrush}"
                         Click="ShowImage_Click"
                         Visibility="Collapsed">显示图片</Button>
-            <Image Name="imageBox"  
+                <ProgressRing Name="LoadingView"  HorizontalAlignment="Left" IsActive="False"
+                          Width="50" Height="50" Visibility="Collapsed"/>
+                <Image Name="imageBox"  
                    MaxHeight="200" 
                    MaxWidth="200" 
-                   HorizontalAlignment="Left"                   
-                   ImageFailed="ImageBox_ImageFailed" />
+                   HorizontalAlignment="Left"   
+                   ImageOpened="ImageBox_ImageOpened"
+                   ImageFailed="ImageBox_ImageFailed" CacheMode="BitmapCache" />
+            </RelativePanel>
             <Line Fill="Gray" Stroke="Gray" X2="{Binding ActualWidth, ElementName=userControl, Mode=OneWay}" Height="1"/>
         </StackPanel>
     </Grid>

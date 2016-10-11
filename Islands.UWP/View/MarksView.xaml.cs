@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -24,9 +25,9 @@ namespace Islands.UWP
         public event MarkClickEventHandler MarkClick;
 
         public void AddMark(Model.ThreadModel tm)
-        {
+        {            
             markList.Insert(0, tm);
-            markListView.Items.Insert(0, new ThreadView(tm, islandCode) { Tag = tm });
+            markListView.Items.Insert(0, new ThreadView(tm, islandCode) { Tag = tm, NoImage = true });
             markCount = markList.Count.ToString();
         }
 
@@ -53,10 +54,14 @@ namespace Islands.UWP
             }
         }
 
-        private void InitMarkList(IslandsCode islandCode)
+        private async void InitMarkList(IslandsCode islandCode)
         {
+            MarkLoading.IsActive = true;
             markListView.Items.Clear();
-            markList = Data.Database.GetMarkList(islandCode);
+            await Task.Run(() =>
+            {
+                markList = Data.Database.GetMarkList(islandCode);
+            });
             foreach (var mark in markList)
             {
                 ThreadView t = new ThreadView(mark, islandCode);
@@ -64,19 +69,15 @@ namespace Islands.UWP
                 markListView.Items.Add(t);
             }
             markCount = markList.Count.ToString();
+            MarkLoading.IsActive = false;
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             ThreadView tv = e.ClickedItem as ThreadView;
-            if (tv != null)
+            if (tv != null && markListView.SelectionMode != ListViewSelectionMode.Multiple)
             {
-                if (tv.IsCheckboxDisplay) {
-                    tv.IsSelected = !tv.IsSelected;
-                    if (tv.IsSelected) tv.Background = Config.SelectedColor;
-                    else tv.Background = null;                                  
-                }
-                else OnItemClick(e);
+                OnItemClick(e);
             }
         }
 
@@ -84,26 +85,26 @@ namespace Islands.UWP
         {
             if (MarkClick != null)
                 MarkClick(this, e);
-        }        
+        }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            int count = 0;
-            foreach (var item in markListView.Items)
+            if (IsCancelButtonVisible)
             {
-                ThreadView t = item as ThreadView;
-                if (t != null)
+                int count = 0;
+                foreach (var item in markListView.SelectedItems)
                 {
-                    if (!IsCancelButtonVisible) t.IsCheckboxDisplay = true;
-                    else {
-                        if (t.IsSelected && Data.Database.Delete(t.thread)) { ++count; }
-                    }
+                    ThreadView t = item as ThreadView;
+                    if (t != null && Data.Database.Delete(t.thread))
+                    { ++count; }
                 }
-            }
-            if (IsCancelButtonVisible) {                
                 Data.Message.ShowMessage($"成功删除{count}项");
                 if (count > 0) InitMarkList(islandCode);
-                else HideCheckbox();
+                markListView.SelectionMode = ListViewSelectionMode.Single;
+            }
+            else
+            {
+                markListView.SelectionMode = ListViewSelectionMode.Multiple;
             }
             IsCancelButtonVisible = !IsCancelButtonVisible;
         }
@@ -111,16 +112,12 @@ namespace Islands.UWP
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             IsCancelButtonVisible = false;
-            HideCheckbox();
+            markListView.SelectionMode = ListViewSelectionMode.Single;
         }
 
-        private void HideCheckbox()
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in markListView.Items)
-            {
-                var view = item as ThreadView;
-                if (view != null && view.IsCheckboxDisplay) view.IsCheckboxDisplay = false;
-            }
+            InitMarkList(islandCode);
         }
     }
 }

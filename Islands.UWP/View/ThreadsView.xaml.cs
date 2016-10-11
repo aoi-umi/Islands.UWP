@@ -130,7 +130,7 @@ namespace Islands.UWP
             try
             {
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
-                List<Model.ThreadModel> Threads = null;
+                List<Model.ThreadResponseModel> Threads = null;
                 switch (code)
                 {
                     case IslandsCode.A:
@@ -138,7 +138,7 @@ namespace Islands.UWP
                         JArray ja = null;
                         if (!Data.Json.TryDeserialize(res, out ja)) throw new Exception(res.UnicodeDencode());
                         if (ja != null) {
-                            Threads = ja.ToObject<List<Model.ThreadModel>>();
+                            Threads = ja.ToObject<List<Model.ThreadResponseModel>>();
                         }
                         break;
                     case IslandsCode.Koukuko:

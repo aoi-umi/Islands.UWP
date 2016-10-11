@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -20,10 +18,7 @@ namespace Islands.UWP
             DataContext = MainPage.Global;
             InitSetting();
             BackButton.Click += BackButton_Click;
-            DataRoamingButton.Click += DataRoamingButton_Click;
         }
-
-        private Model.SettingModel BackgroundImageSettingModel { get; set; }
 
         private double TitleFontSize
         {
@@ -79,19 +74,22 @@ namespace Islands.UWP
         public delegate void BackButtonClickedEventHandler(object sender, RoutedEventArgs e);
         public event BackButtonClickedEventHandler BackButtonClicked;
 
-        public delegate void BackgroundImagePathChangedEventHandler(object sender, RoutedEventArgs e);
-        public event BackgroundImagePathChangedEventHandler BackgroundImagePathChanged;
-
         private IslandsCode islandcode { get; set; }
         private List<Model.SettingModel> SettingList { get; set; }
         private void NightModeSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            NightModelToggled?.Invoke(sender, e);
-        }
+            if (NightModelToggled != null)
+            {                
+                NightModelToggled(sender, e);
+            }
+        }        
 
         private void BackButton_Clicked(object sender, RoutedEventArgs e)
         {
-            BackButtonClicked?.Invoke(sender, e);
+            if (BackButtonClicked != null)
+            {
+                BackButtonClicked(sender, e);
+            }
         }
 
         private void InitSetting()
@@ -138,8 +136,9 @@ namespace Islands.UWP
                         MainPage.Global.IsAskEachTime = IsAskEachTime = string.IsNullOrEmpty(model.SettingValue) ? false : true;
                         break;
                     case Settings.BackgroundImagePath:
-                        BackgroundImageSettingModel = model;
+                        BackgroundImage.Tag = model;
                         MainPage.Global.BackgroundImagePath = model.SettingValue;
+                        if (!string.IsNullOrEmpty(model.SettingValue)) Data.File.SetLocalImage(BackgroundImage, model.SettingValue);
                         break;
                     case Settings.IsHideMenu:
                         IsHideMenuSwitch.Tag = model;
@@ -155,41 +154,9 @@ namespace Islands.UWP
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            UpdateSetting();
-            BackButton_Clicked(sender, e);
-            SaveSettingAsync();
-        }
-
-        private void UpdateSetting()
-        {
             string SettingValue = string.Empty;
-            Model.SettingModel model = null;
-
-            model = IsHideMenuSwitch.Tag as Model.SettingModel;
-            if (model == null || model.SettingValue != SettingValue)
-            {
-                MainPage.Global.IsHideMenu = IsHideMenu;
-            }
-
-            model = TitleFontSizeSlider.Tag as Model.SettingModel;
-            if (model == null || model.SettingValue != SettingValue)
-            {
-                MainPage.Global.TitleFontSize = TitleFontSize;
-            }
-
-            model = ContentFontSizeSlider.Tag as Model.SettingModel;
-            if (model == null || model.SettingValue != SettingValue)
-            {
-                MainPage.Global.ContentFontSize = ContentFontSize;
-            }
-        }
-
-        private async void SaveSettingAsync()
-        {
-            string SettingValue = string.Empty;
-            Model.SettingModel model = null;
             #region 保存夜间模式
-            model = NightModeSwitch.Tag as Model.SettingModel;
+            Model.SettingModel model = NightModeSwitch.Tag as Model.SettingModel;
             if (model == null) model = new Model.SettingModel()
             {
                 SettingName = Settings.NightMode
@@ -201,10 +168,10 @@ namespace Islands.UWP
                 model.SettingValue = SettingValue;
                 if (model._id == 0)
                 {
-                    await Data.Database.InsertAsync(model);
+                    Data.Database.Insert(model);
                     NightModeSwitch.Tag = model;
                 }
-                else await Data.Database.UpdateAsync(model);
+                else Data.Database.Update(model);
             }
             #endregion
 
@@ -222,10 +189,10 @@ namespace Islands.UWP
                 model.SettingValue = SettingValue;
                 if (model._id == 0)
                 {
-                    await Data.Database.InsertAsync(model);
+                    Data.Database.Insert(model);
                     TitleFontSizeSlider.Tag = model;
                 }
-                else await Data.Database.UpdateAsync(model);
+                else Data.Database.Update(model);
             }
             #endregion
 
@@ -243,10 +210,10 @@ namespace Islands.UWP
                 model.SettingValue = SettingValue;
                 if (model._id == 0)
                 {
-                    await Data.Database.InsertAsync(model);
+                    Data.Database.Insert(model);
                     ContentFontSizeSlider.Tag = model;
                 }
-                else await Data.Database.UpdateAsync(model);
+                else Data.Database.Update(model);
             }
             #endregion
 
@@ -263,10 +230,10 @@ namespace Islands.UWP
                 model.SettingValue = SettingValue;
                 if (model._id == 0)
                 {
-                    await Data.Database.InsertAsync(model);
+                    Data.Database.Insert(model);
                     MaskOpacitySlider.Tag = model;
                 }
-                else await Data.Database.UpdateAsync(model);
+                else Data.Database.Update(model);
             }
             #endregion
 
@@ -284,15 +251,15 @@ namespace Islands.UWP
                 model.SettingValue = SettingValue;
                 if (model._id == 0)
                 {
-                    await Data.Database.InsertAsync(model);
+                    Data.Database.Insert(model);
                     IsAskEachTimeBox.Tag = model;
                 }
-                else await Data.Database.UpdateAsync(model);
+                else Data.Database.Update(model);
             }
             #endregion
 
             #region 背景图片
-            model = BackgroundImageSettingModel;
+            model = BackgroundImage.Tag as Model.SettingModel;
             if (model == null) model = new Model.SettingModel()
             {
                 SettingName = Settings.BackgroundImagePath
@@ -304,10 +271,10 @@ namespace Islands.UWP
                 model.SettingValue = SettingValue;
                 if (model._id == 0)
                 {
-                    await Data.Database.InsertAsync(model);
-                    BackgroundImageSettingModel = model;
+                    Data.Database.Insert(model);
+                    BackgroundImage.Tag = model;
                 }
-                else await Data.Database.UpdateAsync(model);
+                else Data.Database.Update(model);
             }
             #endregion
 
@@ -325,10 +292,10 @@ namespace Islands.UWP
                 model.SettingValue = SettingValue;
                 if (model._id == 0)
                 {
-                    await Data.Database.InsertAsync(model);
+                    Data.Database.Insert(model);
                     IsHideMenuSwitch.Tag = model;
                 }
-                else await Data.Database.UpdateAsync(model);
+                else Data.Database.Update(model);
             }
             #endregion
 
@@ -346,13 +313,14 @@ namespace Islands.UWP
                 model.SettingValue = SettingValue;
                 if (model._id == 0)
                 {
-                    await Data.Database.InsertAsync(model);
+                    Data.Database.Insert(model);
                     NoImageSwitch.Tag = model;
                 }
-                else await Data.Database.UpdateAsync(model);
+                else Data.Database.Update(model);
             }
             #endregion
-        }
+            BackButton_Clicked(sender, e);
+        }      
 
         private void MaskOpacitySlider_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
@@ -361,67 +329,14 @@ namespace Islands.UWP
 
         private async void SetImagePathButton_Click(object sender, RoutedEventArgs e)
         {
-            string path = await Data.File.SetLocalImage(null);
-            if (!string.IsNullOrEmpty(path))
-            {
-                MainPage.Global.BackgroundImagePath = path;
-                BackgroundImagePathChanged?.Invoke(sender, e);
-            }
+            //ImagePath = await Data.File.SetPath();
+            MainPage.Global.BackgroundImagePath = await Data.File.SetLocalImage(BackgroundImage);
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            BackgroundImage.Source = null;
             MainPage.Global.BackgroundImagePath = null;
-            BackgroundImagePathChanged?.Invoke(sender, e);
-        }
-
-        private void DataRoamingButton_Click(object sender, RoutedEventArgs e)
-        {
-            DataRoamingButton.Visibility = Visibility.Collapsed;
-            RoamingDataAsync();
-        }
-
-        private async void RoamingDataAsync()
-        {
-            int roamingMarkCount = 0;
-            int roamingMyReplyCount = 0;
-            int localMarkCount = 0;
-            int localMyReplyCount = 0;
-            await Task.Run(() =>
-            {
-                var roamingMarkList = Data.Database.RoamingGetMarkList();
-                var roamingMyReplyList = Data.Database.RoamingGetMyReplyList();
-                var markList = Data.Database.GetMarkList(IslandsCode.All);
-                var replyList = Data.Database.GetMyReplyList(IslandsCode.All);
-                var saveToRoamingMarkList = markList.Where(x => !roamingMarkList.Exists(y => y.id == x.id && y.islandCode == x.islandCode)).ToList();
-                var saveToRoamingMyReplyList = replyList.Where(x =>
-                !roamingMyReplyList.Exists(y => y.sendDateTime == x.sendDateTime && y.sendContent == x.sendContent && y.islandCode == x.islandCode)).ToList();
-
-                var saveToLocalMarkList = roamingMarkList.Where(x => !markList.Exists(y => y.id == x.id && y.islandCode == x.islandCode)).ToList();
-                var saveToMyReplyList = roamingMyReplyList.Where(x =>
-                !replyList.Exists(y => y.sendDateTime == x.sendDateTime && y.sendContent == x.sendContent && y.islandCode == x.islandCode)).ToList();
-
-                saveToLocalMarkList.ForEach(x =>
-                {
-                    if (Data.Database.Insert(x) > 0) localMarkCount++;
-                });
-                saveToMyReplyList.ForEach(x =>
-                {
-                    if (Data.Database.Insert(x) > 0) localMyReplyCount++;
-                });
-                saveToRoamingMarkList.ForEach(x =>
-                {
-                    if (Data.Database.RoamingInsert(x) > 0) roamingMarkCount++;
-                });
-                saveToRoamingMyReplyList.ForEach(x =>
-                {
-                    if (Data.Database.RoamingInsert(x) > 0) roamingMyReplyCount++;
-                });
-            });
-
-            Data.Message.ShowMessage(string.Format("同步到漫游：收藏{0}，回复{1}\r\n同步到本地：收藏{2}，回复{3}",
-                roamingMarkCount, roamingMyReplyCount, localMarkCount, localMyReplyCount), "同步完毕");
-            DataRoamingButton.Visibility = Visibility.Visible;
         }
     }
 }

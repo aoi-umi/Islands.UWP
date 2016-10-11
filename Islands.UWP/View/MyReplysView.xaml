@@ -39,6 +39,11 @@
                        RelativePanel.RightOf="Menu"
                        FontSize="22">
             </TextBlock>
+            <Button Name="RefreshButton"
+                    Content="&#xE117;"
+                    RelativePanel.AlignRightWithPanel="True"
+                    Style="{StaticResource NavButton}"
+                    Click="RefreshButton_Click"/>
         </RelativePanel>
         <RelativePanel Grid.Row="2"
                        Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
@@ -77,5 +82,10 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </ScrollViewer>
+        <ProgressRing Grid.Row="1"
+                      Name="MyReplysLoading"
+                      Width="100"
+                      Height="100"
+                      IsActive="False"/>
     </Grid>
 </UserControl>

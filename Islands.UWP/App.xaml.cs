@@ -24,10 +24,10 @@ namespace Islands.UWP
                 Microsoft.ApplicationInsights.WindowsCollectors.Metadata |
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
             InitializeComponent();
-            Suspending += OnSuspending;
-            UnhandledException += OnUnhandledException;
-            
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
+            Suspending += OnSuspending;
+            UnhandledException += OnUnhandledException;                       
+
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
                 Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;

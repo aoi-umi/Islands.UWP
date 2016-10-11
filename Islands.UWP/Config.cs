@@ -8,7 +8,8 @@ namespace Islands.UWP
     {
         A = 0,
         Koukuko = 1,
-        Beitai = 2
+        Beitai = 2,
+        All = 10
     };
 
     public static class Settings
@@ -132,6 +133,8 @@ namespace Islands.UWP
             "出错也好，崩溃也好，明明是我先的ﾟ(つд`ﾟ)",
             "仙客来根雕",
             "Excuse 咪(´・ω・`)？",
+            "RUNE☆PIKA☆",
+            "猴子*眼小",
         };
         public static class A
         {

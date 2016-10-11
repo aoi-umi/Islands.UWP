@@ -69,7 +69,7 @@
         </RelativePanel>
         <ScrollViewer Name="threadListScrollViewer"
                       Grid.Row="1">
-        <ListView Name="threadListView"
+            <ListView Name="threadListView"
                   IsItemClickEnabled="True"
                   SelectionMode="None"
                   AllowDrop="False"                  
@@ -88,6 +88,6 @@
                       Name="ThreadLoading"
                       Width="100"
                       Height="100"
-                      IsActive="False">
-        </ProgressRing></Grid>
+                      IsActive="False"/>
+    </Grid>
 </UserControl>

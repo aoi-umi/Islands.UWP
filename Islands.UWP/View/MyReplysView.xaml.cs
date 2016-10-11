@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -63,15 +63,20 @@ namespace Islands.UWP
             }
         }
 
-        private void InitMyReplyList(IslandsCode islandCode)
+        private async void InitMyReplyList(IslandsCode islandCode)
         {
+            MyReplysLoading.IsActive = true;
             myreplyListView.Items.Clear();
-            myReplyList = Data.Database.GetMyReplyList(islandCode);
+            await Task.Run(() =>
+            {
+                myReplyList = Data.Database.GetMyReplyList(islandCode);                
+            });
             foreach (var myreply in myReplyList)
             {
                 myreplyListView.Items.Add(new MyReplyView(myreply, islandCode) { Tag = myreply });
             }
             myReplyCount = myReplyList.Count.ToString();
+            MyReplysLoading.IsActive = false;
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -79,13 +84,8 @@ namespace Islands.UWP
             MyReplyView view = e.ClickedItem as MyReplyView;
             if (view != null)
             {
-                if (view.IsCheckboxDisplay)
-                {
-                    view.IsSelected = !view.IsSelected;
-                    if (view.IsSelected) view.Background = Config.SelectedColor;
-                    else view.Background = null;
-                }
-                else OnItemClick(e);
+                if (view != null && myreplyListView.SelectionMode != ListViewSelectionMode.Multiple)
+                    OnItemClick(e);
             }
         }
 
@@ -96,23 +96,22 @@ namespace Islands.UWP
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            int count = 0;
-            foreach (var item in myreplyListView.Items)
-            {
-                MyReplyView t = item as MyReplyView;
-                if (t != null)
-                {
-                    if (!IsCancelButtonVisible) t.IsCheckboxDisplay = true;
-                    else {
-                        if (t.IsSelected && Data.Database.Delete(t.myReply)) { ++count; }
-                    }
-                }
-            }
             if (IsCancelButtonVisible)
             {
+                int count = 0;
+                foreach (var item in myreplyListView.SelectedItems)
+                {
+                    MyReplyView t = item as MyReplyView;
+                    if (t != null && Data.Database.Delete(t.myReply))
+                    { ++count; }
+                }
                 Data.Message.ShowMessage($"成功删除{count}项");
                 if (count > 0) InitMyReplyList(islandCode);
-                else HideCheckbox();
+                myreplyListView.SelectionMode = ListViewSelectionMode.Single;
+            }
+            else
+            {
+                myreplyListView.SelectionMode = ListViewSelectionMode.Multiple;
             }
             IsCancelButtonVisible = !IsCancelButtonVisible;
         }
@@ -120,16 +119,12 @@ namespace Islands.UWP
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             IsCancelButtonVisible = false;
-            HideCheckbox();
+            myreplyListView.SelectionMode = ListViewSelectionMode.Single;
         }
 
-        private void HideCheckbox()
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in myreplyListView.Items)
-            {
-                MyReplyView view = item as MyReplyView;
-                if (view != null && view.IsCheckboxDisplay) view.IsCheckboxDisplay = false;
-            }
+            InitMyReplyList(islandCode);
         }
     }
 }

@@ -6,10 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid Background="{Binding Background, ElementName=userControl, Mode=OneWay}">
+    <Grid>
         <StackPanel Margin="2">
             <StackPanel>
-                <CheckBox Name="IsSelectedBox" Visibility="Collapsed"></CheckBox>
                 <TextBlock Text="{x:Bind myReplyTitle}"
                            Visibility="{x:Bind myReplyIsHadTitle}">
                 </TextBlock>

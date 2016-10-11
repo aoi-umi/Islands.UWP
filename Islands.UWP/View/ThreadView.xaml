@@ -8,10 +8,8 @@
     mc:Ignorable="d">
     <UserControl.Resources>
     </UserControl.Resources>
-    <RelativePanel Background="{Binding Background,ElementName=userControl}">
-        <CheckBox Name="IsSelectedBox" Visibility="Collapsed"></CheckBox>
+    <RelativePanel>
         <StackPanel Margin="2"
-                    RelativePanel.Below="IsSelectedBox"
                     RelativePanel.AlignLeftWithPanel="True"
                     RelativePanel.AlignRightWithPanel="True">
             <RelativePanel>
@@ -95,11 +93,11 @@
                         Foreground="{ThemeResource HyperlinkForegroundThemeBrush}"
                         Click="ShowImage_Click"
                         Visibility="Collapsed">显示图片</Button>
-                <Image Name="imageBox"  
-                   MaxHeight="200" 
-                   MaxWidth="200"
-                   HorizontalAlignment="Left"                       
-                   ImageFailed="ImageBox_ImageFailed"/>
+                <ProgressRing Name="LoadingView" HorizontalAlignment="Left" IsActive="False"
+                              Width="50" Height="50" Visibility="Collapsed"/>
+                <Image Name="imageBox" MaxHeight="200" 
+                   MaxWidth="200" HorizontalAlignment="Left"                       
+                   ImageFailed="ImageBox_ImageFailed" ImageOpened="ImageBox_Opened" CacheMode="BitmapCache"/>
             </RelativePanel>
         </StackPanel>
     </RelativePanel>

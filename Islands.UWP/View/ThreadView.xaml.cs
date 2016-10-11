@@ -29,7 +29,7 @@ namespace Islands.UWP
                 imageBox.Tapped += ImageBox_Tapped;
                 imageBox.PointerPressed += ImageBox_PointerPressed;
             }
-        }        
+        }
 
         public Model.ThreadModel thread { get; set; }
         public Visibility threadIsHadTitle
@@ -236,20 +236,20 @@ namespace Islands.UWP
             }
         }
         public bool IsTextSelectionEnabled { get; set; }
-        public bool IsCheckboxDisplay
-        {
-            set
-            {
-                if (value) IsSelectedBox.Visibility = Visibility.Visible;
-                else {
-                    IsSelectedBox.Visibility = Visibility.Collapsed;
-                    IsSelected = false;
-                    Background = null;
-                }
-            }
-            get { return IsSelectedBox.Visibility == Visibility.Visible ? true : false; }
-        }
-        public bool IsSelected { set { IsSelectedBox.IsChecked = value; } get { return (bool)IsSelectedBox.IsChecked; } }
+        //public bool IsCheckboxDisplay
+        //{
+        //    set
+        //    {
+        //        if (value) IsSelectedBox.Visibility = Visibility.Visible;
+        //        else {
+        //            IsSelectedBox.Visibility = Visibility.Collapsed;
+        //            IsSelected = false;
+        //            Background = null;
+        //        }
+        //    }
+        //    get { return IsSelectedBox.Visibility == Visibility.Visible ? true : false; }
+        //}
+        //public bool IsSelected { set { IsSelectedBox.IsChecked = value; } get { return (bool)IsSelectedBox.IsChecked; } }
         public bool NoImage
         {
             get
@@ -263,10 +263,12 @@ namespace Islands.UWP
                     if (value)
                     {
                         ShowImageButton.Visibility = Visibility.Visible;
+                        LoadingView.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
                         ShowImageButton.Visibility = Visibility.Collapsed;
+                        LoadingView.Visibility = Visibility.Visible;
                     }
                 }
             }
@@ -279,6 +281,8 @@ namespace Islands.UWP
         {
             if (!string.IsNullOrEmpty(this.threadThumb))
             {
+                LoadingView.Visibility = Visibility.Visible;
+                LoadingView.IsActive = true;
                 NoImage = false;
                 imageBox.Source = new BitmapImage(new Uri(this.threadThumb));
             }
@@ -394,6 +398,7 @@ namespace Islands.UWP
             if (!string.IsNullOrEmpty(threadThumb))
             {
                 imageBox.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
+                LoadingView.IsActive = false;
             }
         }
 
@@ -405,6 +410,11 @@ namespace Islands.UWP
         private void ShowImage_Click(object sender, RoutedEventArgs e)
         {
             ShowImage();
+        }
+
+        private void ImageBox_Opened(object sender, RoutedEventArgs e)
+        {
+            LoadingView.IsActive = false;
         }
     }
 }
