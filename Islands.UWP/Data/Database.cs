@@ -12,17 +12,6 @@ namespace Islands.UWP.Data
 {
     public static class Database
     {
-        public static string ExecSql(string sql)
-        {
-            string result = string.Empty;
-            using (var conn = GetDbConnection())
-            {
-                var l = conn.ExecuteScalar<Model.SettingModel>(sql);
-                result = "";
-            }
-            return result;
-        }
-
         public static int Insert<T>(T model)
         {
             int result = 0;
@@ -37,7 +26,7 @@ namespace Islands.UWP.Data
         public static async Task<int> InsertAsync<T>(T model)
         {
             int result = 0;
-            await Task.Run(()=> {
+            await Task.Run(() => {
                 using (var conn = GetDbConnection<T>(DbPath))
                 {
                     if (conn == null) throw new Exception(Config.ConnectDatabaseError);
@@ -79,6 +68,19 @@ namespace Islands.UWP.Data
                 conn.Delete(model);
             }
             return true;
+        }
+
+        public static int DeleteByIDs(string table, List<int> idList)
+        {
+            if (idList == null || idList.Count == 0) return 0;
+            int count = 0;
+            using (var conn = GetDbConnection())
+            {
+                if (conn == null) return 0;
+                string sql = string.Format("delete from {0} where _id in ({1})", table, string.Join(",", idList));
+                count = conn.Execute(sql);
+            }
+            return count;
         }
 
         public static List<Model.SendModel> GetMyReplyList(IslandsCode islandCode)

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
@@ -141,7 +144,27 @@ namespace Islands.UWP.Data
                     Message.ShowMessage("图片保存成功");
                 }
             }
+        }
 
+        public static async Task<string> SaveTextToImage(string filename, RenderTargetBitmap bitmap)
+        {
+            StorageFolder folder = await KnownFolders.SavedPictures.CreateFolderAsync("Islands", CreationCollisionOption.OpenIfExists);
+            StorageFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+            var buffer = await bitmap.GetPixelsAsync();
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                var encod = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                encod.SetPixelData(BitmapPixelFormat.Bgra8,
+                BitmapAlphaMode.Ignore,
+                (uint)bitmap.PixelWidth,
+                (uint)bitmap.PixelHeight,
+                DisplayInformation.GetForCurrentView().LogicalDpi,
+                DisplayInformation.GetForCurrentView().LogicalDpi,
+                buffer.ToArray()
+               );
+                await encod.FlushAsync();
+            }
+            return file.Path;
         }
     }
 }

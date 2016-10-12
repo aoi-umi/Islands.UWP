@@ -95,9 +95,11 @@
                         Visibility="Collapsed">显示图片</Button>
                 <ProgressRing Name="LoadingView" HorizontalAlignment="Left" IsActive="False"
                               Width="50" Height="50" Visibility="Collapsed"/>
-                <Image Name="imageBox" MaxHeight="200" 
-                   MaxWidth="200" HorizontalAlignment="Left"                       
-                   ImageFailed="ImageBox_ImageFailed" ImageOpened="ImageBox_Opened" CacheMode="BitmapCache"/>
+                <Image Name="imageBox"  Stretch="None"
+                       MaxHeight="200" MaxWidth="200"
+                       HorizontalAlignment="Left"
+                       ImageFailed="ImageBox_ImageFailed" 
+                       ImageOpened="ImageBox_Opened" CacheMode="BitmapCache"/>
             </RelativePanel>
         </StackPanel>
     </RelativePanel>

@@ -23,22 +23,17 @@
         </Grid.RowDefinitions>
         <RelativePanel 
             Grid.Row="0"
-            Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}"
-            >
+            Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
             <Button Name="Menu"
                     Content="&#xE700;"
-                    
                     RelativePanel.AlignLeftWithPanel="True"
                     RelativePanel.AlignVerticalCenterWithPanel="True"
                     Style="{StaticResource NavButton}"
-                    Visibility="Collapsed"
-                    >
-            </Button>
+                    Visibility="Collapsed"/>
             <TextBlock Name="Title"
                        Text="我的回复"
                        RelativePanel.RightOf="Menu"
-                       FontSize="22">
-            </TextBlock>
+                       FontSize="22"/>
             <Button Name="RefreshButton"
                     Content="&#xE117;"
                     RelativePanel.AlignRightWithPanel="True"
@@ -50,21 +45,18 @@
             <Button Name="BackButton"
                     x:FieldModifier="public"
                     Content="&#xE80F;"
-                    Style="{StaticResource NavButton}">
-            </Button>
+                    Style="{StaticResource NavButton}"/>
             <Button Name="DeleteButton"
                     Content="&#xE107;"
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}"
-                    Click="DeleteButton_Click">
-            </Button>
+                    Click="DeleteButton_Click"/>
             <Button Name="CancelButton"
                     Content="&#xE10A;"
                     FontFamily="Segoe MDL2 Assets"
                     Style="{StaticResource NavButton}"
                     Visibility="Collapsed"
-                    Click="CancelButton_Click">
-            </Button>
+                    Click="CancelButton_Click"/>
         </RelativePanel>
         <ScrollViewer Name="markListScrollViewer"
                   Grid.Row="1">
@@ -77,15 +69,14 @@
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="Margin" Value="0,0,14,0"/>
-                        <Setter Property="Padding" Value="0"></Setter>
+                        <Setter Property="Padding" Value="0"/>
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
         </ScrollViewer>
         <ProgressRing Grid.Row="1"
                       Name="MyReplysLoading"
-                      Width="100"
-                      Height="100"
+                      Width="100" Height="100"
                       IsActive="False"/>
     </Grid>
 </UserControl>

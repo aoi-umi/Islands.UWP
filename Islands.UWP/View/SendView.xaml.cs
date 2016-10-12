@@ -6,6 +6,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media.Imaging;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -74,7 +75,10 @@ namespace Islands.UWP
                 SendContent.Document.GetText(TextGetOptions.None, out outString);
                 return outString.Trim();
             }
-            set { SendContent.Document.SetText(TextSetOptions.None, value); }
+            set {
+                SendContent.Document.SetText(TextSetOptions.None, value);
+                textToImgTextBlock.Text = string.Empty;
+            }
         }
         private string txtImageUri
         {
@@ -86,6 +90,7 @@ namespace Islands.UWP
                 SendImageStr.Text = value;
             }
         }
+        private RenderTargetBitmap bitmap { get; set; }
 
         private void OnResponse(bool Success, Model.SendModel send)
         {
@@ -134,6 +139,13 @@ namespace Islands.UWP
                     CookieValue = postModel.Cookie.CookieValue,
                     sendDateTime = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")                                      
                 };
+
+                string filename = DateTime.Now.ToString("yyyyMMdd_HHmmssfff") + ".jpg";
+                string fullFilename = await Data.File.SaveTextToImage(filename, bitmap);
+                if (send.sendImage == Config.TextToImageUri) {
+                    send.sendContent = "[文字转图]";
+                    send.sendImage = fullFilename;
+                }
 
                 if (string.IsNullOrEmpty(send.sendContent) && string.IsNullOrEmpty(send.sendImage))
                 {
@@ -201,6 +213,15 @@ namespace Islands.UWP
         private void SendView_Showing(InputPane sender, InputPaneVisibilityEventArgs args)
         {
             Rect.Height = sender.OccludedRect.Height;
+        }
+
+        private async void TextToImage_Click(object sender, RoutedEventArgs e)
+        {
+            bitmap = new RenderTargetBitmap();
+            textToImgTextBlock.Text = txtSendContent;
+            await bitmap.RenderAsync(textToImgPanel);
+            SendImage.Source = bitmap;
+            txtImageUri = Config.TextToImageUri;
         }
     }
 }

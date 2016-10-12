@@ -91,22 +91,32 @@ namespace Islands.UWP
         {
             if (IsCancelButtonVisible)
             {
-                int count = 0;
-                foreach (var item in markListView.SelectedItems)
-                {
-                    ThreadView t = item as ThreadView;
-                    if (t != null && Data.Database.Delete(t.thread))
-                    { ++count; }
-                }
-                Data.Message.ShowMessage($"成功删除{count}项");
-                if (count > 0) InitMarkList(islandCode);
-                markListView.SelectionMode = ListViewSelectionMode.Single;
+                DeleteAsync();
             }
             else
             {
                 markListView.SelectionMode = ListViewSelectionMode.Multiple;
             }
             IsCancelButtonVisible = !IsCancelButtonVisible;
+        }
+
+        private async void DeleteAsync()
+        {
+            int count = 0;
+            var idList = new List<int>();
+            foreach (var item in markListView.SelectedItems)
+            {
+                ThreadView t = item as ThreadView;
+                if (t != null) idList.Add(t.thread._id);
+                //if (t != null && Data.Database.Delete(t.thread))
+                //{ ++count; }
+            }
+            await Task.Run(()=> {
+                count = Data.Database.DeleteByIDs(nameof(Model.ThreadModel), idList);
+            });
+            Data.Message.ShowMessage($"成功删除{count}项");
+            if (count > 0) InitMarkList(islandCode);
+            markListView.SelectionMode = ListViewSelectionMode.Single;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

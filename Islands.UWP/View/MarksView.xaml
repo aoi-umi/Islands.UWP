@@ -8,11 +8,11 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="TextBox">
-            <Setter Property="IsReadOnly" Value="True"></Setter>
-            <Setter Property="Background" Value="Transparent"></Setter>
-            <Setter Property="BorderThickness" Value="0"></Setter>
-            <Setter Property="Margin" Value="0"></Setter>
-            <Setter Property="Padding" Value="0"></Setter>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -30,14 +30,12 @@
                     RelativePanel.AlignLeftWithPanel="True"
                     RelativePanel.AlignVerticalCenterWithPanel="True"
                     Style="{StaticResource NavButton}"
-                    Visibility="Collapsed"
-                    >
-            </Button>
+                    Visibility="Collapsed"/>
             <TextBlock Name="Title"
                        Text="收藏"
                        RelativePanel.RightOf="Menu"
-                       FontSize="22">
-            </TextBlock>
+                       FontSize="22"/>
+
             <Button Name="RefreshButton"
                     Content="&#xE117;"
                     RelativePanel.AlignRightWithPanel="True"
@@ -49,22 +47,20 @@
             <Button Name="BackButton"
                     x:FieldModifier="public"
                     Content="&#xE80F;"
-                    Style="{StaticResource NavButton}">
-            </Button>
+                    Style="{StaticResource NavButton}"/>
+
             <Button Name="DeleteButton"
                     Content="&#xE107;"
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}"
-                    Click="DeleteButton_Click">
-            </Button>
+                    Click="DeleteButton_Click"/>
+
             <Button Name="CancelButton"
                     Content="&#xE10A;"
                     FontFamily="Segoe MDL2 Assets"
                     Style="{StaticResource NavButton}"
                     Visibility="Collapsed"
-                    Click="CancelButton_Click">
-            </Button>
-            <TextBlock></TextBlock>
+                    Click="CancelButton_Click"/>
         </RelativePanel>
         <ScrollViewer Name="markListScrollViewer"
                   Grid.Row="1">

@@ -98,22 +98,32 @@ namespace Islands.UWP
         {
             if (IsCancelButtonVisible)
             {
-                int count = 0;
-                foreach (var item in myreplyListView.SelectedItems)
-                {
-                    MyReplyView t = item as MyReplyView;
-                    if (t != null && Data.Database.Delete(t.myReply))
-                    { ++count; }
-                }
-                Data.Message.ShowMessage($"成功删除{count}项");
-                if (count > 0) InitMyReplyList(islandCode);
-                myreplyListView.SelectionMode = ListViewSelectionMode.Single;
+                DeleteAsync();
             }
             else
             {
                 myreplyListView.SelectionMode = ListViewSelectionMode.Multiple;
             }
             IsCancelButtonVisible = !IsCancelButtonVisible;
+        }
+        
+        private async void DeleteAsync()
+        {
+            int count = 0;
+            var idList = new List<int>();
+            foreach (var item in myreplyListView.SelectedItems)
+            {
+                MyReplyView t = item as MyReplyView;
+                if (t != null) idList.Add(t.myReply._id);
+                //if (t != null && Data.Database.Delete(t.myReply))
+                //{ ++count; }
+            }
+            await Task.Run(() => {
+                count = Data.Database.DeleteByIDs(nameof(Model.SendModel), idList);
+            });
+            Data.Message.ShowMessage($"成功删除{count}项");
+            if (count > 0) InitMyReplyList(islandCode);
+            myreplyListView.SelectionMode = ListViewSelectionMode.Single;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

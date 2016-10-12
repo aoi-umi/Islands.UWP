@@ -83,7 +83,7 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </ScrollViewer>
-        <Grid Background="Black" Opacity="{Binding MaskOpacity}" Grid.Row="0" Grid.RowSpan="3"  IsHitTestVisible="False"></Grid>
+        <Grid Background="Black" Opacity="{Binding MaskOpacity}" Grid.Row="0" Grid.RowSpan="3"  IsHitTestVisible="False"/>
         <ProgressRing Grid.Row="1"
                       Name="ThreadLoading"
                       Width="100"

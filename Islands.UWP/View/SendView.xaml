@@ -8,19 +8,19 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="TextBox">
-            <Setter Property="BorderThickness" Value="0"></Setter>
-            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
-            <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
-            <Setter Property="Margin" Value="5,0,0,0"></Setter>
-            <Setter Property="Padding" Value="0"></Setter>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Padding" Value="0"/>
         </Style>
         <Style TargetType="RichEditBox">
-            <Setter Property="BorderThickness" Value="0"></Setter>
-            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
-            <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
-            <Setter Property="Margin" Value="5,0,0,0"></Setter>
-            <Setter Property="Padding" Value="0"></Setter>
-            <Setter Property="TextWrapping" Value="Wrap"></Setter>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -30,7 +30,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Rectangle Name="Rect" Grid.Row="3"></Rectangle>
+        <Rectangle Name="Rect" Grid.Row="3"/>
         <RelativePanel Grid.Row="0"
                        Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
             <Button Name="Menu"
@@ -40,46 +40,45 @@
                     RelativePanel.AlignLeftWithPanel="True"
                     RelativePanel.AlignVerticalCenterWithPanel="True"
                     Background="Transparent"
-                    Visibility="Collapsed">
-            </Button>
+                    Visibility="Collapsed"/>
+
             <TextBlock Name="Title"
                        Text="发送"
                        RelativePanel.RightOf="Menu"
-                       FontSize="22">
-            </TextBlock>
+                       FontSize="22"/>
         </RelativePanel>
         <RelativePanel Grid.Row="2"
                        Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
             <Button Name="BackButton"
                     x:FieldModifier="public"
                     Content="&#xE80F;"
-                    Style="{StaticResource NavButton}">
-            </Button>
+                    Style="{StaticResource NavButton}"/>
+
             <Button Name="EmptyButton"
                     Content="&#xE107;"
                     RelativePanel.RightOf="BackButton"
                     Style="{StaticResource NavButton}"
-                    Click="EmptyButton_Click">
-            </Button>
+                    Click="EmptyButton_Click"/>
+
             <Button Name="ImageButton"
                     Content="&#xEB9F;"
                     RelativePanel.RightOf="EmptyButton"
                     Style="{StaticResource NavButton}"
-                    Click="ImageButton_Click">
-            </Button>
+                    Click="ImageButton_Click"/>
+
             <Button Name="RefButton"
                     Content=">>"
                     FontFamily="Times New Roman"
                     RelativePanel.RightOf="ImageButton" 
                     Style="{StaticResource NavButton}"
-                    Click="RefButton_Click">
-            </Button>
+                    Click="RefButton_Click"/>
+
             <Button Name="SendButton"
                     Content="&#xE724;"
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}"
-                    Click="SendButton_Click">
-            </Button>
+                    Click="SendButton_Click"/>
+
         </RelativePanel>
         <ListView Grid.Row="1"
                   CanReorderItems="True"
@@ -93,36 +92,41 @@
             </ListView.ItemContainerStyle>
             <ListViewItem Padding="5,0,5,0">
                 <TextBox Name="SendTitle"
-                         PlaceholderText="标题">
-                </TextBox>
+                         PlaceholderText="标题"/>
+
             </ListViewItem>
             <ListViewItem Padding="5,0,5,0">
                 <TextBox Name="SendEmail"
-                         PlaceholderText="Email">
-                </TextBox>
+                         PlaceholderText="Email"/>
+
             </ListViewItem>
             <ListViewItem Padding="5,0,5,0">
                 <TextBox Name="SendName"
-                         PlaceholderText="名字">
-                </TextBox>
+                         PlaceholderText="名字"/>
+
             </ListViewItem>
             <ListViewItem>
                 <ComboBox Name="EmojiBox" 
                           HorizontalAlignment="Stretch"
-                          SelectionChanged="EmojiBox_SelectionChanged">
-                </ComboBox>
+                          SelectionChanged="EmojiBox_SelectionChanged"/>
+
             </ListViewItem>
             <ListViewItem Padding="5,0,5,0">
                 <RichEditBox Name="SendContent" 
                              PlaceholderText="内容" 
                              AcceptsReturn="True"
-                             MinHeight="200">
-                </RichEditBox>
+                             MinHeight="200"/>
             </ListViewItem>
             <ListViewItem>
                 <StackPanel>
-                    <Image Name="SendImage"></Image>
-                    <TextBlock Name="SendImageStr"></TextBlock>
+                    <Button Name="TextToImage" Content="文字转图片" Click="TextToImage_Click"/>
+                    <RelativePanel>
+                        <RelativePanel Name="textToImgPanel" Background="White">
+                            <TextBlock Name="textToImgTextBlock" Text=""/>
+                        </RelativePanel>
+                        <Image Name="SendImage" Stretch="None"/>
+                    </RelativePanel>
+                    <TextBlock Name="SendImageStr"/>
                 </StackPanel>
             </ListViewItem>
         </ListView>
