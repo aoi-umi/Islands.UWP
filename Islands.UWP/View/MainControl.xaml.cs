@@ -271,7 +271,7 @@ namespace Islands.UWP
                 MyReplysControl.AddMyReply(send);                
             }
             else {
-                Data.Message.ShowMessage("发送失败\n可能原因:\n1.网络原因\n2.内容长度超出范围\n3.图片格式不符\n4.其他原因");
+                Data.Message.ShowMessage("发送失败\n可能原因:\n1.没有cookie\n2.网络原因\n3.内容长度超出范围\n4.图片格式不符或过大\n5.其他原因");
             }
         }
 

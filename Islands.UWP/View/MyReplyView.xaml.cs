@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -161,6 +162,12 @@ namespace Islands.UWP
         {
             if (!string.IsNullOrEmpty(myReplyImage))
                 imageBox.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
+        }
+
+        private void ImageBox_ImageOpened(object sender, RoutedEventArgs e)
+        {
+            var bitmap = imageBox.Source as BitmapImage;
+            if (bitmap != null && bitmap.PixelWidth < 200) imageBox.Stretch = Stretch.None;
         }
     }
 }

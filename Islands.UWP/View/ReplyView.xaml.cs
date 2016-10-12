@@ -171,7 +171,7 @@ namespace Islands.UWP
                     case IslandsCode.Beitai:
                         if (string.IsNullOrEmpty(reply.img))
                             return "";
-                        return (Config.B.PictureHost + reply.img + "_t" + reply.ext);
+                        return (Config.B.PictureHost + "thumb/" + reply.img + reply.ext);
                     case IslandsCode.Koukuko:
                         if (string.IsNullOrEmpty(reply.thumb))
                             return "";
@@ -193,7 +193,7 @@ namespace Islands.UWP
                     case IslandsCode.Beitai:
                         if (string.IsNullOrEmpty(reply.img))
                             return "";
-                        return (Config.B.PictureHost + reply.img + reply.ext);
+                        return (Config.B.PictureHost + "image/" + reply.img + reply.ext);
                     case IslandsCode.Koukuko:
                         if (string.IsNullOrEmpty(reply.image))
                             return "";
@@ -347,7 +347,7 @@ namespace Islands.UWP
                         {
                             case IslandsCode.A: req = String.Format(Config.A.GetRefAPI, Config.A.Host, id); break;
                             case IslandsCode.Koukuko: req = String.Format(Config.K.GetRefAPI, Config.K.Host, id); break;
-                            case IslandsCode.Beitai: throw new Exception("获取失败(;´Д`)"); break;
+                            case IslandsCode.Beitai: req = String.Format(Config.B.GetRefAPI, Config.B.Host, id); break;
                         }
                         string res = await Data.Http.GetData(req);
                         JObject jObj;
@@ -410,6 +410,8 @@ namespace Islands.UWP
 
         private void ImageBox_ImageOpened(object sender, RoutedEventArgs e)
         {
+            var bitmap = imageBox.Source as BitmapImage;
+            if (bitmap != null && bitmap.PixelWidth < 200) imageBox.Stretch = Stretch.None;
             LoadingView.IsActive = false;
         }
     }

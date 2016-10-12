@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -177,7 +178,7 @@ namespace Islands.UWP
                     case IslandsCode.Beitai:
                         if (string.IsNullOrEmpty(thread.img))
                             return "";
-                        return (Config.B.PictureHost + thread.img + "_t" + thread.ext);
+                        return (Config.B.PictureHost + "thumb/" + thread.img + thread.ext);
                     case IslandsCode.Koukuko:
                         if (string.IsNullOrEmpty(thread.thumb))
                             return "";
@@ -199,7 +200,7 @@ namespace Islands.UWP
                     case IslandsCode.Beitai:
                         if (string.IsNullOrEmpty(thread.img))
                             return "";
-                        return (Config.B.PictureHost + thread.img + thread.ext);
+                        return (Config.B.PictureHost + "image/" + thread.img + thread.ext);
                     case IslandsCode.Koukuko:
                         if (string.IsNullOrEmpty(thread.image))
                             return "";
@@ -236,20 +237,7 @@ namespace Islands.UWP
             }
         }
         public bool IsTextSelectionEnabled { get; set; }
-        //public bool IsCheckboxDisplay
-        //{
-        //    set
-        //    {
-        //        if (value) IsSelectedBox.Visibility = Visibility.Visible;
-        //        else {
-        //            IsSelectedBox.Visibility = Visibility.Collapsed;
-        //            IsSelected = false;
-        //            Background = null;
-        //        }
-        //    }
-        //    get { return IsSelectedBox.Visibility == Visibility.Visible ? true : false; }
-        //}
-        //public bool IsSelected { set { IsSelectedBox.IsChecked = value; } get { return (bool)IsSelectedBox.IsChecked; } }
+
         public bool NoImage
         {
             get
@@ -357,7 +345,7 @@ namespace Islands.UWP
                         {
                             case IslandsCode.A: req = String.Format(Config.A.GetRefAPI, Config.A.Host, id); break;
                             case IslandsCode.Koukuko: req = String.Format(Config.K.GetRefAPI, Config.K.Host, id); break;
-                            case IslandsCode.Beitai: throw new Exception("获取失败(;´Д`)"); break;
+                            case IslandsCode.Beitai: req  = String.Format(Config.B.GetRefAPI, Config.B.Host, id); break;
                         }
                         string res = await Data.Http.GetData(req);
                         JObject jObj;
@@ -414,6 +402,8 @@ namespace Islands.UWP
 
         private void ImageBox_Opened(object sender, RoutedEventArgs e)
         {
+            var bitmap = imageBox.Source as BitmapImage;
+            if (bitmap != null && bitmap.PixelWidth < 200) imageBox.Stretch = Stretch.None;
             LoadingView.IsActive = false;
         }
     }

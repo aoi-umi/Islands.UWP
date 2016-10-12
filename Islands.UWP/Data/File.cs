@@ -124,8 +124,7 @@ namespace Islands.UWP.Data
         {
             var uri = new Uri(urlStr);
             string filename = Path.GetFileName(urlStr);
-            var savePicker = new FileSavePicker();
-            StorageFolder folder = KnownFolders.SavedPictures;
+            StorageFolder folder = await KnownFolders.SavedPictures.CreateFolderAsync(Config.SaveedImageFolder, CreationCollisionOption.OpenIfExists);
             StorageFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             if (file != null)
             {
@@ -148,7 +147,7 @@ namespace Islands.UWP.Data
 
         public static async Task<string> SaveTextToImage(string filename, RenderTargetBitmap bitmap)
         {
-            StorageFolder folder = await KnownFolders.SavedPictures.CreateFolderAsync("Islands", CreationCollisionOption.OpenIfExists);
+            StorageFolder folder = await KnownFolders.SavedPictures.CreateFolderAsync(Config.SaveedImageFolder, CreationCollisionOption.OpenIfExists);
             StorageFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             var buffer = await bitmap.GetPixelsAsync();
             using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))

@@ -52,9 +52,10 @@
             <TextBlock Name="txtContent"
                        TextWrapping="Wrap"
                        Text="{x:Bind myReplyContent}"></TextBlock>
-            <Image Name="imageBox" Stretch="None"
+            <Image Name="imageBox" Stretch="Uniform"
                    MaxHeight="200" MaxWidth="200" 
                    HorizontalAlignment="Left"
+                   ImageOpened="ImageBox_ImageOpened"
                    ImageFailed="ImageBox_ImageFailed" CacheMode="BitmapCache" />
             <Line Fill="Gray" Stroke="Gray" X2="{Binding ActualWidth, ElementName=userControl, Mode=OneWay}" Height="1"/>
         </StackPanel>

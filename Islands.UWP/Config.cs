@@ -34,6 +34,7 @@ namespace Islands.UWP
         public static string ConnectDatabaseError = "连接数据库失败";
         public static string FailedImageUri = "ms-appx:/Assets/luwei.jpg";
         public static string TextToImageUri = "TextToImage";
+        public static string SaveedImageFolder = "Islands";
         //App.Current.Resources["SystemListLowColor"];
         #region 颜文字
         public static List<string> Emoji = new List<string>() {
@@ -134,7 +135,7 @@ namespace Islands.UWP
             "出错也好，崩溃也好，明明是我先的ﾟ(つд`ﾟ)",
             "仙客来根雕",
             "Excuse 咪(´・ω・`)？",
-            "RUNE☆PIKA☆",
+            "ルン☆ピカ☆ビーム!",
             "猴子*眼小",
         };
         public static class A
@@ -311,9 +312,9 @@ namespace Islands.UWP
         {
             public static string Host = "http://h.adnmb.com";
             public static string PictureHost = "http://h-adnmb-com.n1.yun.tf:8999/Public/Upload/";
-            public static string GetThreadAPI = "{0}/Home/Api/showt/id/{1}/page/{2}";
-            public static string GetReplyAPI = "{0}/Home/Api/thread/id/{1}/page/{2}";
-            public static string GetRefAPI = "{0}/Home/Api/thread/id/{1}/page/1";
+            public static string GetThreadAPI = "{0}/Api/showf/id/{1}/page/{2}";
+            public static string GetReplyAPI = "{0}/Api/thread/id/{1}/page/{2}";
+            public static string GetRefAPI = "{0}/Api/ref?id={1}";
             public static string PostThreadAPI = "{0}/home/forum/dopostthread.html";
             public static string PostReplyAPI = "{0}/home/forum/doreplythread.html";
             public static int PageSize = 19;

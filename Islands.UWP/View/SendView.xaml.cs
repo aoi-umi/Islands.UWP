@@ -86,7 +86,10 @@ namespace Islands.UWP
             set
             {
                 if (string.IsNullOrEmpty(value))
+                {
                     SendImage.Source = null;
+                    textToImgTextBlock.Text = string.Empty;
+                }
                 SendImageStr.Text = value;
             }
         }
@@ -140,9 +143,12 @@ namespace Islands.UWP
                     sendDateTime = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")                                      
                 };
 
-                string filename = DateTime.Now.ToString("yyyyMMdd_HHmmssfff") + ".jpg";
-                string fullFilename = await Data.File.SaveTextToImage(filename, bitmap);
-                if (send.sendImage == Config.TextToImageUri) {
+                string originalContent = string.Empty;
+                if (send.sendImage == Config.TextToImageUri)
+                {
+                    string filename = DateTime.Now.ToString("yyyyMMdd_HHmmssfff") + ".jpg";
+                    string fullFilename = await Data.File.SaveTextToImage(Config.TextToImageUri + filename, bitmap);
+                    originalContent = send.sendContent;
                     send.sendContent = "[文字转图]";
                     send.sendImage = fullFilename;
                 }
@@ -177,6 +183,7 @@ namespace Islands.UWP
                 }
                 if (IsSuccess)
                 {
+                    if (!string.IsNullOrEmpty(originalContent)) send.sendContent += "\r\n" + originalContent;
                     EmptyButton_Click(null,null);
                 }
                 send.ThreadId = ThreadId;

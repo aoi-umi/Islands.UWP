@@ -66,9 +66,9 @@ namespace Islands.UWP.Data
                     var fs = await File.ReadFileStreamAsync(send.sendImage);
                     string filename = Path.GetFileName(send.sendImage);
                     var imageContent = new StreamContent(fs);
-                    if (send.islandCode == IslandsCode.Beitai)
-                        imageContent.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("form-data;name=\"upfile\";filename=\"" + filename + "\"");
-                    else
+                    //if (send.islandCode == IslandsCode.Beitai)
+                    //    imageContent.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("form-data;name=\"upfile\";filename=\"" + filename + "\"");
+                    //else
                         imageContent.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("form-data;name=\"image\";filename=\"" + filename + "\"");
                     imageContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/*");
                     multiContent.Add(imageContent);
