@@ -5,6 +5,9 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:uaBeh="using:UmiAoi.UWP.Behaviors"
     mc:Ignorable="d">
     <UserControl.Resources>
         <CollectionViewSource x:Name="forumGroup" IsSourceGrouped="True"/>
@@ -154,5 +157,13 @@
                 </Grid>
             </SplitView.Content>
         </SplitView>
+        <!--<Canvas HorizontalAlignment="Right" VerticalAlignment="Center" Width="50" Height="Auto">
+            <Button Content="&#xE169;"
+                    Style="{StaticResource NavButton}">
+                <Interactivity:Interaction.Behaviors>
+                    <uaBeh:DragBehavior/>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
+        </Canvas>-->
     </Grid>
 </UserControl>

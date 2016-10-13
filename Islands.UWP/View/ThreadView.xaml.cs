@@ -403,7 +403,7 @@ namespace Islands.UWP
         private void ImageBox_Opened(object sender, RoutedEventArgs e)
         {
             var bitmap = imageBox.Source as BitmapImage;
-            if (bitmap != null && bitmap.PixelWidth < 200) imageBox.Stretch = Stretch.None;
+            if (bitmap != null && bitmap.PixelWidth < Config.MaxImageWidth) imageBox.Stretch = Stretch.None;
             LoadingView.IsActive = false;
         }
     }

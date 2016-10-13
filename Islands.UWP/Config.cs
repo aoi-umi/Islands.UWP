@@ -34,7 +34,8 @@ namespace Islands.UWP
         public static string ConnectDatabaseError = "连接数据库失败";
         public static string FailedImageUri = "ms-appx:/Assets/luwei.jpg";
         public static string TextToImageUri = "TextToImage";
-        public static string SaveedImageFolder = "Islands";
+        public static string SavedImageFolder = "Islands";
+        public static double MaxImageWidth = 200;
         //App.Current.Resources["SystemListLowColor"];
         #region 颜文字
         public static List<string> Emoji = new List<string>() {

@@ -11,6 +11,7 @@ using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Islands.UWP.Data
@@ -62,6 +63,7 @@ namespace Islands.UWP.Data
                 {
                     var bitmap = new BitmapImage();
                     await bitmap.SetSourceAsync(stream);
+                    if (bitmap != null && bitmap.PixelWidth < Config.MaxImageWidth) image.Stretch = Stretch.None;
                     image.Source = bitmap;
                 }
             }
@@ -124,7 +126,7 @@ namespace Islands.UWP.Data
         {
             var uri = new Uri(urlStr);
             string filename = Path.GetFileName(urlStr);
-            StorageFolder folder = await KnownFolders.SavedPictures.CreateFolderAsync(Config.SaveedImageFolder, CreationCollisionOption.OpenIfExists);
+            StorageFolder folder = await KnownFolders.SavedPictures.CreateFolderAsync(Config.SavedImageFolder, CreationCollisionOption.OpenIfExists);
             StorageFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             if (file != null)
             {
@@ -147,7 +149,8 @@ namespace Islands.UWP.Data
 
         public static async Task<string> SaveTextToImage(string filename, RenderTargetBitmap bitmap)
         {
-            StorageFolder folder = await KnownFolders.SavedPictures.CreateFolderAsync(Config.SaveedImageFolder, CreationCollisionOption.OpenIfExists);
+
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
             StorageFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             var buffer = await bitmap.GetPixelsAsync();
             using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
