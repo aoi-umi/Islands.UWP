@@ -13,6 +13,13 @@ namespace Islands.UWP
 {
     public sealed partial class ImageView : UserControl
     {
+        public ImageView()
+        {
+            InitializeComponent();
+            SaveButton.Click += SaveButton_Click;
+            image.ImageOpened += ImageView_ImageOpened;
+            image.ImageFailed += ImageView_ImageFailed;
+        }
         private string _imgageUrl { get; set; }
         public string imageUrl
         {
@@ -20,25 +27,22 @@ namespace Islands.UWP
             {
                 LoadingView.IsActive = true;
                 _imgageUrl = value;
-                ImageWebView.Source = new BitmapImage(new Uri(value));
+                image.Width = 200;
+                image.Height = double.NaN;
+                image.Source = new BitmapImage(new Uri(value));
                 //ImageWebView.NavigateToString("<html></html>");
                 //ImageWebView.Navigate(new Uri(value));
             }
         }
-        public ImageView()
-        {
-            InitializeComponent();
-            SaveButton.Click += SaveButton_Click;
-            ImageWebView.ImageOpened += ImageWebView_ImageOpened;
-            ImageWebView.ImageFailed += ImageWebView_ImageFailed;
-        }
 
-        private void ImageWebView_ImageOpened(object sender, RoutedEventArgs e)
+        private void ImageView_ImageOpened(object sender, RoutedEventArgs e)
         {
+            //var bitmap = image.Source as BitmapImage;
+            //if (bitmap != null) image.Width = bitmap.PixelWidth;
             LoadingView.IsActive = false;
         }
 
-        private void ImageWebView_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        private void ImageView_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
             imageUrl = Config.FailedImageUri;
             LoadingView.IsActive = false;
@@ -59,8 +63,8 @@ namespace Islands.UWP
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            ImageWebView.Width = double.NaN;
-            ImageWebView.Height = double.NaN;
+            image.Width = double.NaN;
+            image.Height = double.NaN;
             imageUrl = _imgageUrl;
         }
 
@@ -84,8 +88,8 @@ namespace Islands.UWP
         ~ImageView()
         {
             SaveButton.Click -= SaveButton_Click;
-            ImageWebView.ImageOpened -= ImageWebView_ImageOpened;
-            ImageWebView.ImageFailed -= ImageWebView_ImageFailed;
+            image.ImageOpened -= ImageView_ImageOpened;
+            image.ImageFailed -= ImageView_ImageFailed;
         }
     }
 }

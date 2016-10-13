@@ -29,35 +29,37 @@
                     RelativePanel.AlignLeftWithPanel="True"
                     RelativePanel.AlignVerticalCenterWithPanel="True"
                     Style="{StaticResource NavButton}"
-                    Visibility="Collapsed"
-                    >
-            </Button>
+                    Visibility="Collapsed"/>
+
             <TextBlock Name="Title"
                        Text="图片"
                        RelativePanel.RightOf="Menu"
-                       FontSize="22">
-            </TextBlock>
+                       FontSize="22"/>
+
             <Button Name="RefreshButton"
                     Content="&#xE117;"
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}"
-                    Click="RefreshButton_Click">
-            </Button>
+                    Click="RefreshButton_Click"/>
+
         </RelativePanel>
         <RelativePanel Grid.Row="2"
                        Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
             <Button Name="BackButton"
                     x:FieldModifier="public"
                     Content="&#xE80F;"
-                    Style="{StaticResource NavButton}"></Button>
+                    Style="{StaticResource NavButton}"/>
             <Button Name="SaveButton"
                     Content="&#xE105;"
                     RelativePanel.AlignRightWithPanel="True"
-                    Style="{StaticResource NavButton}"></Button>
+                    Style="{StaticResource NavButton}"/>
         </RelativePanel>
+        <ProgressRing 
+            Grid.Row="1" Name="LoadingView"
+            Width="100" Height="100" IsActive="False"/>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto">
-            <Image Name="ImageWebView"
+            <Image Name="image"
                Grid.Row="1" FlyoutBase.AttachedFlyout="{StaticResource ImageMenuFlyout}" 
                    Holding="Image_Holding" RightTapped="Image_RightTapped">
                 <Interactivity:Interaction.Behaviors>
@@ -68,8 +70,5 @@
                   Grid.Row="1">
         </WebView>-->
         </ScrollViewer>
-        <ProgressRing 
-            Grid.Row="1" Name="LoadingView"
-            Width="100" Height="100" IsActive="False"/>
     </Grid>
 </UserControl>
