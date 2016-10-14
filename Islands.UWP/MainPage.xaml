@@ -5,16 +5,18 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:uaBeh="using:UmiAoi.UWP.Behaviors"
     mc:Ignorable="d" >
     <Page.Resources>
         <Style TargetType="Pivot">
-            <Setter Property="FontSize" Value="10"></Setter>
+            <Setter Property="FontSize" Value="10"/>
         </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Image Name="BackgroundImage" Stretch="UniformToFill" Opacity="0.5"/>
         <Pivot Name="mainPivot">
@@ -28,6 +30,16 @@
                 <local:MainControl />
             </PivotItem>
         </Pivot>
+
+        <Canvas>
+            <Button Name="MovableMenu" Content="&#xE700;" Height="30" Width="30"
+                    FontFamily="Segoe MDL2 Assets" Padding="0" Tapped="MovableMenu_Tapped"                     
+                    Style="{StaticResource EllipseButtonStyle}">
+                <Interactivity:Interaction.Behaviors>
+                    <uaBeh:DragBehavior/>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
+        </Canvas>
         <local:SettingView x:Name="SettingControl"  Visibility="Collapsed"/>
     </Grid>
 </Page>

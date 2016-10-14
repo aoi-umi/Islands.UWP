@@ -131,47 +131,57 @@ namespace Islands.UWP
             ListBoxItem tapped_item = sender as ListBoxItem;
             if (tapped_item != null && tapped_item.Tag != null)
             {
-                switch (tapped_item.Tag.ToString())
-                {
-                    case "menu":
-                        mainSplitView.IsPaneOpen = !mainSplitView.IsPaneOpen;
-                        break;
-                    case "home":
-                        mainSplitView.IsPaneOpen = false;
-                        if (IsMain)
-                            mainSplitView.Content = ThreadControl;
-                        else
-                            mainSplitView.Content = ReplyControl;
-                        break;
-                    case "mark":
-                        mainSplitView.IsPaneOpen = false;
-                        mainSplitView.Content = MarkControl;
-                        break;
-                    case "myreply":
-                        mainSplitView.IsPaneOpen = false;
-                        mainSplitView.Content = MyReplysControl;
-                        break;
-                    case "image":
-                        mainSplitView.IsPaneOpen = false;
-                        mainSplitView.Content = ImageControl;
-                        break;
-                    case "forums":
-                        mainSplitView.IsPaneOpen = false;
-                        mainSplitView.Content = ForumList;
-                        break;
-                    case "gotothread":
-                        mainSplitView.IsPaneOpen = false;
-                        GotoThread();
-                        break;
-                    case "setting":
-                        mainSplitView.IsPaneOpen = false;
-                        if (SettingTapped != null) SettingTapped(sender, e);
-                        //mainSplitView.Content = SettingControl;
-                        break;
-                    default:
-                        mainSplitView.IsPaneOpen = false;
-                        break;
-                }
+                MenuNavigate(tapped_item.Tag.ToString());                
+            }
+        }
+
+        public void MenuNavigate(MenuType type)
+        {
+            MenuNavigate(type.ToString());
+        }
+
+        private void MenuNavigate(string type)
+        {
+            switch (type)
+            {
+                case "menu":
+                    mainSplitView.IsPaneOpen = !mainSplitView.IsPaneOpen;
+                    break;
+                case "home":
+                    mainSplitView.IsPaneOpen = false;
+                    if (IsMain)
+                        mainSplitView.Content = ThreadControl;
+                    else
+                        mainSplitView.Content = ReplyControl;
+                    break;
+                case "mark":
+                    mainSplitView.IsPaneOpen = false;
+                    mainSplitView.Content = MarkControl;
+                    break;
+                case "myreply":
+                    mainSplitView.IsPaneOpen = false;
+                    mainSplitView.Content = MyReplysControl;
+                    break;
+                case "image":
+                    mainSplitView.IsPaneOpen = false;
+                    mainSplitView.Content = ImageControl;
+                    break;
+                case "forums":
+                    mainSplitView.IsPaneOpen = false;
+                    mainSplitView.Content = ForumListView;
+                    break;
+                case "gotothread":
+                    mainSplitView.IsPaneOpen = false;
+                    GotoThread();
+                    break;
+                case "setting":
+                    mainSplitView.IsPaneOpen = false;
+                    SettingTapped?.Invoke(null, null);
+                    //mainSplitView.Content = SettingControl;
+                    break;
+                default:
+                    mainSplitView.IsPaneOpen = false;
+                    break;
             }
         }
 
@@ -369,5 +379,17 @@ namespace Islands.UWP
                 ReplyControl.GetReplyListByID(thread.ToString(), 0);
             }
         }
+    }
+
+    public enum MenuType
+    {
+        menu,
+        home,
+        mark,
+        myreply,
+        image,
+        forums,
+        gotothread,
+        setting
     }
 }

@@ -29,6 +29,7 @@ namespace Islands.UWP
             }
 
             this.InitializeComponent();
+            Loaded += MainPage_Loaded;
             DataContext = Global;
             MainControl mainControlA = new MainControl()
             {
@@ -86,6 +87,12 @@ namespace Islands.UWP
             InitSetting();
         }
 
+        private void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            Canvas.SetLeft(MovableMenu, ActualWidth - MovableMenu.ActualWidth);
+            Canvas.SetTop(MovableMenu, ActualHeight / 2);
+        }
+
         public static MyGlobal Global = new MyGlobal() { TitleFontSize = 14, ContentFontSize = 12};
         public void SetBackgroundImage(string path)
         {
@@ -120,6 +127,22 @@ namespace Islands.UWP
         private void SettingControl_BackgroundImagePathChanged(object sender, RoutedEventArgs e)
         {
             SetBackgroundImage(MainPage.Global.BackgroundImagePath);
+        }
+
+        private void ToForumList_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedItem = mainPivot.SelectedItem as PivotItem;
+            {
+                if (selectedItem != null) {
+                    var content = selectedItem.Content as MainControl;
+                    content.MenuNavigate(MenuType.forums);
+                }
+            }
+        }
+
+        private void MovableMenu_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            Data.Message.ShowMessage("打开菜单");
         }
     }
     
