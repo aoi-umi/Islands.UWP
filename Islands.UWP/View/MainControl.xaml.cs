@@ -135,12 +135,7 @@ namespace Islands.UWP
             }
         }
 
-        public void MenuNavigate(MenuType type)
-        {
-            MenuNavigate(type.ToString());
-        }
-
-        private void MenuNavigate(string type)
+        public void MenuNavigate(string type)
         {
             switch (type)
             {

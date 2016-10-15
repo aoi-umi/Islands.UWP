@@ -84,6 +84,7 @@ namespace Islands.UWP
             SettingControl.NightModelToggled += SettingControl_NightModelToggled;
             SettingControl.BackgroundImagePathChanged += SettingControl_BackgroundImagePathChanged;
 
+            MovableMenu.MenuItemTapped += MovableMenu_MenuItemTapped;
             InitSetting();
         }
 
@@ -108,13 +109,13 @@ namespace Islands.UWP
 
         private void SettingTapped(object sender, TappedRoutedEventArgs e)
         {
-            mainPivot.Visibility = Visibility.Collapsed;
+            MovableMenu.Visibility = mainPivot.Visibility = Visibility.Collapsed;
             SettingControl.Visibility = Visibility.Visible;
         }
 
         private void BackButton_Clicked(object sender, RoutedEventArgs e)
         {
-            mainPivot.Visibility = Visibility.Visible;
+            MovableMenu.Visibility = mainPivot.Visibility = Visibility.Visible;
             SettingControl.Visibility = Visibility.Collapsed;
         }
 
@@ -129,20 +130,18 @@ namespace Islands.UWP
             SetBackgroundImage(MainPage.Global.BackgroundImagePath);
         }
 
-        private void ToForumList_Click(object sender, RoutedEventArgs e)
+        private void MovableMenu_MenuItemTapped(object sender, TappedRoutedEventArgs e)
         {
-            var selectedItem = mainPivot.SelectedItem as PivotItem;
+            var btn = sender as AppBarButton;
+            if (btn != null)
             {
-                if (selectedItem != null) {
-                    var content = selectedItem.Content as MainControl;
-                    content.MenuNavigate(MenuType.forums);
+                var selectItem = mainPivot.SelectedItem as PivotItem;
+                if (selectItem != null)
+                {
+                    var content = selectItem.Content as MainControl;
+                    content.MenuNavigate(btn.Content.ToString());
                 }
             }
-        }
-
-        private void MovableMenu_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            Data.Message.ShowMessage("打开菜单");
         }
     }
     

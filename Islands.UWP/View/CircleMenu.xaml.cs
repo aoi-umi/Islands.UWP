@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -10,13 +12,79 @@ namespace Islands.UWP
 {
     public sealed partial class CircleMenu : UserControl
     {
+        private List<AppBarButton> MenuItems { get; set; }
         public CircleMenu()
         {
             this.InitializeComponent();
+            double width = 28, height = 28;
+            Style style = Application.Current.Resources["EllipseAppBarButtonStyle"] as Style;
+            SolidColorBrush background = Application.Current.Resources["SystemControlHighlightAltListAccentLowBrush"] as SolidColorBrush;
+            MenuItems = new List<AppBarButton>() {
+                new AppBarButton() {
+                    Content = MenuType.home,
+                    Icon = new FontIcon() {  Glyph = "\uE80F"},
+                    Width = width,
+                    Height = height,
+                    Visibility = Visibility.Collapsed,
+                    Style = style,
+                    Background = background,                                        
+                },new AppBarButton() {
+                    Content = MenuType.mark,
+                    Icon = new FontIcon() {  Glyph = "\uE728"},
+                    Width = width,
+                    Height = height,
+                    Visibility = Visibility.Collapsed,
+                    Style = style,
+                    Background = background
+                },new AppBarButton() {
+                    Content = MenuType.myreply,
+                    Icon = new FontIcon() {  Glyph = "\uE120"},
+                    Width = width,
+                    Height = height,
+                    Visibility = Visibility.Collapsed,
+                    Style = style,
+                    Background = background
+                },new AppBarButton() {
+                    Content = MenuType.image,
+                    Icon = new FontIcon() {  Glyph = "\uEB9F"},
+                    Width = width,
+                    Height = height,
+                    Visibility = Visibility.Collapsed,
+                    Style = style,
+                    Background = background
+                },new AppBarButton() {
+                    Content = MenuType.forums,
+                    Icon = new FontIcon() {  Glyph = "\uE169"},
+                    Width = width,
+                    Height = height,
+                    Visibility = Visibility.Collapsed,
+                    Style = style,
+                    Background = background
+                },new AppBarButton() {
+                    Content = MenuType.gotothread,
+                    Icon = new FontIcon() {  Glyph = "\uE8AD"},
+                    Width = width,
+                    Height = height,
+                    Visibility = Visibility.Collapsed,
+                    Style = style,
+                    Background = background
+                },new AppBarButton() {
+                    Content = MenuType.setting,
+                    Icon = new FontIcon() {  Glyph = "\uE713"},
+                    Width = width,
+                    Height = height,
+                    Visibility = Visibility.Collapsed,
+                    Style = style,
+                    Background = background
+                },
+            };
             Init();
             //Loaded += CircleMenu_Loaded;
             //Unloaded += CircleMenu_Unloaded;
         }
+
+        public delegate void MenuItemTappedEventHandler(Object sender, TappedRoutedEventArgs e);
+        public event MenuItemTappedEventHandler MenuItemTapped;
 
         private void CircleMenu_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -36,19 +104,13 @@ namespace Islands.UWP
             _storyboard.Completed += _storyboard_Completed;
             double theta = 0;
             double thetaRadians = 0;
-            int count = 10;
+            int count = MenuItems.Count;
             float circleRadius = 80;
             double millSeconds = 500;
             for (int i = 0; i < count; i++)
             {
-                var b = new Button()
-                {
-                    Content = i.ToString(),
-                    Width = Menu.Width,
-                    Height = Menu.Height,
-                    Visibility = Visibility.Collapsed,
-                    Style = Application.Current.Resources["EllipseButtonStyle"] as Style
-                };
+                var b = MenuItems[i];
+                b.Tapped += MenuItem_Tapped;
                 canvas.Children.Add(b);
                 var x = (float)(circleRadius * Math.Cos(thetaRadians)) + _posX;
                 var y = (float)(circleRadius * Math.Sin(thetaRadians)) + _posY;
@@ -81,12 +143,23 @@ namespace Islands.UWP
             }
         }
 
+        private void MenuItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            StartStoryBoard();
+            MenuItemTapped?.Invoke(sender, e);
+        }
+
         private Storyboard _storyboard { get; set; }
-        bool open = false;
+        bool IsOpen = false;
         private void Menu_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            StartStoryBoard();
+        }
+
+        private void StartStoryBoard()
+        {
             _storyboard.Stop();
-            if (!open)
+            if (!IsOpen)
             {
                 foreach (var child in canvas.Children)
                 {
@@ -125,13 +198,13 @@ namespace Islands.UWP
                     }
                 }
             }
-            open = !open;
+            IsOpen = !IsOpen;
             _storyboard.Begin();
         }
 
         private void _storyboard_Completed(object sender, object e)
         {
-            if (!open)
+            if (!IsOpen)
             {
                 foreach (var child in canvas.Children)
                 {

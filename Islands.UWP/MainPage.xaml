@@ -30,28 +30,15 @@
                 <local:MainControl />
             </PivotItem>
         </Pivot>
-
+        <local:SettingView x:Name="SettingControl"  Visibility="Collapsed"/>
         <Canvas>
             <local:CircleMenu 
-                x:Name="MovableMenu" Height="30" Width="30" 
+                x:Name="MovableMenu" Height="28" Width="28" 
                 Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
                 <Interactivity:Interaction.Behaviors>
                     <uaBeh:DragBehavior/>
                 </Interactivity:Interaction.Behaviors>
             </local:CircleMenu>
-            <!--<AppBarButton 
-                Name="MovableMenu" Height="30" Width="30"
-                Tapped="MovableMenu_Tapped"
-                Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}"
-                Style="{StaticResource EllipseAppBarButtonStyle}">
-                <AppBarButton.Icon>
-                    <FontIcon Glyph="&#xE700;"/>
-                </AppBarButton.Icon>
-                <Interactivity:Interaction.Behaviors>
-                    <uaBeh:DragBehavior/>
-                </Interactivity:Interaction.Behaviors>                
-            </AppBarButton>-->
         </Canvas>
-        <local:SettingView x:Name="SettingControl"  Visibility="Collapsed"/>
     </Grid>
 </Page>
