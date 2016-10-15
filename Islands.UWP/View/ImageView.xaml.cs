@@ -20,6 +20,7 @@ namespace Islands.UWP
             image.ImageOpened += ImageView_ImageOpened;
             image.ImageFailed += ImageView_ImageFailed;
         }
+
         private string _imgageUrl { get; set; }
         public string imageUrl
         {
@@ -29,16 +30,12 @@ namespace Islands.UWP
                 _imgageUrl = value;
                 image.Width = 200;
                 image.Height = double.NaN;
-                image.Source = new BitmapImage(new Uri(value));
-                //ImageWebView.NavigateToString("<html></html>");
-                //ImageWebView.Navigate(new Uri(value));
+                image.Source = string.IsNullOrEmpty(_imgageUrl) ? null : new BitmapImage(new Uri(value));
             }
         }
 
         private void ImageView_ImageOpened(object sender, RoutedEventArgs e)
         {
-            //var bitmap = image.Source as BitmapImage;
-            //if (bitmap != null) image.Width = bitmap.PixelWidth;
             LoadingView.IsActive = false;
         }
 

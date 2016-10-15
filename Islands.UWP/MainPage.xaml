@@ -32,13 +32,25 @@
         </Pivot>
 
         <Canvas>
-            <Button Name="MovableMenu" Content="&#xE700;" Height="30" Width="30"
-                    FontFamily="Segoe MDL2 Assets" Padding="0" Tapped="MovableMenu_Tapped"                     
-                    Style="{StaticResource EllipseButtonStyle}">
+            <local:CircleMenu 
+                x:Name="MovableMenu" Height="30" Width="30" 
+                Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
                 <Interactivity:Interaction.Behaviors>
                     <uaBeh:DragBehavior/>
                 </Interactivity:Interaction.Behaviors>
-            </Button>
+            </local:CircleMenu>
+            <!--<AppBarButton 
+                Name="MovableMenu" Height="30" Width="30"
+                Tapped="MovableMenu_Tapped"
+                Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}"
+                Style="{StaticResource EllipseAppBarButtonStyle}">
+                <AppBarButton.Icon>
+                    <FontIcon Glyph="&#xE700;"/>
+                </AppBarButton.Icon>
+                <Interactivity:Interaction.Behaviors>
+                    <uaBeh:DragBehavior/>
+                </Interactivity:Interaction.Behaviors>                
+            </AppBarButton>-->
         </Canvas>
         <local:SettingView x:Name="SettingControl"  Visibility="Collapsed"/>
     </Grid>

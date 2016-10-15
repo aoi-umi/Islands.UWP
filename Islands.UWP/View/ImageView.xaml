@@ -66,9 +66,6 @@
                     <uaBeh:GestureBehavior/>
                 </Interactivity:Interaction.Behaviors>
             </Image>
-            <!--<WebView Name="ImageWebView"
-                  Grid.Row="1">
-        </WebView>-->
         </ScrollViewer>
     </Grid>
 </UserControl>

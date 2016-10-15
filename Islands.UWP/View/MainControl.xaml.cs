@@ -163,7 +163,7 @@ namespace Islands.UWP
                     mainSplitView.Content = MyReplysControl;
                     break;
                 case "image":
-                    mainSplitView.IsPaneOpen = false;
+                    mainSplitView.IsPaneOpen = false;                    
                     mainSplitView.Content = ImageControl;
                     break;
                 case "forums":
