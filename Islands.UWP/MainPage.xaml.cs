@@ -84,7 +84,7 @@ namespace Islands.UWP
             SettingControl.NightModelToggled += SettingControl_NightModelToggled;
             SettingControl.BackgroundImagePathChanged += SettingControl_BackgroundImagePathChanged;
 
-            MovableMenu.MenuItemTapped += MovableMenu_MenuItemTapped;
+            MovableMenu.ItemsTapped += MovableMenu_ItemsTapped;
             InitSetting();
         }
 
@@ -130,7 +130,7 @@ namespace Islands.UWP
             SetBackgroundImage(MainPage.Global.BackgroundImagePath);
         }
 
-        private void MovableMenu_MenuItemTapped(object sender, TappedRoutedEventArgs e)
+        private void MovableMenu_ItemsTapped(object sender, TappedRoutedEventArgs e)
         {
             var btn = sender as AppBarButton;
             if (btn != null)
