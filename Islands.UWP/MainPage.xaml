@@ -35,7 +35,7 @@
         <Canvas>
             <uaCtr:CircleMenu Height="40" Width="40"
                               CircleRadius="80" Name="MovableMenu"
-                              Canvas.Left="150"
+                              Canvas.Left="150" IsOpen="False"
                               Background="{StaticResource ThemeColor}" >
                 <Interactivity:Interaction.Behaviors>
                     <uaBeh:DragBehavior IsKeptMovePointCenter="False"/>
@@ -91,5 +91,16 @@
                 </AppBarButton>
             </uaCtr:CircleMenu>
         </Canvas>
+        <!--<local:BaseView>
+            <local:BaseView.TopContent>
+                <RelativePanel>
+                    <Button>bbbbbbbbbbbbbbbb</Button>
+                </RelativePanel>
+            </local:BaseView.TopContent>
+            <local:BaseView.BottomContent>
+                <Button>bottom</Button>
+            </local:BaseView.BottomContent>
+            <Button>aaaaa</Button>
+        </local:BaseView>-->
     </Grid>
 </Page>

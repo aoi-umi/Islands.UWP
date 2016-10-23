@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UmiAoi.UWP;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -11,15 +12,23 @@ using Windows.UI.Xaml.Input;
 
 namespace Islands.UWP
 {
-    public sealed partial class ReplysView : UserControl
+    public sealed partial class ReplysView : BaseView
     {
         public ReplysView()
         {
             InitializeComponent();
             this.DataContext = MainPage.Global;
-            replyListView.Items.Add(ReplyStatusBox);
-            replyListScrollViewer.ViewChanged += ReplyListScrollViewer_ViewChanged;
+            Items.Add(ReplyStatusBox);
             ReplyStatusBox.Tapped += ReplyStatusBox_Tapped;
+            var bindingModel = new BindingModel()
+            {
+                BindingMode = BindingMode.OneWay,
+                BindingElement = this,
+                Property = MaskOpacityProperty,
+                Path = nameof(MaskOpacity),
+                Source = MainPage.Global
+            };
+            Helper.BindingHelper(bindingModel);
         }
         
         public Model.PostRequest postReq;
@@ -92,16 +101,16 @@ namespace Islands.UWP
 
         private void DataLoading()
         {
-            ReplyLoading.IsActive = true;
+            IsLoading = true;
             IsHitTestVisible = false;
-            replyListView.Items.Remove(ReplyStatusBox);
+            Items.Remove(ReplyStatusBox);
             message = "点我加载";
         }
 
         private void DataLoaded()
         {
-            replyListView.Items.Add(ReplyStatusBox);
-            ReplyLoading.IsActive = false;
+            Items.Add(ReplyStatusBox);
+            IsLoading = false;
             IsHitTestVisible = true;
         }
 
@@ -111,9 +120,9 @@ namespace Islands.UWP
             IsGetAllReply = false;
             replyCount = 0;
             currPage = page;
-            for (var i = replyListView.Items.Count - 1; i >= 0; i--)
+            for (var i = Items.Count - 1; i >= 0; i--)
             {
-                replyListView.Items.RemoveAt(i);
+                Items.RemoveAt(i);
             }
             try
             {
@@ -128,7 +137,7 @@ namespace Islands.UWP
 
         private async void GetReplyList(Model.PostRequest req, IslandsCode code)
         {
-            if (ReplyLoading.IsActive) return;
+            if (IsLoading) return;
             txtReplyCount = "0";
             DataLoading();
             string res = "";
@@ -165,13 +174,13 @@ namespace Islands.UWP
 
                 int _replyCount;
                 int.TryParse(top.replyCount, out _replyCount);
-                if (replyListView.Items.Count == 0 && top != null)
+                if (Items.Count == 0 && top != null)
                 {
                     var tv = new ThreadView(top, code) { Tag = top, IsTextSelectionEnabled = true, Background = null };
                     tv.ImageTapped += Image_ImageTapped;
                     tv.IsPo = true;
                     if (!MainPage.Global.NoImage) tv.ShowImage();
-                    replyListView.Items.Add(tv);
+                    Items.Add(tv);
                 }
                 replyCount = _replyCount;
                 txtReplyCount = _replyCount.ToString();
@@ -180,12 +189,11 @@ namespace Islands.UWP
                     IsGetAllReply = true;
                     throw new Exception("已经没有了");
                 }
-                //Replys = Replys.OrderBy(x=>x.id);
 
-                if ((replyListView.Items.Count - 1) % (pageSize + 1) == 0)
-                    replyListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
+                if ((Items.Count - 1) % (pageSize + 1) == 0)
+                    Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
 
-                Replys = Replys.OrderBy(x => x.id).ToList();
+                Replys = Replys.OrderBy(x => int.Parse(x.id)).ToList();
                 foreach (var reply in Replys)
                 {
                     if (lastReply == null && Replys.IndexOf(reply) == Replys.Count - 1)
@@ -202,7 +210,7 @@ namespace Islands.UWP
                     if ((code == IslandsCode.Koukuko && reply.uid == top.uid) || (code != IslandsCode.Koukuko && reply.userid == top.userid))
                         rv.IsPo = true;
                     rv.ImageTapped += Image_ImageTapped;
-                    replyListView.Items.Add(rv);
+                    Items.Add(rv);
 
                 }
                 if (Replys.Count < pageSize || (currPage - 1) * pageSize + Replys.Count == replyCount)
@@ -224,15 +232,14 @@ namespace Islands.UWP
 
         }
 
-        //滑动刷新
-        private void ReplyListScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        //滑动刷新    
+        protected override void OnScrollToEnd()
         {
-            ScrollViewer sv = (ScrollViewer)sender;
-            if (!IsGetAllReply && currPage <= allPage && sv.VerticalOffset > 0 && sv.ActualHeight + sv.VerticalOffset >= sv.ExtentHeight)
+            base.OnScrollToEnd();
+            if (!IsGetAllReply && currPage <= allPage)
             {
                 try
                 {
-                    sv.ChangeView(null, sv.VerticalOffset - 1, null);
                     postReq.Page = currPage;
                     GetReplyList(postReq, islandCode);
                 }

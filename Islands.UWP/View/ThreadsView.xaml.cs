@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using UmiAoi.UWP;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -11,19 +12,24 @@ using Windows.UI.Xaml.Input;
 
 namespace Islands.UWP
 {
-    public sealed partial class ThreadsView : UserControl
+    public sealed partial class ThreadsView : BaseView
     {
         public ThreadsView()
         {
             InitializeComponent();
-            DataContext = MainPage.Global;
-            string DeviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;//Windows.Desktop Windows.Mobile
-            threadListScrollViewer.ViewChanged += ThreadListScrollViewer_ViewChanged;
+            this.DataContext = MainPage.Global;
             ThreadStatusBox.Tapped += ThreadStatusBox_Tapped;
-            threadListView.Items.Add(ThreadStatusBox);
+            Items.Add(ThreadStatusBox);
             currPage = 1;
-            if (IsInitRefresh)
-                _Refresh(1);
+            var bindingModel = new BindingModel()
+            {
+                BindingMode = BindingMode.OneWay,
+                BindingElement = this,
+                Property = MaskOpacityProperty,
+                Path = nameof(MaskOpacity),
+                Source = MainPage.Global
+            };
+            Helper.BindingHelper(bindingModel);
         }
 
         public bool IsInitRefresh = false;
@@ -71,16 +77,16 @@ namespace Islands.UWP
         private void DataLoading()
         {
             
-            ThreadLoading.IsActive = true;
+            IsLoading = true;
             IsHitTestVisible = false;
-            threadListView.Items.Remove(ThreadStatusBox);
+            Items.Remove(ThreadStatusBox);
             message = "点我加载";
         }
 
         private void DataLoaded()
         {
-            threadListView.Items.Add(ThreadStatusBox);
-            ThreadLoading.IsActive = false;
+            Items.Add(ThreadStatusBox);
+            IsLoading = false;
             IsHitTestVisible = true;
         }
 
@@ -89,9 +95,9 @@ namespace Islands.UWP
             currPage = page;     
             try
             {                
-                for (var i = threadListView.Items.Count - 1; i >= 0; i--)
+                for (var i = Items.Count - 1; i >= 0; i--)
                 {
-                    threadListView.Items.RemoveAt(i);
+                    Items.RemoveAt(i);
                 }
                 postReq.Page = page;
                 GetThreadList(postReq, islandCode);
@@ -103,28 +109,23 @@ namespace Islands.UWP
         }
 
         //滑动刷新
-        private void ThreadListScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        protected override void OnScrollToEnd()
         {
-            ScrollViewer sv = (ScrollViewer)sender;
-            //Debug.WriteLine("{0}|{1}+{2}={3} => {4}", sv.ActualHeight, sv.ViewportHeight, sv.VerticalOffset, sv.ViewportHeight + sv.VerticalOffset, sv.ExtentHeight);
-            if (sv.VerticalOffset > 0 && sv.ActualHeight + sv.VerticalOffset >= sv.ExtentHeight)
+            base.OnScrollToEnd();
+            try
             {
-                try
-                {
-                    sv.ChangeView(null, sv.VerticalOffset - 1, null);
-                    postReq.Page = currPage;
-                    GetThreadList(postReq, islandCode);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                }
+                postReq.Page = currPage;
+                GetThreadList(postReq, islandCode);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
             }
         }
 
         private async void GetThreadList(Model.PostRequest req, IslandsCode code)
         {
-            if (ThreadLoading.IsActive) return;
+            if (IsLoading) return;
             DataLoading();
             string res = "";
             try
@@ -150,13 +151,13 @@ namespace Islands.UWP
                 }
                 if (Threads == null || Threads.Count == 0)
                     throw new Exception("什么也没有");
-                threadListView.Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
+                Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
                 foreach (var thread in Threads)
                 {
                     var tv = new ThreadView(thread, code);
                     tv.ImageTapped += Image_ImageTapped;
                     if (!MainPage.Global.NoImage) tv.ShowImage();
-                    threadListView.Items.Add(tv);
+                    Items.Add(tv);
                 }
                 ++currPage;
             }
@@ -179,21 +180,20 @@ namespace Islands.UWP
         }
 
         //点击串
-        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        protected override void OnItemClick(object sender, ItemClickEventArgs e)
         {
+            base.OnItemClick(sender, e);
             ThreadView tv = e.ClickedItem as ThreadView;
             if (tv != null)
             {
-                if (ThreadClick != null)
-                    ThreadClick(sender, e);
+                ThreadClick?.Invoke(sender, e);
             }
         }
 
         //点击图片
         private void Image_ImageTapped(object sender, TappedRoutedEventArgs e)
         {
-            if (ImageTapped != null)
-                ImageTapped(sender, e);
+            ImageTapped?.Invoke(sender, e);
         }
 
         private void Menu_Click(object sender, RoutedEventArgs e)
