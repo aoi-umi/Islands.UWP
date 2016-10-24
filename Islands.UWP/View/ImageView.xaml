@@ -17,6 +17,7 @@
     <local:BaseContentView.TopContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
             <Button Name="Menu" Content="&#xE700;"
+
                     RelativePanel.AlignLeftWithPanel="True"
                     RelativePanel.AlignVerticalCenterWithPanel="True"
                     Style="{StaticResource NavButton}" Visibility="Collapsed"/>

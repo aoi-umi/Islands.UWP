@@ -12,6 +12,7 @@ namespace Islands.UWP
         private static string ScrollViewerName = "ScrollViewer";
         private static string ListViewName = "ListView";
         public BaseListView():base()
+
         {
             this.DefaultStyleKey = typeof(BaseListView);        
         }

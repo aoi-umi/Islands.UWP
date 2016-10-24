@@ -33,74 +33,47 @@
         </Pivot>
         <local:SettingView x:Name="SettingControl"  Visibility="Collapsed"/>
         <Canvas>
-            <uaCtr:CircleMenu Height="40" Width="40"
-                              CircleRadius="80" Name="MovableMenu"
-                              Canvas.Left="150" IsOpen="False"
-                              Background="{StaticResource ThemeColor}" >
+            <uaCtr:CircleMenu Height="40" Width="40" CircleRadius="80" Name="MovableMenu"
+                              Canvas.Left="150" IsOpen="False" Background="{StaticResource ThemeColor}" >
                 <Interactivity:Interaction.Behaviors>
                     <uaBeh:DragBehavior IsKeptMovePointCenter="False"/>
                 </Interactivity:Interaction.Behaviors>
-                <AppBarButton Content="home"
-                    Background="{StaticResource ThemeColor}" 
-                              Style="{StaticResource EllipseAppBarButtonStyle}">
+                <AppBarButton Content="home" Background="{StaticResource ThemeColor}" Style="{StaticResource EllipseAppBarButtonStyle}">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="&#xe80f;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Content="mark"
-                    Background="{StaticResource ThemeColor}" 
-                              Style="{StaticResource EllipseAppBarButtonStyle}">
+                <AppBarButton Content="mark" Background="{StaticResource ThemeColor}" Style="{StaticResource EllipseAppBarButtonStyle}">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="&#xe728;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Content="myreply"
-                    Background="{StaticResource ThemeColor}"  
-                              Style="{StaticResource EllipseAppBarButtonStyle}">
+                <AppBarButton Content="myreply" Background="{StaticResource ThemeColor}" Style="{StaticResource EllipseAppBarButtonStyle}">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="&#xe120;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Content="image"
-                              Background="{StaticResource ThemeColor}" 
-                              Style="{StaticResource EllipseAppBarButtonStyle}">
+                <AppBarButton Content="image" Background="{StaticResource ThemeColor}" Style="{StaticResource EllipseAppBarButtonStyle}">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="&#xeb9f;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Content="forums"
-                              Background="{StaticResource ThemeColor}" 
-                              Style="{StaticResource EllipseAppBarButtonStyle}">
+                <AppBarButton Content="forums" Background="{StaticResource ThemeColor}" Style="{StaticResource EllipseAppBarButtonStyle}">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="&#xe169;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Content="gotothread"
-                              Background="{StaticResource ThemeColor}" 
-                              Style="{StaticResource EllipseAppBarButtonStyle}">
+                <AppBarButton Content="gotothread" Background="{StaticResource ThemeColor}" Style="{StaticResource EllipseAppBarButtonStyle}">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="&#xe8ad;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
-                <AppBarButton Content="setting"
-                              Background="{StaticResource ThemeColor}" 
-                              Style="{StaticResource EllipseAppBarButtonStyle}">
+                <AppBarButton Content="setting" Background="{StaticResource ThemeColor}" Style="{StaticResource EllipseAppBarButtonStyle}">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="&#xe713;"/>
                     </AppBarButton.Icon>
                 </AppBarButton>
             </uaCtr:CircleMenu>
         </Canvas>
-        <!--<local:BaseView>
-            <local:BaseView.TopContent>
-                <RelativePanel>
-                    <Button>bbbbbbbbbbbbbbbb</Button>
-                </RelativePanel>
-            </local:BaseView.TopContent>
-            <local:BaseView.BottomContent>
-                <Button>bottom</Button>
-            </local:BaseView.BottomContent>
-            <Button>aaaaa</Button>
-        </local:BaseView>-->
     </Grid>
 </Page>
