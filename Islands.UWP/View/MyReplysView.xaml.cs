@@ -27,12 +27,14 @@ namespace Islands.UWP
             set { SetValue(TitleFontSizeProperty, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TitleFontSize")); }
         }
         public static readonly DependencyProperty TitleFontSizeProperty = DependencyProperty.Register("TitleFontSize", typeof(double), typeof(MyReplysView), null);
+
         public double ContentFontSize
         {
             get { double value = (double)GetValue(ContentFontSizeProperty); return value == 0 ? 1 : value; }
             set { SetValue(ContentFontSizeProperty, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ContentFontSize")); }
         }
         public static readonly DependencyProperty ContentFontSizeProperty = DependencyProperty.Register("ContentFontSize", typeof(double), typeof(MyReplysView), null);
+
         public event PropertyChangedEventHandler PropertyChanged;
         public delegate void MyReplyClickEventHandler(Object sender, ItemClickEventArgs e);
         public event MyReplyClickEventHandler MyReplyClick;
@@ -78,9 +80,9 @@ namespace Islands.UWP
             myReplyCount = myReplyList.Count.ToString();
             IsLoading = false;
         }
-
-        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        protected override void OnItemClick(object sender, ItemClickEventArgs e)
         {
+            base.OnItemClick(sender, e);
             MyReplyView view = e.ClickedItem as MyReplyView;
             if (view != null)
             {
@@ -91,7 +93,7 @@ namespace Islands.UWP
 
         private void OnItemClick(ItemClickEventArgs e)
         {
-            if (MyReplyClick != null) MyReplyClick(this, e);
+            MyReplyClick?.Invoke(this, e);
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)

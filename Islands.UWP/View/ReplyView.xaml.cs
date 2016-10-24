@@ -317,7 +317,7 @@ namespace Islands.UWP
                     string id = r.Text.ToLower().Replace(">>", "").Replace("no.", "");
 
                     //从list寻找
-                    ListView lv = this.Parent as ListView;
+                    var lv = this.Parent as ReplysView;
                     if (lv != null)
                     {
                         foreach (var lvi in lv.Items)
@@ -325,7 +325,7 @@ namespace Islands.UWP
                             ThreadView tv = lvi as ThreadView;
                             if (tv != null && tv.thread != null && tv.thread.id == id)
                             {
-                                ThreadView thread = new ThreadView(tv.thread, islandCode) { Margin = new Thickness(0, 0, 5, 0), Background = null, IsTextSelectionEnabled = true };                                
+                                ThreadView thread = new ThreadView(tv.thread, islandCode) { Margin = new Thickness(0, 0, 5, 0), Background = null, IsTextSelectionEnabled = true };
                                 await Data.Message.ShowRef(r.Text, thread);
                                 return;
                             }
@@ -350,21 +350,24 @@ namespace Islands.UWP
                             case IslandsCode.Beitai: req = String.Format(Config.B.GetRefAPI, Config.B.Host, id); break;
                         }
                         string res = await Data.Http.GetData(req);
-                        JObject jObj;
-                        Data.Json.TryDeserializeObject(res, out jObj);
 
-                        if (jObj == null)
+                        JObject jObj;
+                        if (!Data.Json.TryDeserializeObject(res, out jObj)) throw new Exception(res.UnicodeDencode());
+                        Model.ReplyModel rm = null;
+                        switch (islandCode)
                         {
-                            res = $"{{\"error\":{res}}}";
-                            Data.Json.TryDeserializeObject(res, out jObj);
-                            string err = jObj["error"].ToString();
-                            throw new Exception(err);
+                            case IslandsCode.A:
+                            case IslandsCode.Beitai:
+                                rm = Data.Json.Deserialize<Model.ReplyModel>(res); break;
+                            case IslandsCode.Koukuko:
+                                Model.KReplyQueryResponse kResModel = Data.Json.Deserialize<Model.KReplyQueryResponse>(res);
+                                if (kResModel != null)
+                                {
+                                    if (!kResModel.success) throw new Exception(kResModel.message);
+                                    rm = kResModel.data;
+                                }
+                                break;
                         }
-                        if (islandCode == IslandsCode.Koukuko)
-                        {
-                            res = jObj["data"].ToString();
-                        }
-                        Model.ReplyModel rm = Data.Json.Deserialize<Model.ReplyModel>(res);
                         ReplyView reply = new ReplyView(rm, islandCode) { Margin = new Thickness(0, 0, 5, 0) };
                         await Data.Message.ShowRef(r.Text, reply);
                     }
@@ -411,7 +414,7 @@ namespace Islands.UWP
         private void ImageBox_ImageOpened(object sender, RoutedEventArgs e)
         {
             var bitmap = imageBox.Source as BitmapImage;
-            if (bitmap != null && bitmap.PixelWidth < Config.MaxImageWidth) imageBox.Stretch = Stretch.None;
+            if (bitmap != null && bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight) imageBox.Stretch = Stretch.None;
             LoadingView.IsActive = false;
         }
     }

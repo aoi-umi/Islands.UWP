@@ -45,14 +45,8 @@ namespace Islands.UWP
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected async override void OnLaunched(LaunchActivatedEventArgs e)
-        {
-            //string DeviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;//Windows.Desktop Windows.Mobile
-            //if (DeviceFamily == "Windows.Mobile")
-            //{
-            //    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-            //    //await StatusBar.GetForCurrentView().ShowAsync();
-            //}
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        {            
             EnsureSyncContext();
 
 #if DEBUG

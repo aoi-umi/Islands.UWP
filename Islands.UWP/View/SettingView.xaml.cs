@@ -37,7 +37,7 @@ namespace Islands.UWP
             set { ContentFontSizeSlider.Value = value; }
         }
 
-        private double MaskOpacity
+        private double MaskOpacitySliderValue
         {
             get { return MaskOpacitySlider.Value; }
             set { MaskOpacitySlider.Value = value; }
@@ -130,7 +130,7 @@ namespace Islands.UWP
                             double value;
                             Double.TryParse(model.SettingValue, out value);
                             MainPage.Global.MaskOpacity = value / 100;
-                            MaskOpacity = value;
+                            MaskOpacitySliderValue = value;
                         }
                         break;
                     case Settings.IsAskEachTime:
@@ -256,7 +256,7 @@ namespace Islands.UWP
             {
                 SettingName = Settings.MaskOpacity
             };
-            SettingValue = MaskOpacity.ToString();
+            SettingValue = MaskOpacitySliderValue.ToString();
 
             if (model.SettingValue != SettingValue)
             {

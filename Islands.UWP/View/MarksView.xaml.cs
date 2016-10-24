@@ -72,8 +72,9 @@ namespace Islands.UWP
             IsLoading = false;
         }
 
-        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        protected override void OnItemClick(object sender, ItemClickEventArgs e)
         {
+            base.OnItemClick(sender, e);
             ThreadView tv = e.ClickedItem as ThreadView;
             if (tv != null && SelectionMode != ListViewSelectionMode.Multiple)
             {

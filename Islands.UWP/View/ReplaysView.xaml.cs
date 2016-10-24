@@ -260,8 +260,7 @@ namespace Islands.UWP
         //点击图片
         private void Image_ImageTapped(object sender, TappedRoutedEventArgs e)
         {
-            if (ImageTapped != null)
-                ImageTapped(sender, e);
+            ImageTapped?.Invoke(sender, e);
         }
 
         //点击收藏
@@ -289,13 +288,12 @@ namespace Islands.UWP
 
         private void OnMarkSuccess()
         {
-            if (this.MarkSuccess != null)
-                this.MarkSuccess(this, top);
+            MarkSuccess?.Invoke(this, top);
         }
 
         private void Menu_Click(object sender, RoutedEventArgs e)
         {
-            if (MenuClick != null) MenuClick(sender, e);
+            MenuClick?.Invoke(sender, e);
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Islands.UWP.Model
 {
@@ -12,6 +8,7 @@ namespace Islands.UWP.Model
         public string message;
         public ThreadModel threads;
         public List<ReplyModel> replys;
+        public ReplyModel data;
     }
 
     public class ABReplyQueryResponse : ThreadModel

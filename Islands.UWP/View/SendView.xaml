@@ -25,8 +25,7 @@
     </local:BaseContentView.Resources>
     <local:BaseContentView.TopContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
-            <Button Name="Menu" Content="&#xE700;" FontFamily="Segoe MDL2 Assets" FontSize="22"
-                    RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"
+            <Button Name="Menu" Content="&#xE700;" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"
                     Background="Transparent" Visibility="Collapsed"/>
             <TextBlock Name="Title" Text="发送" RelativePanel.RightOf="Menu" FontSize="22"/>
         </RelativePanel>

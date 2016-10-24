@@ -1,4 +1,5 @@
-﻿using SQLite.Net;
+﻿using Islands.UWP.Model;
+using SQLite.Net;
 using SQLite.Net.Platform.WinRT;
 using System;
 using System.Collections.Generic;
@@ -73,55 +74,50 @@ namespace Islands.UWP.Data
         public static int DeleteByIDs(string table, List<int> idList)
         {
             if (idList == null || idList.Count == 0) return 0;
-            int count = 0;
-            using (var conn = GetDbConnection())
-            {
-                if (conn == null) return 0;
-                string sql = string.Format("delete from {0} where _id in ({1})", table, string.Join(",", idList));
-                count = conn.Execute(sql);
-            }
-            return count;
+            string sql = string.Format("delete from {0} where _id in ({1})", table, string.Join(",", idList));
+            return Execute(sql);
         }
 
-        public static List<Model.SendModel> GetMyReplyList(IslandsCode islandCode)
+        public static List<SendModel> GetMyReplyList(IslandsCode islandCode)
         {
-            using (var conn = GetDbConnection<Model.SendModel>(DbPath))
+            using (var conn = GetDbConnection<SendModel>(DbPath))
             {
                 if (conn != null)
-                    return (from model in conn.Table<Model.SendModel>()
+                {
+                    return (from model in conn.Table<SendModel>()
                             where islandCode == IslandsCode.All || model.islandCode == islandCode
                             orderby model.sendDateTime descending
                             select model).ToList();
-                return new List<Model.SendModel>();
+                }
+                return new List<SendModel>();
             }
         }
 
-        public static List<Model.ThreadModel> GetMarkList(IslandsCode islandCode)
+        public static List<ThreadModel> GetMarkList(IslandsCode islandCode)
         {
-            using (var conn = GetDbConnection<Model.ThreadModel>(DbPath))
+            using (var conn = GetDbConnection<ThreadModel>(DbPath))
             {
                 if (conn != null)
-                    return (from model in conn.Table<Model.ThreadModel>()
+                    return (from model in conn.Table<ThreadModel>()
                             where islandCode == IslandsCode.All || model.islandCode == islandCode
                             orderby model._id descending
                             select model).ToList();
-
-                return new List<Model.ThreadModel>();
+                return new List<ThreadModel>();
             }
         }
 
-        public static List<Model.SettingModel> GetSettingList(IslandsCode islandCode)
+        public static List<SettingModel> GetSettingList(IslandsCode islandCode)
         {           
-            using (var conn = GetDbConnection<Model.SettingModel>(DbPath))
+            using (var conn = GetDbConnection<SettingModel>(DbPath))
             {
                 if (conn != null)
-                    return (from model in conn.Table<Model.SettingModel>()
+                    return (from model in conn.Table<SettingModel>()
                             where model.islandCode == islandCode
                             orderby model._id descending
                             group model by model.SettingName into g
                             select g.ElementAtOrDefault(0)).ToList();
 
-                return new List<Model.SettingModel>();
+                return new List<SettingModel>();
             }
         }
 
@@ -136,26 +132,25 @@ namespace Islands.UWP.Data
             return result;
         }
 
-        public static List<Model.SendModel> RoamingGetMyReplyList()
+        public static List<SendModel> RoamingGetMyReplyList()
         {
-            using (var conn = GetDbConnection<Model.SendModel>(RoamingDbPath))
+            using (var conn = GetDbConnection<SendModel>(RoamingDbPath))
             {
                 if (conn != null)
-                    return (from model in conn.Table<Model.SendModel>()
+                    return (from model in conn.Table<SendModel>()
                             select model).ToList();
-                return new List<Model.SendModel>();
+                return new List<SendModel>();
             }
         }
 
-        public static List<Model.ThreadModel> RoamingGetMarkList()
+        public static List<ThreadModel> RoamingGetMarkList()
         {
-            using (var conn = GetDbConnection<Model.ThreadModel>(RoamingDbPath))
+            using (var conn = GetDbConnection<ThreadModel>(RoamingDbPath))
             {
                 if (conn != null)
-                    return (from model in conn.Table<Model.ThreadModel>()
+                    return (from model in conn.Table<ThreadModel>()
                             select model).ToList();
-
-                return new List<Model.ThreadModel>();
+                return new List<ThreadModel>();
             }
         }
 
@@ -189,6 +184,17 @@ namespace Islands.UWP.Data
                 //Message.ShowMessage(ex.Message);
                 return null;
             }
+        }
+
+        private static int Execute(string sql)
+        {
+            int count = 0;
+            using (var conn = GetDbConnection())
+            {
+                if (conn == null) return 0;
+                count = conn.Execute(sql);
+            }
+            return count;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Islands.UWP
 
     public static class Settings
     {
+        public const string DataVersion = "DataVersion";
         public const string NightMode = "NightMode";
         public const string TitleFontSize = "TitleFontSize";
         public const string ContentFontSize = "ContentFontSize";
@@ -36,6 +37,7 @@ namespace Islands.UWP
         public static string TextToImageUri = "TextToImage";
         public static string SavedImageFolder = "Islands";
         public static double MaxImageWidth = 200;
+        public static double MaxImageHeight = 200;
         //App.Current.Resources["SystemListLowColor"];
         #region 颜文字
         public static List<string> Emoji = new List<string>() {

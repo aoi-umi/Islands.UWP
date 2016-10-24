@@ -17,41 +17,26 @@
     </local:BaseListView.Resources>
     <local:BaseListView.TopContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
-            <Button Name="Menu"
-                    Content="&#xE700;"
-                    RelativePanel.AlignLeftWithPanel="True"
-                    RelativePanel.AlignVerticalCenterWithPanel="True"
-                    Style="{StaticResource NavButton}"
-                    Visibility="Collapsed"/>
-            <TextBlock Name="Title"
-                       Text="收藏"
-                       RelativePanel.RightOf="Menu"
-                       FontSize="22"/>
-            <Button Name="RefreshButton"
-                    Content="&#xE117;"
-                    RelativePanel.AlignRightWithPanel="True"
-                    Style="{StaticResource NavButton}"
+            <Button Name="Menu" Content="&#xE700;"
+                    RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"
+                    Style="{StaticResource NavButton}" Visibility="Collapsed"/>
+            <TextBlock Name="Title" Text="收藏"
+                       RelativePanel.RightOf="Menu" FontSize="22"/>
+            <Button Name="RefreshButton" Content="&#xE117;"
+                    RelativePanel.AlignRightWithPanel="True" Style="{StaticResource NavButton}"
                     Click="RefreshButton_Click"/>
         </RelativePanel>
     </local:BaseListView.TopContent>
     <local:BaseListView.BottomContent>
         <RelativePanel  Background="{StaticResource ThemeColor}">
-            <Button Name="BackButton"
-                    x:FieldModifier="public"
-                    Content="&#xE80F;"
-                    Style="{StaticResource NavButton}"/>
-
-            <Button Name="DeleteButton"
-                    Content="&#xE107;"
+            <Button Name="BackButton" Content="&#xE80F;"
+                    x:FieldModifier="public" Style="{StaticResource NavButton}"/>
+            <Button Name="DeleteButton" Content="&#xE107;"
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}"
                     Click="DeleteButton_Click"/>
-
-            <Button Name="CancelButton"
-                    Content="&#xE10A;"
-                    FontFamily="Segoe MDL2 Assets"
-                    Style="{StaticResource NavButton}"
-                    Visibility="Collapsed"
+            <Button Name="CancelButton" Content="&#xE10A;"
+                    Style="{StaticResource NavButton}" Visibility="Collapsed"
                     Click="CancelButton_Click"/>
         </RelativePanel>
     </local:BaseListView.BottomContent>
