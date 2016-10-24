@@ -3,12 +3,27 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Islands.UWP">
     <SolidColorBrush x:Key="ThemeColor" Color="{ThemeResource SystemAccentColor}" Opacity="0.4"/>
-    <Style TargetType="local:BaseView">
+    <Style TargetType="local:BaseListView">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:BaseView">
+                <ControlTemplate TargetType="local:BaseListView">
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid>
+                        <local:BaseContentView x:Name="BaseContentView" TopContent="{TemplateBinding TopContent}" BottomContent="{TemplateBinding BottomContent}" 
+                                               IsLoading="{TemplateBinding IsLoading}" MaskOpacity="{TemplateBinding MaskOpacity}">
+                            <ScrollViewer x:Name="ScrollViewer" Grid.Row="1">
+                                <ListView x:Name="ListView" CanReorderItems="True" IsItemClickEnabled="True" AllowDrop="False"
+                                          SelectionMode="{TemplateBinding SelectionMode}">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="Margin" Value="0,0,14,0"/>
+                                            <Setter Property="Padding" Value="0"/>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                </ListView>
+                            </ScrollViewer>
+                        </local:BaseContentView>
+                        <!--<Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="*"/>
@@ -17,7 +32,8 @@
                             <ContentControl Grid.Row="0" Content="{TemplateBinding TopContent}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                             <ContentControl Grid.Row="2" Content="{TemplateBinding BottomContent}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                             <ScrollViewer x:Name="ScrollViewer" Grid.Row="1">
-                                <ListView x:Name="ListView" CanReorderItems="True" IsItemClickEnabled="True" SelectionMode="None" AllowDrop="False">
+                                <ListView x:Name="ListView" CanReorderItems="True" IsItemClickEnabled="True" AllowDrop="False"
+                                          SelectionMode="{TemplateBinding SelectionMode}">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem">
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -29,7 +45,7 @@
                             </ScrollViewer>
                             <Grid x:Name="Mask" Background="Black" Opacity="{TemplateBinding MaskOpacity}" Grid.Row="0" Grid.RowSpan="3" IsHitTestVisible="False"/>
                             <ProgressRing Grid.Row="1" x:Name="ProgressRing" Width="100" Height="100" IsActive="{TemplateBinding IsLoading}"/>
-                        </Grid>
+                        </Grid>-->
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

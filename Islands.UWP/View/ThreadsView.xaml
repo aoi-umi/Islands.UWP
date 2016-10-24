@@ -1,4 +1,4 @@
-﻿<local:BaseView
+﻿<local:BaseListView
     x:Class="Islands.UWP.ThreadsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <local:BaseView.Resources>
+    <local:BaseListView.Resources>
         <Style TargetType="TextBox">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -14,8 +14,8 @@
             <Setter Property="Padding" Value="0"/>
         </Style>
         <local:IsShowMenuButtonConverter x:Key="IsShowMenuButtonConverter"/>
-    </local:BaseView.Resources>
-    <local:BaseView.TopContent>
+    </local:BaseListView.Resources>
+    <local:BaseListView.TopContent>
         <RelativePanel 
             Grid.Row="0"
             Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
@@ -24,39 +24,29 @@
                     Click="Menu_Click"
                     Style="{StaticResource NavButton}"
                     Visibility="{Binding IsHideMenu, Converter={StaticResource IsShowMenuButtonConverter}}"/>
-
-            <TextBlock Name="Title"
-                       Text=""
+            <TextBlock Name="Title" Text=""
                        RelativePanel.RightOf="Menu"
                        FontSize="22"/>
-            <Button Name="RefreshButton"
-                    Content="&#xE117;"
+            <Button Name="RefreshButton" Content="&#xE117;"
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}"
                     Click="RefreshButton_Click"/>
-
         </RelativePanel>
-    </local:BaseView.TopContent>
-    <local:BaseView.BottomContent>
+    </local:BaseListView.TopContent>
+    <local:BaseListView.BottomContent>
         <RelativePanel Grid.Row="2"
                        Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
             <Button Name="SwitchButton"
                     x:FieldModifier="public"
-                    Content="&#xE13C;"
-                    Style="{StaticResource NavButton}"/>
-
-            <Button Name="GotoPageButton"
-                    Content="&#xE0AB;"
+                    Content="&#xE13C;" Style="{StaticResource NavButton}"/>
+            <Button Name="GotoPageButton" Content="&#xE0AB;"
                     Style="{StaticResource NavButton}"
                     RelativePanel.RightOf="SwitchButton"
                     Click="GotoPageButton_Click"/>
-
-            <Button Name="SendButton"
+            <Button Name="SendButton" Content="&#xE724;"
                     x:FieldModifier="public"
-                    Content="&#xE724;"
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}"/>
-
         </RelativePanel>
-    </local:BaseView.BottomContent>
-</local:BaseView>
+    </local:BaseListView.BottomContent>
+</local:BaseListView>

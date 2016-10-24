@@ -17,49 +17,37 @@
                          SelectionMode="Single">
                     <ListBoxItem Tag="menu" Tapped="ListBoxItem_Tapped" Name="menuItem">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE700;"
-                                       Style="{StaticResource MenuIcon}"/>
+                            <TextBlock Text="&#xE700;" Style="{StaticResource MenuIcon}"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem Tag="home" Tapped="ListBoxItem_Tapped" Name="homeItem">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE80F;"
-                                       Style="{StaticResource MenuIcon}"/>
-                            <TextBlock Text="Home"
-                                       Style="{StaticResource MenuText}"/>
+                            <TextBlock Text="&#xE80F;" Style="{StaticResource MenuIcon}"/>
+                            <TextBlock Text="Home" Style="{StaticResource MenuText}"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem Tag="mark" Tapped="ListBoxItem_Tapped" Name="collectionItem">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE728;"
-                                       Style="{StaticResource MenuIcon}"/>
-                            <TextBlock Text="收藏"
-                                       Style="{StaticResource MenuText}"/>
+                            <TextBlock Text="&#xE728;" Style="{StaticResource MenuIcon}"/>
+                            <TextBlock Text="收藏" Style="{StaticResource MenuText}"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem Tag="myreply" Tapped="ListBoxItem_Tapped" Name="myReplyItem">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE120;"
-                                       Style="{StaticResource MenuIcon}"/>
-                            <TextBlock Text="回复"
-                                       Style="{StaticResource MenuText}"/>
+                            <TextBlock Text="&#xE120;" Style="{StaticResource MenuIcon}"/>
+                            <TextBlock Text="回复" Style="{StaticResource MenuText}"/>
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem Tag="4" Tapped="ListBoxItem_Tapped" Name="draftItem"
-                                 Visibility="Collapsed">
+                    <!--<ListBoxItem Tag="4" Tapped="ListBoxItem_Tapped" Name="draftItem" Visibility="Collapsed">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE74E;"
-                                       Style="{StaticResource MenuIcon}"/>
-                            <TextBlock Text="草稿"
-                                       Style="{StaticResource MenuText}"/>
+                            <TextBlock Text="&#xE74E;" Style="{StaticResource MenuIcon}"/>
+                            <TextBlock Text="草稿" Style="{StaticResource MenuText}"/>
                         </StackPanel>
-                    </ListBoxItem>
+                    </ListBoxItem>-->
                     <ListBoxItem Tag="image" Tapped="ListBoxItem_Tapped" Name="imageItem">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xEB9F;" 
-                                       Style="{StaticResource MenuIcon}"/>
-                            <TextBlock Text="图片"
-                                       Style="{StaticResource MenuText}"/>
+                            <TextBlock Text="&#xEB9F;" Style="{StaticResource MenuIcon}"/>
+                            <TextBlock Text="图片" Style="{StaticResource MenuText}"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem IsEnabled="False" Padding="0,10,0,10">
@@ -69,27 +57,20 @@
                     </ListBoxItem>
                     <ListBoxItem Tag="forums" Tapped="ListBoxItem_Tapped" Name="forumsItem">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE169;"
-                                       Style="{StaticResource MenuIcon}"/>
-                            <TextBlock Text="板块" 
-                                       Style="{StaticResource MenuText}"/>
+                            <TextBlock Text="&#xE169;" Style="{StaticResource MenuIcon}"/>
+                            <TextBlock Text="板块" Style="{StaticResource MenuText}"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem Tag="gotothread" Tapped="ListBoxItem_Tapped" Name="gotothreadItem">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE8AD;"
-                                       Style="{StaticResource MenuIcon}"/>
-                            <TextBlock Text="跳转" 
-                                       FontSize="12"
-                                       Style="{StaticResource MenuText}"/>
+                            <TextBlock Text="&#xE8AD;" Style="{StaticResource MenuIcon}"/>
+                            <TextBlock Text="跳转" FontSize="12" Style="{StaticResource MenuText}"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem Tag="setting" Tapped="ListBoxItem_Tapped" Name="settingItem">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE713;"
-                                       Style="{StaticResource MenuIcon}"/>
-                            <TextBlock Text="设置" 
-                                       Style="{StaticResource MenuText}"/>
+                            <TextBlock Text="&#xE713;" Style="{StaticResource MenuIcon}"/>
+                            <TextBlock Text="设置" Style="{StaticResource MenuText}"/>
                         </StackPanel>
                     </ListBoxItem>
                 </ListBox>
@@ -97,15 +78,13 @@
             <SplitView.Content>
                 <Grid Name="ForumListView">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <SemanticZoom Grid.Row="0">
                         <SemanticZoom.ZoomedInView>
-                            <ListView Name="forumZoomInView"
-                                      IsItemClickEnabled="True"
-                                        ItemsSource="{Binding Source={StaticResource forumGroup}}"
-                                        ItemClick="ForumList_ItemClick">
+                            <ListView Name="forumZoomInView" IsItemClickEnabled="True" 
+                                      ItemsSource="{Binding Source={StaticResource forumGroup}}" ItemClick="ForumList_ItemClick">
                                 <ListView.GroupStyle>
                                     <GroupStyle>
                                         <GroupStyle.HeaderTemplate>
@@ -115,7 +94,7 @@
                                         </GroupStyle.HeaderTemplate>
                                         <GroupStyle.HeaderContainerStyle>
                                             <Style TargetType="ListViewHeaderItem">
-                                                <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAltListAccentLowBrush}" />
+                                                <Setter Property="Background" Value="{StaticResource ThemeColor}" />
                                             </Style>
                                         </GroupStyle.HeaderContainerStyle>
                                     </GroupStyle>
@@ -136,20 +115,16 @@
                                 </ListView.ItemTemplate>
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
-                                        <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAltListAccentLowBrush}" />
+                                        <Setter Property="Background" Value="{StaticResource ThemeColor}" />
                                         <Setter Property="Margin" Value="0,0,0,5" />
                                     </Style>
                                 </ListView.ItemContainerStyle>
                             </ListView>
                         </SemanticZoom.ZoomedOutView>
                     </SemanticZoom>
-                    <RelativePanel Grid.Row="1"
-                                   Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
-                        <Button Name="BackButton"
-                                x:FieldModifier="public"
-                                Content="&#xE80F;"
-                                Style="{StaticResource NavButton}">
-                        </Button>
+                    <RelativePanel Grid.Row="1" Background="{StaticResource ThemeColor}">
+                        <Button Name="BackButton" Content="&#xE80F;"
+                                x:FieldModifier="public" Style="{StaticResource NavButton}"/>
                     </RelativePanel>
                 </Grid>
             </SplitView.Content>

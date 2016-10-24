@@ -1,4 +1,4 @@
-﻿<local:BaseView
+﻿<local:BaseListView
     x:Class="Islands.UWP.ReplysView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <local:BaseView.Resources>
+    <local:BaseListView.Resources>
         <Style TargetType="TextBox">
             <Setter Property="IsReadOnly" Value="True"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -15,8 +15,8 @@
             <Setter Property="Padding" Value="0"/>
         </Style>
         <local:IsShowMenuButtonConverter x:Key="IsShowMenuButtonConverter"/>
-    </local:BaseView.Resources>
-    <local:BaseView.TopContent>
+    </local:BaseListView.Resources>
+    <local:BaseListView.TopContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
             <Button Name="Menu"
                     Content="&#xE700;"
@@ -46,8 +46,8 @@
                     Click="MarkButton_Click">
             </Button>
         </RelativePanel>
-    </local:BaseView.TopContent>
-    <local:BaseView.BottomContent>
+    </local:BaseListView.TopContent>
+    <local:BaseListView.BottomContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
             <Button Name="SwitchButton"
                     x:FieldModifier="public"
@@ -67,5 +67,5 @@
                     Style="{StaticResource NavButton}">
             </Button>
         </RelativePanel>
-    </local:BaseView.BottomContent>
-</local:BaseView>
+    </local:BaseListView.BottomContent>
+</local:BaseListView>

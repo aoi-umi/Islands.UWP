@@ -1,0 +1,27 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Islands.UWP">
+    <Style TargetType="local:BaseContentView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:BaseContentView">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <ContentControl Grid.Row="0" Content="{TemplateBinding TopContent}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
+                            <ContentControl Grid.Row="2" Content="{TemplateBinding BottomContent}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
+                            <ContentPresenter Grid.Row="1"/>
+                            <Grid x:Name="Mask" Background="Black" Opacity="{TemplateBinding MaskOpacity}" Grid.Row="0" Grid.RowSpan="3" IsHitTestVisible="False"/>
+                            <ProgressRing Grid.Row="1" x:Name="ProgressRing" Width="100" Height="100" IsActive="{TemplateBinding IsLoading}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

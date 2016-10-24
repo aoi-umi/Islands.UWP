@@ -120,7 +120,8 @@
     <Compile Include="Model\ReplyQueryResponse.cs" />
     <Compile Include="Model\ThreadResponseModel.cs" />
     <Compile Include="Model\ThreadQueryResponse.cs" />
-    <Compile Include="View\BaseView.cs" />
+    <Compile Include="View\BaseContentView.cs" />
+    <Compile Include="View\BaseListView.cs" />
     <Compile Include="View\ImageView.xaml.cs">
       <DependentUpon>ImageView.xaml</DependentUpon>
     </Compile>
@@ -193,7 +194,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Themes\BaseViewStyle.xaml">
+    <Page Include="Themes\BaseContentViewStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\BaseListViewStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

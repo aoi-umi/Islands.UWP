@@ -2,7 +2,6 @@
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
@@ -11,7 +10,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Islands.UWP
 {
-    public sealed partial class ImageView : UserControl
+    public sealed partial class ImageView : BaseContentView
     {
         public ImageView()
         {
@@ -26,7 +25,7 @@ namespace Islands.UWP
         {
             set
             {
-                LoadingView.IsActive = true;
+                IsLoading = true;
                 _imgageUrl = value;
                 image.Width = 200;
                 image.Height = double.NaN;
@@ -36,13 +35,13 @@ namespace Islands.UWP
 
         private void ImageView_ImageOpened(object sender, RoutedEventArgs e)
         {
-            LoadingView.IsActive = false;
+            IsLoading = false;
         }
 
         private void ImageView_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
             imageUrl = Config.FailedImageUri;
-            LoadingView.IsActive = false;
+            IsLoading = false;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)

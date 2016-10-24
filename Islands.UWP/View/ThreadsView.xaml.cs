@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Input;
 
 namespace Islands.UWP
 {
-    public sealed partial class ThreadsView : BaseView
+    public sealed partial class ThreadsView : BaseListView
     {
         public ThreadsView()
         {

@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Islands.UWP
 {
-    public sealed partial class SendView : UserControl
+    public sealed partial class SendView : BaseContentView
     {
         public SendView()
         {
