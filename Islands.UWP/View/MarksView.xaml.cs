@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Data;
 
 namespace Islands.UWP
 {
-    public sealed partial class MarksView : UserControl
+    public sealed partial class MarksView : BaseView
     {
         public MarksView(IslandsCode islandCode)
         {
@@ -27,7 +27,7 @@ namespace Islands.UWP
         public void AddMark(Model.ThreadModel tm)
         {            
             markList.Insert(0, tm);
-            markListView.Items.Insert(0, new ThreadView(tm, islandCode) { Tag = tm, NoImage = true });
+            Items.Insert(0, new ThreadView(tm, islandCode) { Tag = tm, NoImage = true });
             markCount = markList.Count.ToString();
         }
 
@@ -56,8 +56,8 @@ namespace Islands.UWP
 
         private async void InitMarkList(IslandsCode islandCode)
         {
-            MarkLoading.IsActive = true;
-            markListView.Items.Clear();
+            IsLoading = true;
+            Items.Clear();
             await Task.Run(() =>
             {
                 markList = Data.Database.GetMarkList(islandCode);
@@ -66,16 +66,16 @@ namespace Islands.UWP
             {
                 ThreadView t = new ThreadView(mark, islandCode);
                 t.NoImage = true;
-                markListView.Items.Add(t);
+                Items.Add(t);
             }
             markCount = markList.Count.ToString();
-            MarkLoading.IsActive = false;
+            IsLoading = false;
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             ThreadView tv = e.ClickedItem as ThreadView;
-            if (tv != null && markListView.SelectionMode != ListViewSelectionMode.Multiple)
+            if (tv != null && SelectionMode != ListViewSelectionMode.Multiple)
             {
                 OnItemClick(e);
             }
@@ -83,8 +83,7 @@ namespace Islands.UWP
 
         private void OnItemClick(ItemClickEventArgs e)
         {
-            if (MarkClick != null)
-                MarkClick(this, e);
+            MarkClick?.Invoke(this, e);
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -95,7 +94,7 @@ namespace Islands.UWP
             }
             else
             {
-                markListView.SelectionMode = ListViewSelectionMode.Multiple;
+                SelectionMode = ListViewSelectionMode.Multiple;
             }
             IsCancelButtonVisible = !IsCancelButtonVisible;
         }
@@ -104,7 +103,7 @@ namespace Islands.UWP
         {
             int count = 0;
             var idList = new List<int>();
-            foreach (var item in markListView.SelectedItems)
+            foreach (var item in SelectedItems)
             {
                 ThreadView t = item as ThreadView;
                 if (t != null) idList.Add(t.thread._id);
@@ -116,13 +115,13 @@ namespace Islands.UWP
             });
             Data.Message.ShowMessage($"成功删除{count}项");
             if (count > 0) InitMarkList(islandCode);
-            markListView.SelectionMode = ListViewSelectionMode.Single;
+            SelectionMode = ListViewSelectionMode.Single;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             IsCancelButtonVisible = false;
-            markListView.SelectionMode = ListViewSelectionMode.Single;
+            SelectionMode = ListViewSelectionMode.Single;
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)

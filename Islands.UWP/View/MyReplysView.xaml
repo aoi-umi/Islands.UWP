@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<local:BaseView
     x:Class="Islands.UWP.MyReplysView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,24 +6,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <UserControl.Resources>
+    <local:BaseView.Resources>
         <Style TargetType="TextBox">
-            <Setter Property="IsReadOnly" Value="True"></Setter>
-            <Setter Property="Background" Value="Transparent"></Setter>
-            <Setter Property="BorderThickness" Value="0"></Setter>
-            <Setter Property="Margin" Value="0"></Setter>
-            <Setter Property="Padding" Value="0"></Setter>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
         </Style>
-    </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <RelativePanel 
-            Grid.Row="0"
-            Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
+    </local:BaseView.Resources>
+    <local:BaseView.TopContent>
+        <RelativePanel Background="{StaticResource ThemeColor}">
             <Button Name="Menu"
                     Content="&#xE700;"
                     RelativePanel.AlignLeftWithPanel="True"
@@ -40,8 +33,9 @@
                     Style="{StaticResource NavButton}"
                     Click="RefreshButton_Click"/>
         </RelativePanel>
-        <RelativePanel Grid.Row="2"
-                       Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
+    </local:BaseView.TopContent>
+    <local:BaseView.BottomContent>
+        <RelativePanel Background="{StaticResource ThemeColor}">
             <Button Name="BackButton"
                     x:FieldModifier="public"
                     Content="&#xE80F;"
@@ -58,25 +52,5 @@
                     Visibility="Collapsed"
                     Click="CancelButton_Click"/>
         </RelativePanel>
-        <ScrollViewer Name="markListScrollViewer"
-                  Grid.Row="1">
-            <ListView Name="myreplyListView"
-                  CanReorderItems="True"
-                  IsItemClickEnabled="True"
-                  SelectionMode="None"
-                  ItemClick="ListView_ItemClick">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="Margin" Value="0,0,14,0"/>
-                        <Setter Property="Padding" Value="0"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
-        </ScrollViewer>
-        <ProgressRing Grid.Row="1"
-                      Name="MyReplysLoading"
-                      Width="100" Height="100"
-                      IsActive="False"/>
-    </Grid>
-</UserControl>
+    </local:BaseView.BottomContent>
+</local:BaseView>

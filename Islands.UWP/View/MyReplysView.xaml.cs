@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Islands.UWP
 {
-    public sealed partial class MyReplysView : UserControl,INotifyPropertyChanged
+    public sealed partial class MyReplysView : BaseView,INotifyPropertyChanged
     {
 
         public MyReplysView(IslandsCode islandCode)
@@ -40,7 +40,7 @@ namespace Islands.UWP
         public void AddMyReply(Model.SendModel sm)
         {
             myReplyList.Insert(0, sm);
-            myreplyListView.Items.Insert(0, new MyReplyView(sm, islandCode) { Tag = sm });
+            Items.Insert(0, new MyReplyView(sm, islandCode) { Tag = sm });
             myReplyCount = myReplyList.Count.ToString();
         }
 
@@ -65,18 +65,18 @@ namespace Islands.UWP
 
         private async void InitMyReplyList(IslandsCode islandCode)
         {
-            MyReplysLoading.IsActive = true;
-            myreplyListView.Items.Clear();
+            IsLoading = true;
+            Items.Clear();
             await Task.Run(() =>
             {
                 myReplyList = Data.Database.GetMyReplyList(islandCode);                
             });
             foreach (var myreply in myReplyList)
             {
-                myreplyListView.Items.Add(new MyReplyView(myreply, islandCode) { Tag = myreply });
+                Items.Add(new MyReplyView(myreply, islandCode) { Tag = myreply });
             }
             myReplyCount = myReplyList.Count.ToString();
-            MyReplysLoading.IsActive = false;
+            IsLoading = false;
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -84,7 +84,7 @@ namespace Islands.UWP
             MyReplyView view = e.ClickedItem as MyReplyView;
             if (view != null)
             {
-                if (view != null && myreplyListView.SelectionMode != ListViewSelectionMode.Multiple)
+                if (view != null && SelectionMode != ListViewSelectionMode.Multiple)
                     OnItemClick(e);
             }
         }
@@ -102,7 +102,7 @@ namespace Islands.UWP
             }
             else
             {
-                myreplyListView.SelectionMode = ListViewSelectionMode.Multiple;
+                SelectionMode = ListViewSelectionMode.Multiple;
             }
             IsCancelButtonVisible = !IsCancelButtonVisible;
         }
@@ -111,7 +111,7 @@ namespace Islands.UWP
         {
             int count = 0;
             var idList = new List<int>();
-            foreach (var item in myreplyListView.SelectedItems)
+            foreach (var item in SelectedItems)
             {
                 MyReplyView t = item as MyReplyView;
                 if (t != null) idList.Add(t.myReply._id);
@@ -123,13 +123,13 @@ namespace Islands.UWP
             });
             Data.Message.ShowMessage($"成功删除{count}项");
             if (count > 0) InitMyReplyList(islandCode);
-            myreplyListView.SelectionMode = ListViewSelectionMode.Single;
+            SelectionMode = ListViewSelectionMode.Single;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             IsCancelButtonVisible = false;
-            myreplyListView.SelectionMode = ListViewSelectionMode.Single;
+            SelectionMode = ListViewSelectionMode.Single;
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)

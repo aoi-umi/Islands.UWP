@@ -19,7 +19,7 @@ namespace Islands.UWP
         private static string ListViewName = "ListView";
         private static string ProgressRingName = "ProgressRing";
         private static string MaskName = "Mask";
-        public BaseView()
+        public BaseView():base()
         {
             this.DefaultStyleKey = typeof(BaseView);            
         }
@@ -65,7 +65,17 @@ namespace Islands.UWP
         public static readonly DependencyProperty MaskOpacityProperty =
             DependencyProperty.Register(nameof(MaskOpacity), typeof(double), typeof(BaseView), new PropertyMetadata(0.0));
 
+        public ListViewSelectionMode SelectionMode
+        {
+            get { return (ListViewSelectionMode)GetValue(SelectionModeProperty); }
+            set { SetValue(SelectionModeProperty, value); }
+        }
 
+        // Using a DependencyProperty as the backing store for SelectionMode.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionModeProperty =
+            DependencyProperty.Register(nameof(SelectionMode), typeof(ListViewSelectionMode), typeof(BaseView), new PropertyMetadata(ListViewSelectionMode.Single));
+
+        public IList<Object> SelectedItems => listView.SelectedItems;
         #endregion
 
         private ScrollViewer scrollViewer { get; set; }

@@ -17,7 +17,8 @@
                             <ContentControl Grid.Row="0" Content="{TemplateBinding TopContent}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                             <ContentControl Grid.Row="2" Content="{TemplateBinding BottomContent}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                             <ScrollViewer x:Name="ScrollViewer" Grid.Row="1">
-                                <ListView x:Name="ListView" CanReorderItems="True" IsItemClickEnabled="True" SelectionMode="None" AllowDrop="False">
+                                <ListView x:Name="ListView" CanReorderItems="True" IsItemClickEnabled="True" AllowDrop="False"
+                                          SelectionMode="{TemplateBinding SelectionMode}">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem">
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
