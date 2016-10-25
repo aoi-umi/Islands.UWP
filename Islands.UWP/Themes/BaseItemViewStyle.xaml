@@ -6,11 +6,17 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:BaseItemView">
-                    <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
-                        <ContentPresenter/>
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <local:BaseContentView TopContent="{TemplateBinding TopContent}" BottomContent="{TemplateBinding BottomContent}">
+                            <StackPanel>
+                                <ContentPresenter/>
+                                <RelativePanel>
+                                    <Button x:Name="ShowImageButton" Background="Transparent" Foreground="{ThemeResource HyperlinkForegroundThemeBrush}" Visibility="Collapsed" Content="显示图片"/>
+                                    <ProgressRing x:Name="ProgressRing" HorizontalAlignment="Left" IsActive="False" Width="50" Height="50" Visibility="Collapsed"/>
+                                    <Image x:Name="Image"  Stretch="None" MaxHeight="200" MaxWidth="200" HorizontalAlignment="Left" CacheMode="BitmapCache" Visibility="Collapsed"/>
+                                </RelativePanel>
+                            </StackPanel>
+                        </local:BaseContentView>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

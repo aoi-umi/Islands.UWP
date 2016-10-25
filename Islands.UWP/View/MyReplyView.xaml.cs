@@ -22,27 +22,15 @@ namespace Islands.UWP
             ItemNo = myReply.ThreadId;
             ItemCreateDate = myReply.sendDateTime;
             ItemMsg = (myReply.isMain ? "新串：" : "回复：") + myReply.sendId; 
-            ItemImage = myReply.sendImage;
+            ItemThumb = ItemImage = myReply.sendImage;
             ItemContent = myReply.sendContent;
 
-            if (!string.IsNullOrEmpty(ItemImage))
-                Data.File.SetLocalImage(imageBox, ItemImage);
+            //if (!string.IsNullOrEmpty(ItemImage))
+            //    Data.File.SetLocalImage(image, ItemImage);
         }
 
         public Model.SendModel myReply {get; set; }
 
         private IslandsCode islandCode { get; set; }
-
-        private void ImageBox_ImageFailed(object sender, ExceptionRoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(ItemImage))
-                imageBox.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
-        }
-
-        private void ImageBox_ImageOpened(object sender, RoutedEventArgs e)
-        {
-            var bitmap = imageBox.Source as BitmapImage;
-            if (bitmap != null && bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight) imageBox.Stretch = Stretch.None;
-        }
     }
 }

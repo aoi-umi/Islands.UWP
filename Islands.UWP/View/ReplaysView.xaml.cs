@@ -159,7 +159,6 @@ namespace Islands.UWP
                     var tv = new ThreadView(top, code) { Tag = top, IsTextSelectionEnabled = true, Background = null };
                     tv.ImageTapped += Image_ImageTapped;
                     tv.IsPo = true;
-                    if (!MainPage.Global.NoImage) tv.ShowImage();
                     Items.Add(tv);
                 }
                 replyCount = _replyCount;

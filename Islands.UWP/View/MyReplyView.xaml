@@ -6,6 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <local:BaseItemView.BottomContent>
+        <Line Fill="Gray" Stroke="Gray" Height="1" X2="{Binding ActualWidth, ElementName=userControl,Mode=OneWay}"/>
+    </local:BaseItemView.BottomContent>
     <Grid>
         <StackPanel Margin="2">
             <StackPanel>
@@ -26,12 +29,6 @@
                            RelativePanel.AlignRightWithPanel="True" />
             </RelativePanel>
             <TextBlock Name="txtContent" Text="{x:Bind ItemContent}" TextWrapping="Wrap"/>
-            <Image Name="imageBox" Stretch="Uniform"
-                   MaxHeight="200" MaxWidth="200" 
-                   HorizontalAlignment="Left"
-                   ImageOpened="ImageBox_ImageOpened"
-                   ImageFailed="ImageBox_ImageFailed" CacheMode="BitmapCache" />
-            <Line Fill="Gray" Stroke="Gray" X2="{Binding ActualWidth, ElementName=userControl, Mode=OneWay}" Height="1"/>
         </StackPanel>
     </Grid>
 </local:BaseItemView>

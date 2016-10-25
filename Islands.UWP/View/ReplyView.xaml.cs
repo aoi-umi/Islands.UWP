@@ -70,13 +70,7 @@ namespace Islands.UWP
                     ItemUid = reply.uid;
                     break;
             }
-            NoImage = MainPage.Global.NoImage;
-            if (!NoImage) ShowImage();
-            if (!string.IsNullOrEmpty(ItemImage))
-            {
-                imageBox.Tag = ItemImage;
-                imageBox.Tapped += ImageBox_Tapped;
-            }
+            NoImage = MainPage.Global.NoImage;            
         }
 
         public RichTextBlock replyContent
@@ -106,32 +100,7 @@ namespace Islands.UWP
                 if (value) txtUserid.Foreground = Config.PoColor;
             }
         }
-        
-        public event ImageTappedEventHandler ImageTapped;
-
-        private bool NoImage
-        {
-            get
-            {
-                return ShowImageButton.Visibility == Visibility.Visible ? true : false;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(ItemThumb))
-                {
-                    if (value)
-                    {
-                        ShowImageButton.Visibility = Visibility.Visible;
-                        LoadingView.Visibility = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        ShowImageButton.Visibility = Visibility.Collapsed;
-                        LoadingView.Visibility = Visibility.Visible;
-                    }
-                }
-            }
-        }
+                
         private Model.ReplyModel reply { get; set; }
         private IslandsCode islandCode { get; set; }
         private RichTextBlock rtb;
@@ -237,43 +206,6 @@ namespace Islands.UWP
                     }
                 }
             }
-        }        
-
-        private void ImageBox_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            ImageTapped?.Invoke(sender, e);
-        }
-
-        private void ImageBox_ImageOpened(object sender, RoutedEventArgs e)
-        {
-            var bitmap = imageBox.Source as BitmapImage;
-            if (bitmap != null && bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight) imageBox.Stretch = Stretch.None;
-            LoadingView.IsActive = false;
-        }
-
-        private void ImageBox_ImageFailed(object sender, ExceptionRoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(ItemThumb))
-            {
-                imageBox.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
-                LoadingView.IsActive = false;
-            }
-        }
-
-        private void ShowImage_Click(object sender, RoutedEventArgs e)
-        {
-            ShowImage();
-        }
-
-        private void ShowImage()
-        {
-            if (!string.IsNullOrEmpty(ItemThumb))
-            {
-                LoadingView.Visibility = Visibility.Visible;
-                LoadingView.IsActive = true;
-                NoImage = false;
-                imageBox.Source = new BitmapImage(new Uri(ItemThumb));
-            }
-        }
+        }                
     }
 }

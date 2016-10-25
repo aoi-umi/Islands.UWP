@@ -137,7 +137,6 @@ namespace Islands.UWP
                 {
                     var tv = new ThreadView(thread, code);
                     tv.ImageTapped += Image_ImageTapped;
-                    if (!MainPage.Global.NoImage) tv.ShowImage();
                     Items.Add(tv);
                 }
                 ++currPage;

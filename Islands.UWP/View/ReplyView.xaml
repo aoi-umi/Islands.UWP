@@ -11,6 +11,9 @@
             <Setter Property="IsTextSelectionEnabled" Value="True"/>
         </Style>
     </local:BaseItemView.Resources>
+    <local:BaseItemView.BottomContent>
+        <Line Fill="Gray" Stroke="Gray" Height="1" X2="{Binding ActualWidth, ElementName=userControl,Mode=OneWay}"/>
+    </local:BaseItemView.BottomContent>
     <Grid Margin="0,0,0,5">
         <StackPanel Name="threadSp" Margin="2">
             <RelativePanel>
@@ -35,17 +38,6 @@
                            RelativePanel.Below="txtCreateDate" FontSize="{Binding TitleFontSize}"/>
             </RelativePanel>
             <ContentControl Name="txtContent" Content="{x:Bind replyContent}"/>
-            <RelativePanel>
-                <Button Name="ShowImageButton" Background="Transparent" 
-                        Foreground="{ThemeResource HyperlinkForegroundThemeBrush}"
-                        Click="ShowImage_Click" Visibility="Collapsed">显示图片</Button>
-                <ProgressRing Name="LoadingView"  HorizontalAlignment="Left" IsActive="False"
-                          Width="50" Height="50" Visibility="Collapsed"/>
-                <Image Name="imageBox" Stretch="Uniform" MaxHeight="200" MaxWidth="200"
-                   HorizontalAlignment="Left" CacheMode="BitmapCache" 
-                   ImageOpened="ImageBox_ImageOpened" ImageFailed="ImageBox_ImageFailed" />
-            </RelativePanel>
-            <Line Fill="Gray" Stroke="Gray" X2="{Binding ActualWidth, ElementName=userControl, Mode=OneWay}" Height="1"/>
         </StackPanel>
     </Grid>
 </local:BaseItemView>
