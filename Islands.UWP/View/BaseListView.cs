@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UmiAoi.UWP;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -66,11 +67,15 @@ namespace Islands.UWP
 
         // Using a DependencyProperty as the backing store for SelectionMode.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionModeProperty =
-            DependencyProperty.Register(nameof(SelectionMode), typeof(ListViewSelectionMode), typeof(BaseListView), new PropertyMetadata(ListViewSelectionMode.Single));
+            DependencyProperty.Register(nameof(SelectionMode), typeof(ListViewSelectionMode), typeof(BaseListView), new PropertyMetadata(ListViewSelectionMode.None));
 
         public IList<Object> SelectedItems => listView.SelectedItems;
         #endregion
 
+        public delegate void ItemsClickEventHandler(Object sender, ItemClickEventArgs e);
+        public event ItemsClickEventHandler ItemClick;
+
+        protected DeviceFamily DeviceFamily { get { return Helper.CurrDeviceFamily; } }
         private ScrollViewer scrollViewer { get; set; }
         private ListView listView { get; set; }
         private ProgressRing progressRing { get; set; }
@@ -86,6 +91,12 @@ namespace Islands.UWP
             listView.ItemClick += ListView_ItemClick;
         }
 
+        protected virtual void OnScrollToEnd()
+        {
+            //ScrollViewer sv = scrollViewer;
+            //sv.ChangeView(null, sv.VerticalOffset - 1, null);
+        }
+
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             ScrollViewer sv = scrollViewer;
@@ -95,12 +106,6 @@ namespace Islands.UWP
             }
         }
 
-        protected virtual void OnScrollToEnd()
-        {
-            //ScrollViewer sv = scrollViewer;
-            //sv.ChangeView(null, sv.VerticalOffset - 1, null);
-        }
-
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             OnItemClick(sender, e);
@@ -108,6 +113,7 @@ namespace Islands.UWP
 
         protected virtual void OnItemClick(object sender, ItemClickEventArgs e)
         {
+            ItemClick?.Invoke(this, e);
         }
     }
 }

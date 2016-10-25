@@ -1,4 +1,4 @@
-﻿<UserControl x:Name="userControl"
+﻿<local:BaseItemView x:Name="userControl"
     x:Class="Islands.UWP.ReplyView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,82 +6,46 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <local:BaseItemView.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="IsTextSelectionEnabled" Value="True"/>
+        </Style>
+    </local:BaseItemView.Resources>
     <Grid Margin="0,0,0,5">
         <StackPanel Name="threadSp" Margin="2">
             <RelativePanel>
-                <TextBlock Name="title" 
-                           IsTextSelectionEnabled="True"
-                           Text="{x:Bind replyTitle}"
-                           Visibility="{x:Bind replyIsHadTitle}"
-                           Foreground="Red"
-                           FontSize="{Binding TitleFontSize}">
-                </TextBlock>
-                <TextBlock Name="email" 
-                           IsTextSelectionEnabled="True"
-                           Text="{x:Bind replyEmail}"
-                           Visibility="{x:Bind replyIsHadEmail}"
+                <TextBlock Name="title" Text="{x:Bind ItemTitle}"
+                           Visibility="{x:Bind IsHadTitle}"
+                           Foreground="Red" FontSize="{Binding TitleFontSize}"/>
+                <TextBlock Name="email" Text="{x:Bind ItemEmail}"
+                           Visibility="{x:Bind IsHadEmail}"
                            RelativePanel.Below="title"
-                           Foreground="Red"
-                           FontSize="{Binding TitleFontSize}">
-                </TextBlock>
-                <TextBlock Name="name"
-                           IsTextSelectionEnabled="True"
-                           Text="{x:Bind replyName}"
-                           Visibility="{x:Bind replyIsHadName}"
+                           Foreground="Red" FontSize="{Binding TitleFontSize}"/>
+                <TextBlock Name="name" Text="{x:Bind ItemName}"
+                           Visibility="{x:Bind IsHadName}"
                            RelativePanel.Below="email"
-                           Foreground="Red"
-                           FontSize="{Binding TitleFontSize}">
-                </TextBlock>
-                <TextBlock Name="txtCreateDate" 
-                           IsTextSelectionEnabled="True"
-                           Text="{x:Bind replyCreateDate}"
-                           RelativePanel.Below="name"
-                           FontSize="{Binding TitleFontSize}">
-                </TextBlock>
-                <TextBlock Name="id"
-                           Text="No."
-                           RelativePanel.LeftOf="txtId"
-                           FontSize="{Binding TitleFontSize}">
-                </TextBlock>
-                <TextBlock Name="txtId" 
-                           IsTextSelectionEnabled="True"
-                           Text="{x:Bind replyNo}" 
-                           RelativePanel.AlignRightWithPanel="True"
-                           FontSize="{Binding TitleFontSize}">
-                </TextBlock>
-                <!--<TextBlock Name="userid"
-                           Text="ID:"
-                           RelativePanel.Below="txtCreateDate"
-                           >
-                </TextBlock>-->
-                <TextBlock Name="txtUserid" 
-                           IsTextSelectionEnabled="True"
-                           Text="{x:Bind replyUid}"
-                           RelativePanel.Below="txtCreateDate"
-                           FontSize="{Binding TitleFontSize}"
-                           >
-                </TextBlock>
-
+                           Foreground="Red" FontSize="{Binding TitleFontSize}"/>
+                <TextBlock Name="txtCreateDate" Text="{x:Bind ItemCreateDate}"
+                           RelativePanel.Below="name" FontSize="{Binding TitleFontSize}"/>
+                <TextBlock Name="id" Text="No."
+                           RelativePanel.LeftOf="txtId" FontSize="{Binding TitleFontSize}"/>
+                <TextBlock Name="txtId" Text="{x:Bind ItemNo}" 
+                           RelativePanel.AlignRightWithPanel="True" FontSize="{Binding TitleFontSize}"/>
+                <TextBlock Name="txtUserid" Text="{x:Bind ItemUid}"
+                           RelativePanel.Below="txtCreateDate" FontSize="{Binding TitleFontSize}"/>
             </RelativePanel>
-            <ContentControl Name="txtContent"
-                            Content="{x:Bind replyContent}"
-                            >
-            </ContentControl>
+            <ContentControl Name="txtContent" Content="{x:Bind replyContent}"/>
             <RelativePanel>
-                <Button Name="ShowImageButton" 
-                        Background="Transparent" 
+                <Button Name="ShowImageButton" Background="Transparent" 
                         Foreground="{ThemeResource HyperlinkForegroundThemeBrush}"
-                        Click="ShowImage_Click"
-                        Visibility="Collapsed">显示图片</Button>
+                        Click="ShowImage_Click" Visibility="Collapsed">显示图片</Button>
                 <ProgressRing Name="LoadingView"  HorizontalAlignment="Left" IsActive="False"
                           Width="50" Height="50" Visibility="Collapsed"/>
-                <Image Name="imageBox" Stretch="Uniform"
-                   MaxHeight="200" MaxWidth="200"
-                   HorizontalAlignment="Left"   
-                   ImageOpened="ImageBox_ImageOpened"
-                   ImageFailed="ImageBox_ImageFailed" CacheMode="BitmapCache" />
+                <Image Name="imageBox" Stretch="Uniform" MaxHeight="200" MaxWidth="200"
+                   HorizontalAlignment="Left" CacheMode="BitmapCache" 
+                   ImageOpened="ImageBox_ImageOpened" ImageFailed="ImageBox_ImageFailed" />
             </RelativePanel>
             <Line Fill="Gray" Stroke="Gray" X2="{Binding ActualWidth, ElementName=userControl, Mode=OneWay}" Height="1"/>
         </StackPanel>
     </Grid>
-</UserControl>
+</local:BaseItemView>

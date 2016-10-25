@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Islands.UWP
 {
-    public sealed partial class ThreadView : UserControl
+    public sealed partial class ThreadView : BaseItemView
     {
         public ThreadView(Model.ThreadModel thread, IslandsCode islandCode)
         {
@@ -23,192 +23,59 @@ namespace Islands.UWP
             DataContext = MainPage.Global;
             this.thread = thread;
             this.islandCode = islandCode;
-            NoImage = MainPage.Global.NoImage;
-            if (!string.IsNullOrEmpty(this.threadThumb))
+            #region Init
+            ItemTitle = thread.title;
+            ItemEmail = thread.email;
+            ItemName = thread.name;
+            ItemNo = thread.id;
+            ItemReplyCount = thread.replyCount;
+            ItemContent = thread.content;
+            switch (islandCode)
             {
-                imageBox.Tag = this.threadImage;
+                case IslandsCode.A:
+                    if (thread.admin == "1") txtUserid.Foreground = Config.AdminColor;
+                    if (!string.IsNullOrEmpty(thread.img))
+                    {
+                        ItemThumb = (Config.A.PictureHost + "thumb/" + thread.img + thread.ext);
+                        ItemImage = (Config.A.PictureHost + "image/" + thread.img + thread.ext);
+                    }
+                    ItemCreateDate = thread.now;
+                    ItemUid = thread.userid;
+                    break;
+                case IslandsCode.Beitai:
+                    if (thread.admin == "1") txtUserid.Foreground = Config.AdminColor;
+                    if (!string.IsNullOrEmpty(thread.img))
+                    {
+                        ItemThumb = (Config.B.PictureHost + "thumb/" + thread.img + thread.ext);
+                        ItemImage = (Config.B.PictureHost + "image/" + thread.img + thread.ext);
+                    }
+                    ItemCreateDate = thread.now;
+                    ItemUid = thread.userid;
+                    break;
+                case IslandsCode.Koukuko:
+                    if (thread.uid.IndexOf("<font color=\"red\">") >= 0)
+                    {
+                        txtUserid.Foreground = Config.AdminColor;
+                        thread.uid = Regex.Replace(thread.uid, "</?[^>]*/?>", "");
+                    }
+                    if (string.IsNullOrEmpty(thread.thumb)) ItemThumb = (Config.K.PictureHost + thread.thumb);
+                    if (string.IsNullOrEmpty(thread.image)) ItemImage = (Config.K.PictureHost + thread.image);
+                    ItemCreateDate = new DateTime(1970, 1, 1).ToLocalTime().AddMilliseconds(Convert.ToDouble(thread.createdAt)).ToString("yyyy-MM-dd HH:mm:ss");
+                    ItemUid = thread.uid;
+                    break;
+            }
+            #endregion
+            NoImage = MainPage.Global.NoImage;
+            if (!string.IsNullOrEmpty(ItemImage))
+            {
+                imageBox.Tag = ItemImage;
                 imageBox.Tapped += ImageBox_Tapped;
                 imageBox.PointerPressed += ImageBox_PointerPressed;
             }
         }
 
-        public Model.ThreadModel thread { get; set; }
-        public Visibility threadIsHadTitle
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(threadTitle) && threadTitle != "标题:" && threadTitle != "无标题")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-        public Visibility threadIsHadEmail
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(threadEmail) && threadEmail != "email:")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-        public Visibility threadIsHadName
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(threadName) && threadName != "名字:" && threadName != "无名氏")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-
-        public string threadTitle
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return /*"标题:" +*/ thread.title;
-                    default: return "";
-                }
-            }
-        }
-        public string threadEmail
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return /*"email:" +*/ thread.email;
-                    default: return "";
-                }
-            }
-        }
-        public string threadName
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return /*"名字:" +*/ thread.name;
-                    default: return "";
-                }
-            }
-        }
-        public string threadNo
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return thread.id;
-                    default: return "";
-                }
-            }
-        }
-        public string threadCreateDate
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai: return thread.now;
-                    case IslandsCode.Koukuko:
-                        DateTime dt = new DateTime(1970, 1, 1).ToLocalTime();
-                        return dt.AddMilliseconds(Convert.ToDouble(thread.createdAt)).ToString("yyyy-MM-dd HH:mm:ss");
-                    default: return "";
-                }
-            }
-        }
-        public string threadUid
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                        if (thread.admin == "1")
-                        {
-                            txtUserid.Foreground = Config.AdminColor;
-                        }
-                        return thread.userid;
-                    case IslandsCode.Koukuko:
-                        if (thread.uid.IndexOf("<font color=\"red\">") >= 0)
-                        {
-                            txtUserid.Foreground = Config.AdminColor;
-                            thread.uid = Regex.Replace(thread.uid, "</?[^>]*/?>", "");
-                        }
-                        return thread.uid;
-                    default: return "";
-                }
-            }
-        }
-        public string threadReplyCount
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return thread.replyCount;
-                    default: return "";
-                }
-            }
-        }
-        public string threadThumb
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                        if (string.IsNullOrEmpty(thread.img))
-                            return "";
-                        return (Config.A.PictureHost + "thumb/" + thread.img + thread.ext);
-                    case IslandsCode.Beitai:
-                        if (string.IsNullOrEmpty(thread.img))
-                            return "";
-                        return (Config.B.PictureHost + "thumb/" + thread.img + thread.ext);
-                    case IslandsCode.Koukuko:
-                        if (string.IsNullOrEmpty(thread.thumb))
-                            return "";
-                        return (Config.K.PictureHost + thread.thumb);
-                    default: return "";
-                }
-            }
-        }
-        public string threadImage
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                        if (string.IsNullOrEmpty(thread.img))
-                            return "";
-                        return (Config.A.PictureHost + "image/" + thread.img + thread.ext);
-                    case IslandsCode.Beitai:
-                        if (string.IsNullOrEmpty(thread.img))
-                            return "";
-                        return (Config.B.PictureHost + "image/" + thread.img + thread.ext);
-                    case IslandsCode.Koukuko:
-                        if (string.IsNullOrEmpty(thread.image))
-                            return "";
-                        return (Config.K.PictureHost + thread.image);
-                    default: return "";
-                }
-            }
-        }
+        public event ImageTappedEventHandler ImageTapped;
+        public Model.ThreadModel thread { get; set; }                                       
         public RichTextBlock threadContent
         {
             get
@@ -237,7 +104,6 @@ namespace Islands.UWP
             }
         }
         public bool IsTextSelectionEnabled { get; set; }
-
         public bool NoImage
         {
             get
@@ -246,7 +112,7 @@ namespace Islands.UWP
             }
             set
             {
-                if (!string.IsNullOrEmpty(this.threadThumb))
+                if (!string.IsNullOrEmpty(ItemThumb))
                 {
                     if (value)
                     {
@@ -259,20 +125,6 @@ namespace Islands.UWP
                         LoadingView.Visibility = Visibility.Visible;
                     }
                 }
-            }
-        }
-
-        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
-        public event ImageTappedEventHandler ImageTapped;
-
-        public void ShowImage()
-        {
-            if (!string.IsNullOrEmpty(this.threadThumb))
-            {
-                LoadingView.Visibility = Visibility.Visible;
-                LoadingView.IsActive = true;
-                NoImage = false;
-                imageBox.Source = new BitmapImage(new Uri(this.threadThumb));
             }
         }
         
@@ -316,9 +168,9 @@ namespace Islands.UWP
                         foreach (var inline in p.Inlines)
                         {
                             Hyperlink h = inline as Hyperlink;
-                            if (h != null)
+                            if (h != null && h.UnderlineStyle == UnderlineStyle.None)
                             {
-                                if (h.UnderlineStyle == UnderlineStyle.None) h.Click += Ref_Click;
+                                h.Click += Ref_Click;
                             }
                         }
                     }
@@ -348,25 +200,7 @@ namespace Islands.UWP
                             case IslandsCode.Beitai: req  = String.Format(Config.B.GetRefAPI, Config.B.Host, id); break;
                         }
                         string res = await Data.Http.GetData(req);
-
-                        JObject jObj;
-                        if (!Data.Json.TryDeserializeObject(res, out jObj)) throw new Exception(res.UnicodeDencode());
-
-                        Model.ReplyModel rm = null;
-                        switch (islandCode)
-                        {
-                            case IslandsCode.A:
-                            case IslandsCode.Beitai:
-                                rm = Data.Json.Deserialize<Model.ReplyModel>(res); break;
-                            case IslandsCode.Koukuko:
-                                Model.KReplyQueryResponse kResModel = Data.Json.Deserialize<Model.KReplyQueryResponse>(res);
-                                if (kResModel != null)
-                                {
-                                    if (!kResModel.success) throw new Exception(kResModel.message);
-                                    rm = kResModel.data;
-                                }
-                                break;
-                        }
+                        Model.ReplyModel rm = Data.Convert.RefStringToReplyModel(res, islandCode);
                         ReplyView reply = new ReplyView(rm, islandCode) { Margin = new Thickness(0, 0, 5, 0) };
                         await Data.Message.ShowRef(r.Text, reply);
                     }
@@ -379,19 +213,25 @@ namespace Islands.UWP
             }
         }
 
-        private void ImageBox_Tapped(object sender, TappedRoutedEventArgs e)
+        private void ImageBox_Opened(object sender, RoutedEventArgs e)
         {
-            if (ImageTapped != null)
-                ImageTapped(sender, e);
+            var bitmap = imageBox.Source as BitmapImage;
+            if (bitmap != null && bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight) imageBox.Stretch = Stretch.None;
+            LoadingView.IsActive = false;
         }
 
         private void ImageBox_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(threadThumb))
+            if (!string.IsNullOrEmpty(ItemThumb))
             {
                 imageBox.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
                 LoadingView.IsActive = false;
             }
+        }
+
+        private void ImageBox_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            ImageTapped?.Invoke(sender, e);
         }
 
         private void ImageBox_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -404,11 +244,15 @@ namespace Islands.UWP
             ShowImage();
         }
 
-        private void ImageBox_Opened(object sender, RoutedEventArgs e)
+        public void ShowImage()
         {
-            var bitmap = imageBox.Source as BitmapImage;
-            if (bitmap != null && bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight) imageBox.Stretch = Stretch.None;
-            LoadingView.IsActive = false;
+            if (!string.IsNullOrEmpty(ItemThumb))
+            {
+                LoadingView.Visibility = Visibility.Visible;
+                LoadingView.IsActive = true;
+                NoImage = false;
+                imageBox.Source = new BitmapImage(new Uri(ItemThumb));
+            }
         }
     }
 }

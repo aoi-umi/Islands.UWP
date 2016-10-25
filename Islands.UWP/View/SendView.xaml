@@ -50,35 +50,24 @@
         <ListView.ItemContainerStyle>
             <Style TargetType="ListViewItem">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                <Setter Property="Margin" Value="0,0,15,0"/>
+                <Setter Property="Margin" Value="0,0,14,0"/>
+                <Setter Property="Padding" Value="5,0"/>
             </Style>
         </ListView.ItemContainerStyle>
-        <ListViewItem Padding="5,0,5,0">
-            <TextBox Name="SendTitle" PlaceholderText="标题"/>
-        </ListViewItem>
-        <ListViewItem Padding="5,0,5,0">
-            <TextBox Name="SendEmail" PlaceholderText="Email"/>
-        </ListViewItem>
-        <ListViewItem Padding="5,0,5,0">
-            <TextBox Name="SendName" PlaceholderText="名字"/>
-        </ListViewItem>
-        <ListViewItem>
-            <ComboBox Name="EmojiBox" HorizontalAlignment="Stretch" SelectionChanged="EmojiBox_SelectionChanged"/>
-        </ListViewItem>
-        <ListViewItem Padding="5,0,5,0">
-            <RichEditBox Name="SendContent" PlaceholderText="内容" AcceptsReturn="True" MinHeight="200"/>
-        </ListViewItem>
-        <ListViewItem>
-            <StackPanel>
-                <Button Name="TextToImage" Content="文字转图片" Click="TextToImage_Click"/>
-                <RelativePanel>
-                    <RelativePanel Name="textToImgPanel" Background="White">
-                        <TextBlock Name="textToImgTextBlock" Text="" Foreground="Black"/>
-                    </RelativePanel>
-                    <Image Name="SendImage" Stretch="None"/>
+        <TextBox Name="SendTitle" PlaceholderText="标题"/>
+        <TextBox Name="SendEmail" PlaceholderText="Email"/>
+        <TextBox Name="SendName" PlaceholderText="名字"/>
+        <ComboBox Name="EmojiBox" HorizontalAlignment="Stretch" SelectionChanged="EmojiBox_SelectionChanged"/>
+        <RichEditBox Name="SendContent" PlaceholderText="内容" AcceptsReturn="True" MinHeight="200"/>
+        <StackPanel>
+            <Button Name="TextToImage" Content="文字转图片" Click="TextToImage_Click"/>
+            <RelativePanel>
+                <RelativePanel Name="textToImgPanel" Background="White">
+                    <TextBlock Name="textToImgTextBlock" Text="" Foreground="Black"/>
                 </RelativePanel>
-                <TextBlock Name="SendImageStr"/>
-            </StackPanel>
-        </ListViewItem>
+                <Image Name="SendImage" Stretch="None"/>
+            </RelativePanel>
+            <TextBlock Name="SendImageStr"/>
+        </StackPanel>
     </ListView>
 </local:BaseContentView>

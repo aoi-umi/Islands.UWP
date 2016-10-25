@@ -11,8 +11,7 @@
                         <local:BaseContentView x:Name="BaseContentView" TopContent="{TemplateBinding TopContent}" BottomContent="{TemplateBinding BottomContent}" 
                                                IsLoading="{TemplateBinding IsLoading}" MaskOpacity="{TemplateBinding MaskOpacity}">
                             <ScrollViewer x:Name="ScrollViewer" Grid.Row="1">
-                                <ListView x:Name="ListView" CanReorderItems="True" IsItemClickEnabled="True" AllowDrop="False"
-                                          SelectionMode="{TemplateBinding SelectionMode}">
+                                <ListView x:Name="ListView" CanReorderItems="False" IsItemClickEnabled="True" AllowDrop="False" SelectionMode="{TemplateBinding SelectionMode}">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem">
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -23,29 +22,6 @@
                                 </ListView>
                             </ScrollViewer>
                         </local:BaseContentView>
-                        <!--<Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <ContentControl Grid.Row="0" Content="{TemplateBinding TopContent}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
-                            <ContentControl Grid.Row="2" Content="{TemplateBinding BottomContent}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
-                            <ScrollViewer x:Name="ScrollViewer" Grid.Row="1">
-                                <ListView x:Name="ListView" CanReorderItems="True" IsItemClickEnabled="True" AllowDrop="False"
-                                          SelectionMode="{TemplateBinding SelectionMode}">
-                                    <ListView.ItemContainerStyle>
-                                        <Style TargetType="ListViewItem">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                            <Setter Property="Margin" Value="0,0,14,0"/>
-                                            <Setter Property="Padding" Value="0"/>
-                                        </Style>
-                                    </ListView.ItemContainerStyle>
-                                </ListView>
-                            </ScrollViewer>
-                            <Grid x:Name="Mask" Background="Black" Opacity="{TemplateBinding MaskOpacity}" Grid.Row="0" Grid.RowSpan="3" IsHitTestVisible="False"/>
-                            <ProgressRing Grid.Row="1" x:Name="ProgressRing" Width="100" Height="100" IsActive="{TemplateBinding IsLoading}"/>
-                        </Grid>-->
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

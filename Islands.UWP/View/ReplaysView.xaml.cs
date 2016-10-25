@@ -146,29 +146,9 @@ namespace Islands.UWP
             {
                 if (string.IsNullOrEmpty(req.ID)) throw new Exception("串号为空");
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
-                JObject jObj;
-                if (!Data.Json.TryDeserializeObject(res, out jObj)) throw new Exception(res.UnicodeDencode());
-
                 List<Model.ReplyModel> Replys = null;
                 top = null;
-                switch (code)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                        top = Data.Json.Deserialize<Model.ThreadModel>(res);
-                        Model.ABReplyQueryResponse abResModel = Data.Json.Deserialize<Model.ABReplyQueryResponse>(res);
-                        if(abResModel != null) Replys = abResModel.replys;                        
-                        break;
-                    case IslandsCode.Koukuko:
-                        Model.KReplyQueryResponse kResModel = Data.Json.Deserialize<Model.KReplyQueryResponse>(res);
-                        if (kResModel != null)
-                        {
-                            if (!kResModel.success) throw new Exception(kResModel.message);
-                            top = kResModel.threads;
-                            Replys = kResModel.replys;
-                        }                        
-                        break;
-                }
+                Data.Convert.ResStringToThreadAndReplyList(res, code, out top, out Replys);
                 top.islandCode = code;
                 top._id = markId;
 

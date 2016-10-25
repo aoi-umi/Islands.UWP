@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -19,10 +20,7 @@ namespace Islands.UWP
             InitMarkList(islandCode);
         }
 
-        public List<Model.ThreadModel> markList { get; set; }
-
-        public delegate void MarkClickEventHandler(Object sender, ItemClickEventArgs e);
-        public event MarkClickEventHandler MarkClick;
+        public List<Model.ThreadModel> markList { get; set; }        
 
         public void AddMark(Model.ThreadModel tm)
         {            
@@ -74,17 +72,11 @@ namespace Islands.UWP
 
         protected override void OnItemClick(object sender, ItemClickEventArgs e)
         {
-            base.OnItemClick(sender, e);
             ThreadView tv = e.ClickedItem as ThreadView;
             if (tv != null && SelectionMode != ListViewSelectionMode.Multiple)
             {
-                OnItemClick(e);
+                base.OnItemClick(sender, e);
             }
-        }
-
-        private void OnItemClick(ItemClickEventArgs e)
-        {
-            MarkClick?.Invoke(this, e);
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -103,26 +95,26 @@ namespace Islands.UWP
         private async void DeleteAsync()
         {
             int count = 0;
-            var idList = new List<int>();
-            foreach (var item in SelectedItems)
-            {
-                ThreadView t = item as ThreadView;
-                if (t != null) idList.Add(t.thread._id);
-                //if (t != null && Data.Database.Delete(t.thread))
-                //{ ++count; }
-            }
+            var idList = SelectedItems.Where(x => (x as ThreadView) != null).Select(x => (x as ThreadView).thread._id).ToList();
+            //foreach (var item in SelectedItems)
+            //{
+            //    ThreadView t = item as ThreadView;
+            //    if (t != null) idList.Add(t.thread._id);
+            //    //if (t != null && Data.Database.Delete(t.thread))
+            //    //{ ++count; }
+            //}
             await Task.Run(()=> {
                 count = Data.Database.DeleteByIDs(nameof(Model.ThreadModel), idList);
             });
             Data.Message.ShowMessage($"成功删除{count}项");
             if (count > 0) InitMarkList(islandCode);
-            SelectionMode = ListViewSelectionMode.Single;
+            SelectionMode = ListViewSelectionMode.None;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             IsCancelButtonVisible = false;
-            SelectionMode = ListViewSelectionMode.Single;
+            SelectionMode = ListViewSelectionMode.None;
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)

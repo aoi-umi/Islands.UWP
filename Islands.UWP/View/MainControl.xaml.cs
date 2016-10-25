@@ -92,7 +92,7 @@ namespace Islands.UWP
 
             MyReplysControl = new MyReplysView(IslandCode);
 
-            ThreadControl.ThreadClick += ThreadControl_ThreadClick;
+            ThreadControl.ItemClick += ThreadControl_ThreadClick;
             ThreadControl.SwitchButton.Click += SwitchButton_Click;
             ThreadControl.ImageTapped += Control_ImageTapped;
             ThreadControl.SendButton.Click += SendButton_Click;
@@ -104,7 +104,7 @@ namespace Islands.UWP
             ReplyControl.SendButton.Click += SendButton_Click;
             ReplyControl.MenuClick += Control_MenuClick;
 
-            MarkControl.MarkClick += MarkControl_MarkClick;
+            MarkControl.ItemClick += MarkControl_MarkClick;
             MarkControl.BackButton.Click += BackButton_Click;
 
             SendControl.Response += SendControl_Response;
@@ -113,7 +113,7 @@ namespace Islands.UWP
 
             ImageControl.BackButton.Click += BackButton_Click;
 
-            MyReplysControl.MyReplyClick += MyReplysControl_MyReplyClick;
+            MyReplysControl.ItemClick += MyReplysControl_MyReplyClick;
             MyReplysControl.BackButton.Click += BackButton_Click;
 
             BackButton.Click += BackButton_Click;
@@ -188,10 +188,10 @@ namespace Islands.UWP
                 IsMain = false;
                 mainSplitView.Content = ReplyControl;
                 var markId = (from mark in MarkControl.markList
-                              where mark.id == tv.threadNo
+                              where mark.id == tv.ItemNo
                               select mark._id
                               ).FirstOrDefault();
-                ReplyControl.GetReplyListByID(tv.threadNo, markId);
+                ReplyControl.GetReplyListByID(tv.ItemNo, markId);
             }
         }
 
@@ -230,7 +230,7 @@ namespace Islands.UWP
                 var id = 1;
                 if (tm != null)
                     id = tm._id;
-                ReplyControl.GetReplyListByID(tv.threadNo, id);
+                ReplyControl.GetReplyListByID(tv.ItemNo, id);
             }
         }
 

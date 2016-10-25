@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Islands.UWP
 {
-    public sealed partial class ReplyView : UserControl
+    public sealed partial class ReplyView : BaseItemView
     {
         public ReplyView(Model.ReplyModel reply, IslandsCode islandCode)
         {
@@ -31,177 +31,54 @@ namespace Islands.UWP
             DataContext = MainPage.Global;
             this.reply = reply;
             this.islandCode = islandCode;
+            ItemTitle = reply.title;
+            ItemEmail = reply.email;
+            ItemName = reply.name;
+            ItemNo = reply.id;
+            ItemContent = reply.content;
+            switch (islandCode)
+            {
+                case IslandsCode.A:
+                    if (reply.admin == "1") txtUserid.Foreground = Config.AdminColor;
+                    if (!string.IsNullOrEmpty(reply.img))
+                    {
+                        ItemThumb = (Config.A.PictureHost + "thumb/" + reply.img + reply.ext);
+                        ItemImage = (Config.A.PictureHost + "image/" + reply.img + reply.ext);
+                    }
+                    ItemCreateDate = reply.now;
+                    ItemUid = reply.userid;
+                    break;
+                case IslandsCode.Beitai:
+                    if (reply.admin == "1") txtUserid.Foreground = Config.AdminColor;
+                    if (!string.IsNullOrEmpty(reply.img))
+                    {
+                        ItemThumb = (Config.B.PictureHost + "thumb/" + reply.img + reply.ext);
+                        ItemImage = (Config.B.PictureHost + "image/" + reply.img + reply.ext);
+                    }
+                    ItemCreateDate = reply.now;
+                    ItemUid = reply.userid;
+                    break;
+                case IslandsCode.Koukuko:
+                    if (reply.uid.IndexOf("<font color=\"red\">") >= 0)
+                    {
+                        txtUserid.Foreground = Config.AdminColor;
+                        reply.uid = Regex.Replace(reply.uid, "</?[^>]*/?>", "");
+                    }
+                    if (string.IsNullOrEmpty(reply.thumb)) ItemThumb = (Config.K.PictureHost + reply.thumb);
+                    if (string.IsNullOrEmpty(reply.image)) ItemImage = (Config.K.PictureHost + reply.image);
+                    ItemCreateDate = new DateTime(1970, 1, 1).ToLocalTime().AddMilliseconds(Convert.ToDouble(reply.createdAt)).ToString("yyyy-MM-dd HH:mm:ss");
+                    ItemUid = reply.uid;
+                    break;
+            }
             NoImage = MainPage.Global.NoImage;
             if (!NoImage) ShowImage();
-            if (!string.IsNullOrEmpty(this.replyThumb))
+            if (!string.IsNullOrEmpty(ItemImage))
             {
-                imageBox.Tag = replyImage;
+                imageBox.Tag = ItemImage;
                 imageBox.Tapped += ImageBox_Tapped;
             }
         }
 
-        public Visibility replyIsHadTitle
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(replyTitle) && replyTitle != "标题:" && replyTitle != "无标题")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-        public Visibility replyIsHadEmail
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(replyEmail) && replyEmail != "email:")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-        public Visibility replyIsHadName
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(replyName) && replyName != "名字:" && replyName != "无名氏")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-        public string replyTitle
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return /*"标题:" + */reply.title;
-                    default: return "";
-                }
-            }
-        }
-        public string replyEmail
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return /*"email:" + */reply.email;
-                    default: return "";
-                }
-            }
-        }
-        public string replyName
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return /*"名字:" + */reply.name;
-                    default: return "";
-                }
-            }
-        }
-        public string replyNo
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                    case IslandsCode.Koukuko: return reply.id;
-                    default: return "";
-                }
-            }
-        }
-        public string replyCreateDate
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai: return reply.now;
-                    case IslandsCode.Koukuko:
-                        DateTime dt = new DateTime(1970, 1, 1).ToLocalTime();
-                        return dt.AddMilliseconds(Convert.ToDouble(reply.createdAt)).ToString("yyyy-MM-dd HH:mm:ss");
-                    default: return "";
-                }
-            }
-        }
-        public string replyUid
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                        if (reply.admin == "1")
-                        {
-                            txtUserid.Foreground = Config.AdminColor;
-                        }
-                        return reply.userid;
-                    case IslandsCode.Koukuko:
-                        if (reply.uid.IndexOf("<font color=\"red\">") >= 0)
-                        {
-                            txtUserid.Foreground = Config.AdminColor;
-                            reply.uid = Regex.Replace(reply.uid, "</?[^>]*/?>", "");
-                        }
-                        return reply.uid;
-                    default: return "";
-                }
-            }
-        }
-        public string replyThumb
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                        if (string.IsNullOrEmpty(reply.img))
-                            return "";
-                        return (Config.A.PictureHost + "thumb/" + reply.img + reply.ext);
-                    case IslandsCode.Beitai:
-                        if (string.IsNullOrEmpty(reply.img))
-                            return "";
-                        return (Config.B.PictureHost + "thumb/" + reply.img + reply.ext);
-                    case IslandsCode.Koukuko:
-                        if (string.IsNullOrEmpty(reply.thumb))
-                            return "";
-                        return (Config.K.PictureHost + reply.thumb);
-                    default: return "";
-                }
-            }
-        }
-        public string replyImage
-        {
-            get
-            {
-                switch (islandCode)
-                {
-                    case IslandsCode.A:
-                        if (string.IsNullOrEmpty(reply.img))
-                            return "";
-                        return (Config.A.PictureHost + "image/" + reply.img + reply.ext);
-                    case IslandsCode.Beitai:
-                        if (string.IsNullOrEmpty(reply.img))
-                            return "";
-                        return (Config.B.PictureHost + "image/" + reply.img + reply.ext);
-                    case IslandsCode.Koukuko:
-                        if (string.IsNullOrEmpty(reply.image))
-                            return "";
-                        return (Config.K.PictureHost + reply.image);
-                    default: return "";
-                }
-            }
-        }
         public RichTextBlock replyContent
         {
             get
@@ -230,7 +107,6 @@ namespace Islands.UWP
             }
         }
         
-        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
         public event ImageTappedEventHandler ImageTapped;
 
         private bool NoImage
@@ -241,7 +117,7 @@ namespace Islands.UWP
             }
             set
             {
-                if (!string.IsNullOrEmpty(this.replyThumb))
+                if (!string.IsNullOrEmpty(ItemThumb))
                 {
                     if (value)
                     {
@@ -350,24 +226,7 @@ namespace Islands.UWP
                             case IslandsCode.Beitai: req = String.Format(Config.B.GetRefAPI, Config.B.Host, id); break;
                         }
                         string res = await Data.Http.GetData(req);
-
-                        JObject jObj;
-                        if (!Data.Json.TryDeserializeObject(res, out jObj)) throw new Exception(res.UnicodeDencode());
-                        Model.ReplyModel rm = null;
-                        switch (islandCode)
-                        {
-                            case IslandsCode.A:
-                            case IslandsCode.Beitai:
-                                rm = Data.Json.Deserialize<Model.ReplyModel>(res); break;
-                            case IslandsCode.Koukuko:
-                                Model.KReplyQueryResponse kResModel = Data.Json.Deserialize<Model.KReplyQueryResponse>(res);
-                                if (kResModel != null)
-                                {
-                                    if (!kResModel.success) throw new Exception(kResModel.message);
-                                    rm = kResModel.data;
-                                }
-                                break;
-                        }
+                        Model.ReplyModel rm = Data.Convert.RefStringToReplyModel(res, islandCode);                        
                         ReplyView reply = new ReplyView(rm, islandCode) { Margin = new Thickness(0, 0, 5, 0) };
                         await Data.Message.ShowRef(r.Text, reply);
                     }
@@ -382,27 +241,22 @@ namespace Islands.UWP
 
         private void ImageBox_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (ImageTapped != null)
-                ImageTapped(sender, e);
+            ImageTapped?.Invoke(sender, e);
+        }
+
+        private void ImageBox_ImageOpened(object sender, RoutedEventArgs e)
+        {
+            var bitmap = imageBox.Source as BitmapImage;
+            if (bitmap != null && bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight) imageBox.Stretch = Stretch.None;
+            LoadingView.IsActive = false;
         }
 
         private void ImageBox_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(replyImage))
+            if (!string.IsNullOrEmpty(ItemThumb))
             {
                 imageBox.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
                 LoadingView.IsActive = false;
-            }
-        }
-
-        private void ShowImage()
-        {
-            if (!string.IsNullOrEmpty(this.replyThumb))
-            {
-                LoadingView.Visibility = Visibility.Visible;
-                LoadingView.IsActive = true;
-                NoImage = false;
-                imageBox.Source = new BitmapImage(new Uri(this.replyThumb));
             }
         }
 
@@ -411,11 +265,15 @@ namespace Islands.UWP
             ShowImage();
         }
 
-        private void ImageBox_ImageOpened(object sender, RoutedEventArgs e)
+        private void ShowImage()
         {
-            var bitmap = imageBox.Source as BitmapImage;
-            if (bitmap != null && bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight) imageBox.Stretch = Stretch.None;
-            LoadingView.IsActive = false;
+            if (!string.IsNullOrEmpty(ItemThumb))
+            {
+                LoadingView.Visibility = Visibility.Visible;
+                LoadingView.IsActive = true;
+                NoImage = false;
+                imageBox.Source = new BitmapImage(new Uri(ItemThumb));
+            }
         }
     }
 }

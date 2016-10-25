@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -9,7 +10,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Islands.UWP
 {
-    public sealed partial class MyReplysView : BaseListView,INotifyPropertyChanged
+    public sealed partial class MyReplysView : BaseListView
     {
 
         public MyReplysView(IslandsCode islandCode)
@@ -21,23 +22,7 @@ namespace Islands.UWP
         }
 
         public List<Model.SendModel> myReplyList { get; set; }
-        public double TitleFontSize
-        {
-            get { double value = (double)GetValue(TitleFontSizeProperty); return value == 0 ? 1 : value; }
-            set { SetValue(TitleFontSizeProperty, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TitleFontSize")); }
-        }
-        public static readonly DependencyProperty TitleFontSizeProperty = DependencyProperty.Register("TitleFontSize", typeof(double), typeof(MyReplysView), null);
-
-        public double ContentFontSize
-        {
-            get { double value = (double)GetValue(ContentFontSizeProperty); return value == 0 ? 1 : value; }
-            set { SetValue(ContentFontSizeProperty, value); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ContentFontSize")); }
-        }
-        public static readonly DependencyProperty ContentFontSizeProperty = DependencyProperty.Register("ContentFontSize", typeof(double), typeof(MyReplysView), null);
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public delegate void MyReplyClickEventHandler(Object sender, ItemClickEventArgs e);
-        public event MyReplyClickEventHandler MyReplyClick;
+        
 
         public void AddMyReply(Model.SendModel sm)
         {
@@ -82,18 +67,12 @@ namespace Islands.UWP
         }
         protected override void OnItemClick(object sender, ItemClickEventArgs e)
         {
-            base.OnItemClick(sender, e);
             MyReplyView view = e.ClickedItem as MyReplyView;
             if (view != null)
             {
                 if (view != null && SelectionMode != ListViewSelectionMode.Multiple)
-                    OnItemClick(e);
+                    base.OnItemClick(sender, e);
             }
-        }
-
-        private void OnItemClick(ItemClickEventArgs e)
-        {
-            MyReplyClick?.Invoke(this, e);
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -112,26 +91,26 @@ namespace Islands.UWP
         private async void DeleteAsync()
         {
             int count = 0;
-            var idList = new List<int>();
-            foreach (var item in SelectedItems)
-            {
-                MyReplyView t = item as MyReplyView;
-                if (t != null) idList.Add(t.myReply._id);
-                //if (t != null && Data.Database.Delete(t.myReply))
-                //{ ++count; }
-            }
+            var idList = SelectedItems.Where(x => (x as MyReplyView) != null).Select(x => (x as MyReplyView).myReply._id).ToList();
+            //foreach (var item in SelectedItems)
+            //{
+            //    MyReplyView t = item as MyReplyView;
+            //    if (t != null) idList.Add(t.myReply._id);
+            //    //if (t != null && Data.Database.Delete(t.myReply))
+            //    //{ ++count; }
+            //}
             await Task.Run(() => {
                 count = Data.Database.DeleteByIDs(nameof(Model.SendModel), idList);
             });
             Data.Message.ShowMessage($"成功删除{count}项");
             if (count > 0) InitMyReplyList(islandCode);
-            SelectionMode = ListViewSelectionMode.Single;
+            SelectionMode = ListViewSelectionMode.None;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             IsCancelButtonVisible = false;
-            SelectionMode = ListViewSelectionMode.Single;
+            SelectionMode = ListViewSelectionMode.None;
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)

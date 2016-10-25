@@ -39,8 +39,6 @@ namespace Islands.UWP
         public string initTitle { set { Title.Text = value; } }
         public Model.ForumModel currForum { get; set; }
         
-        public delegate void ThreadClickEventHandler(Object sender, ItemClickEventArgs e);
-        public event ThreadClickEventHandler ThreadClick;
         public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
         public event ImageTappedEventHandler ImageTapped;
         public delegate void MenuClickEventHandler(Object sender, RoutedEventArgs e);
@@ -75,8 +73,7 @@ namespace Islands.UWP
         }
 
         private void DataLoading()
-        {
-            
+        {            
             IsLoading = true;
             IsHitTestVisible = false;
             Items.Remove(ThreadStatusBox);
@@ -132,23 +129,7 @@ namespace Islands.UWP
             {
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
                 List<Model.ThreadResponseModel> Threads = null;
-                switch (code)
-                {
-                    case IslandsCode.A:
-                    case IslandsCode.Beitai:
-                        JArray ja = null;
-                        if (!Data.Json.TryDeserialize(res, out ja)) throw new Exception(res.UnicodeDencode());
-                        if (ja != null) {
-                            Threads = ja.ToObject<List<Model.ThreadResponseModel>>();
-                        }
-                        break;
-                    case IslandsCode.Koukuko:
-                        Model.KThreadQueryResponse kRes = Data.Json.Deserialize<Model.KThreadQueryResponse>(res);
-                        if (kRes != null && kRes.data != null) {
-                            Threads = kRes.data.threads;
-                        }
-                        break;
-                }
+                Data.Convert.ResStringToThreadList(res, code, out Threads);                
                 if (Threads == null || Threads.Count == 0)
                     throw new Exception("什么也没有");
                 Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
@@ -182,11 +163,10 @@ namespace Islands.UWP
         //点击串
         protected override void OnItemClick(object sender, ItemClickEventArgs e)
         {
-            base.OnItemClick(sender, e);
             ThreadView tv = e.ClickedItem as ThreadView;
             if (tv != null)
             {
-                ThreadClick?.Invoke(sender, e);
+                base.OnItemClick(sender, e);
             }
         }
 
@@ -198,7 +178,7 @@ namespace Islands.UWP
 
         private void Menu_Click(object sender, RoutedEventArgs e)
         {
-            if (MenuClick != null) MenuClick(sender, e);
+            MenuClick?.Invoke(sender, e);
         }        
     }   
 }
