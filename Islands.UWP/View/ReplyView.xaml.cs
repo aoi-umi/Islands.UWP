@@ -64,8 +64,8 @@ namespace Islands.UWP
                         txtUserid.Foreground = Config.AdminColor;
                         reply.uid = Regex.Replace(reply.uid, "</?[^>]*/?>", "");
                     }
-                    if (string.IsNullOrEmpty(reply.thumb)) ItemThumb = (Config.K.PictureHost + reply.thumb);
-                    if (string.IsNullOrEmpty(reply.image)) ItemImage = (Config.K.PictureHost + reply.image);
+                    if (!string.IsNullOrEmpty(reply.thumb)) ItemThumb = (Config.K.PictureHost + reply.thumb);
+                    if (!string.IsNullOrEmpty(reply.image)) ItemImage = (Config.K.PictureHost + reply.image);
                     ItemCreateDate = new DateTime(1970, 1, 1).ToLocalTime().AddMilliseconds(Convert.ToDouble(reply.createdAt)).ToString("yyyy-MM-dd HH:mm:ss");
                     ItemUid = reply.uid;
                     break;

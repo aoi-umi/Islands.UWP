@@ -12,7 +12,7 @@
     <UseEmulator>false</UseEmulator>
   </PropertyGroup>
   <PropertyGroup>
-    <ProjectView>ShowAllFiles</ProjectView>
+    <ProjectView>ProjectFiles</ProjectView>
     <AppxShowAllApps>False</AppxShowAllApps>
     <AppxPackageIsForStore>False</AppxPackageIsForStore>
     <AppxBuildConfigurationSelection>x86|arm</AppxBuildConfigurationSelection>
