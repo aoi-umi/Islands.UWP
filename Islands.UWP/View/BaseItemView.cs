@@ -98,17 +98,23 @@ namespace Islands.UWP
             showImageButton = GetTemplateChild(ShowImageButtonName) as Button;
             progressRing = GetTemplateChild(ProgressRingName) as ProgressRing;
             image = GetTemplateChild(ImageName) as Image;
+            image.Tag = ItemImage;
             if (!string.IsNullOrEmpty(ItemThumb))
             {
                 if (!NoImage) ShowImage();
                 else showImageButton.Visibility = Visibility.Visible;
-
                 showImageButton.Click += ShowImageButton_Click;
+                image.Tapped += Image_Tapped;
                 image.PointerPressed += Image_PointerPressed;
                 image.ImageOpened += Image_ImageOpened;
                 image.ImageFailed += Image_ImageFailed;
             }
 
+        }
+
+        private void Image_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            ImageTapped?.Invoke(sender, e);
         }
 
         private void Image_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -138,6 +144,7 @@ namespace Islands.UWP
             var bitmap = image.Source as BitmapImage;
             if (bitmap != null && !(bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight)) image.Stretch = Stretch.Uniform;
             progressRing.IsActive = false;
+            progressRing.Visibility = Visibility.Collapsed;
         }
 
         private void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
@@ -146,6 +153,7 @@ namespace Islands.UWP
             {
                 image.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
                 progressRing.IsActive = false;
+                progressRing.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -153,6 +161,8 @@ namespace Islands.UWP
         {
             base.OnDisconnectVisualChildren();
             showImageButton.Click -= ShowImageButton_Click;
+            image.Tapped -= Image_Tapped;
+            image.PointerPressed -= Image_PointerPressed;
             image.ImageOpened -= Image_ImageOpened;
             image.ImageFailed -= Image_ImageFailed;
         }

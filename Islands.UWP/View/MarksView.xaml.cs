@@ -15,7 +15,7 @@ namespace Islands.UWP
         public MarksView(IslandsCode islandCode)
         {
             this.InitializeComponent();
-            this.islandCode = islandCode;
+            this.IslandCode = islandCode;
             this.DataContext = MainPage.Global;
             InitMarkList(islandCode);
         }
@@ -25,11 +25,9 @@ namespace Islands.UWP
         public void AddMark(Model.ThreadModel tm)
         {            
             markList.Insert(0, tm);
-            Items.Insert(0, new ThreadView(tm, islandCode) { Tag = tm, NoImage = true });
+            Items.Insert(0, new ThreadView(tm, IslandCode) { Tag = tm, NoImage = true });
             markCount = markList.Count.ToString();
         }
-
-        private IslandsCode islandCode { get; set; }
 
         private string markCount
         {
@@ -96,18 +94,11 @@ namespace Islands.UWP
         {
             int count = 0;
             var idList = SelectedItems.Where(x => (x as ThreadView) != null).Select(x => (x as ThreadView).thread._id).ToList();
-            //foreach (var item in SelectedItems)
-            //{
-            //    ThreadView t = item as ThreadView;
-            //    if (t != null) idList.Add(t.thread._id);
-            //    //if (t != null && Data.Database.Delete(t.thread))
-            //    //{ ++count; }
-            //}
             await Task.Run(()=> {
                 count = Data.Database.DeleteByIDs(nameof(Model.ThreadModel), idList);
             });
             Data.Message.ShowMessage($"成功删除{count}项");
-            if (count > 0) InitMarkList(islandCode);
+            if (count > 0) InitMarkList(IslandCode);
             SelectionMode = ListViewSelectionMode.None;
         }
 
@@ -119,7 +110,7 @@ namespace Islands.UWP
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            InitMarkList(islandCode);
+            InitMarkList(IslandCode);
         }
     }
 }

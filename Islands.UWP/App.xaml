@@ -8,7 +8,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///UmiAoi.UWP/Themes/EllipseAppBarButtonStyle.xaml"/>
-                <ResourceDictionary Source="/Themes/EllipseButtonStyle.xaml"/>
                 <ResourceDictionary>
                     <Style TargetType="TextBlock" x:Key="MenuIcon">
                         <Setter Property="FontSize" Value="12"/>

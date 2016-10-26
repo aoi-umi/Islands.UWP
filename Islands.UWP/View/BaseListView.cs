@@ -10,8 +10,6 @@ namespace Islands.UWP
 {
     public class BaseListView : ItemsControl
     {
-        private static string ScrollViewerName = "ScrollViewer";
-        private static string ListViewName = "ListView";
         public BaseListView():base()
 
         {
@@ -75,7 +73,10 @@ namespace Islands.UWP
         public delegate void ItemsClickEventHandler(Object sender, ItemClickEventArgs e);
         public event ItemsClickEventHandler ItemClick;
 
+        public IslandsCode IslandCode { get; set; }
         protected DeviceFamily DeviceFamily { get { return Helper.CurrDeviceFamily; } }
+        private static string ScrollViewerName = "ScrollViewer";
+        private static string ListViewName = "ListView";
         private ScrollViewer scrollViewer { get; set; }
         private ListView listView { get; set; }
         private ProgressRing progressRing { get; set; }

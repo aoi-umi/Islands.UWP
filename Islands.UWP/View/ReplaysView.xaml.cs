@@ -32,7 +32,6 @@ namespace Islands.UWP
         }
         
         public Model.PostRequest postReq;
-        public IslandsCode islandCode;
         public int pageSize { get; set; }
         public string currThread { get; set; }      
 
@@ -91,7 +90,7 @@ namespace Islands.UWP
         private void ReplyStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
         {
             postReq.Page = currPage;
-            GetReplyList(postReq, islandCode);
+            GetReplyList(postReq, IslandCode);
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -127,7 +126,7 @@ namespace Islands.UWP
             try
             {
                 postReq.Page = currPage;
-                GetReplyList(postReq, islandCode);
+                GetReplyList(postReq, IslandCode);
             }
             catch (Exception ex)
             {
@@ -220,7 +219,7 @@ namespace Islands.UWP
                 try
                 {
                     postReq.Page = currPage;
-                    GetReplyList(postReq, islandCode);
+                    GetReplyList(postReq, IslandCode);
                 }
                 catch (Exception ex)
                 {

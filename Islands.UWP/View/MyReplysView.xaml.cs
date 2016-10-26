@@ -16,22 +16,19 @@ namespace Islands.UWP
         public MyReplysView(IslandsCode islandCode)
         {
             this.InitializeComponent();
-            this.islandCode = islandCode;
+            this.IslandCode = islandCode;
             InitMyReplyList(islandCode);
             DataContext = this;
         }
 
         public List<Model.SendModel> myReplyList { get; set; }
         
-
         public void AddMyReply(Model.SendModel sm)
         {
             myReplyList.Insert(0, sm);
-            Items.Insert(0, new MyReplyView(sm, islandCode) { Tag = sm });
+            Items.Insert(0, new MyReplyView(sm, IslandCode) { Tag = sm });
             myReplyCount = myReplyList.Count.ToString();
         }
-
-        private IslandsCode islandCode { get; set; }
 
         private string myReplyCount { set {
                 Title.Text = "我的回复(" + value + ")";
@@ -92,18 +89,11 @@ namespace Islands.UWP
         {
             int count = 0;
             var idList = SelectedItems.Where(x => (x as MyReplyView) != null).Select(x => (x as MyReplyView).myReply._id).ToList();
-            //foreach (var item in SelectedItems)
-            //{
-            //    MyReplyView t = item as MyReplyView;
-            //    if (t != null) idList.Add(t.myReply._id);
-            //    //if (t != null && Data.Database.Delete(t.myReply))
-            //    //{ ++count; }
-            //}
             await Task.Run(() => {
                 count = Data.Database.DeleteByIDs(nameof(Model.SendModel), idList);
             });
             Data.Message.ShowMessage($"成功删除{count}项");
-            if (count > 0) InitMyReplyList(islandCode);
+            if (count > 0) InitMyReplyList(IslandCode);
             SelectionMode = ListViewSelectionMode.None;
         }
 
@@ -115,7 +105,7 @@ namespace Islands.UWP
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            InitMyReplyList(islandCode);
+            InitMyReplyList(IslandCode);
         }
     }
 }

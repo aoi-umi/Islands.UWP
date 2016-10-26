@@ -33,7 +33,6 @@ namespace Islands.UWP
         }
 
         public bool IsInitRefresh = false;
-        public IslandsCode islandCode;
         public Model.PostRequest postReq;
         
         public string initTitle { set { Title.Text = value; } }
@@ -64,7 +63,7 @@ namespace Islands.UWP
         private void ThreadStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
         {
             postReq.Page = currPage;
-            GetThreadList(postReq, islandCode);
+            GetThreadList(postReq, IslandCode);
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -97,7 +96,7 @@ namespace Islands.UWP
                     Items.RemoveAt(i);
                 }
                 postReq.Page = page;
-                GetThreadList(postReq, islandCode);
+                GetThreadList(postReq, IslandCode);
             }
             catch (Exception ex)
             {
@@ -112,7 +111,7 @@ namespace Islands.UWP
             try
             {
                 postReq.Page = currPage;
-                GetThreadList(postReq, islandCode);
+                GetThreadList(postReq, IslandCode);
             }
             catch (Exception ex)
             {

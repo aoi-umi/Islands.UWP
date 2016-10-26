@@ -59,7 +59,7 @@ namespace Islands.UWP
                     API = GetThreadAPI,
                     ID = currForum.forumValue
                 },
-                islandCode = IslandCode,
+                IslandCode = IslandCode,
                 currForum = currForum,
                 initTitle = currForum.forumName
             };
@@ -71,7 +71,7 @@ namespace Islands.UWP
                     Host = Host,
                     API = GetReplyAPI
                 },
-                islandCode = IslandCode,
+                IslandCode = IslandCode,
                 pageSize = PageSize
             };
 

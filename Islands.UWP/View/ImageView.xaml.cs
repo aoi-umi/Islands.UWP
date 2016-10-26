@@ -27,7 +27,7 @@ namespace Islands.UWP
             {
                 IsLoading = true;
                 _imgageUrl = value;
-                image.Width = 200;
+                image.Width = Config.MaxImageWidth;
                 image.Height = double.NaN;
                 image.Source = string.IsNullOrEmpty(_imgageUrl) ? null : new BitmapImage(new Uri(value));
             }
