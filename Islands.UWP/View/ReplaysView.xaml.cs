@@ -189,11 +189,11 @@ namespace Islands.UWP
                         rv.IsPo = true;
                     rv.ImageTapped += Image_ImageTapped;
                     Items.Add(rv);
-
                 }
                 if (Replys.Count < pageSize || (currPage - 1) * pageSize + Replys.Count == replyCount)
                 {
                     IsGetAllReply = true;
+                    if (Replys.Count == pageSize) ++currPage;
                     throw new Exception("已经没有了");
                 }
                 ++currPage;
@@ -248,11 +248,15 @@ namespace Islands.UWP
             {
                 if (top._id != 0)
                 {
-                    Data.Message.ShowMessage("已经收藏过");
-                    return;
+                    throw new Exception("已经收藏过");
                 }
                 if (top != null)
                 {
+                    var mark = Data.Database.GetMarkList(top.islandCode, top.id).FirstOrDefault();
+                    if (mark != null && mark._id != 0)
+                    {
+                        throw new Exception("已经收藏过");
+                    }
                     Data.Database.Insert(top);
                     OnMarkSuccess();
                     Data.Message.ShowMessage("收藏成功");

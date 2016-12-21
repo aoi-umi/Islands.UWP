@@ -75,7 +75,7 @@ namespace Islands.UWP
                 pageSize = PageSize
             };
 
-            MarkControl = new MarksView(IslandCode);
+            MarkControl = new MarksView() { IslandCode = IslandCode };
 
             ImageControl = new ImageView();
 
@@ -90,7 +90,7 @@ namespace Islands.UWP
                 islandCode = IslandCode
             };
 
-            MyReplysControl = new MyReplysView(IslandCode);
+            MyReplysControl = new MyReplysView() { IslandCode = IslandCode };
 
             ThreadControl.ItemClick += ThreadControl_ThreadClick;
             ThreadControl.SwitchButton.Click += SwitchButton_Click;
@@ -186,12 +186,8 @@ namespace Islands.UWP
             if (tv != null)
             {
                 IsMain = false;
-                mainSplitView.Content = ReplyControl;
-                var markId = (from mark in MarkControl.markList
-                              where mark.id == tv.ItemNo
-                              select mark._id
-                              ).FirstOrDefault();
-                ReplyControl.GetReplyListByID(tv.ItemNo, markId);
+                mainSplitView.Content = ReplyControl;                
+                ReplyControl.GetReplyListByID(tv.ItemNo, 0);
             }
         }
 

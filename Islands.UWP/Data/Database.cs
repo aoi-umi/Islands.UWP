@@ -93,15 +93,22 @@ namespace Islands.UWP.Data
             }
         }
 
-        public static List<ThreadModel> GetMarkList(IslandsCode islandCode)
+        public static List<ThreadModel> GetMarkList(IslandsCode islandCode, string id = null)
         {
             using (var conn = GetDbConnection<ThreadModel>(DbPath))
             {
                 if (conn != null)
+                {
+                    if (string.IsNullOrEmpty(id))
+                        return (from model in conn.Table<ThreadModel>()
+                                where (islandCode == IslandsCode.All || model.islandCode == islandCode)
+                                orderby model._id descending
+                                select model).ToList();
                     return (from model in conn.Table<ThreadModel>()
-                            where islandCode == IslandsCode.All || model.islandCode == islandCode
+                            where (islandCode == IslandsCode.All || model.islandCode == islandCode) && model.id == id
                             orderby model._id descending
                             select model).ToList();
+                }
                 return new List<ThreadModel>();
             }
         }

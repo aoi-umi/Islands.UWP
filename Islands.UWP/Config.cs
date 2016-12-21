@@ -39,7 +39,8 @@ namespace Islands.UWP
         public static double MaxImageWidth = 200;
         public static double MaxImageHeight = 200;
         #region 颜文字
-        public static List<string> Emoji = new List<string>() {
+        public static List<string> Kaomoji = new List<string>() {
+            "颜文字",
             "|∀ﾟ",
             "(´ﾟДﾟ`)",
             "(;´Д`)",
@@ -143,7 +144,7 @@ namespace Islands.UWP
         public static class A
         {
             public static string Host = "https://h.nimingban.com";
-            public static string PictureHost = "http://img1.nimingban.com/";
+            public static string PictureHost = "http://cdn.ovear.info:8998/";
             public static string GetThreadAPI = "{0}/Api/showf/id/{1}/page/{2}";
             public static string GetReplyAPI = "{0}/Api/thread/id/{1}/page/{2}";
             public static string GetRefAPI = "{0}/Api/ref?id={1}";
@@ -313,7 +314,7 @@ namespace Islands.UWP
         public static class B
         {
             public static string Host = "http://h.adnmb.com";
-            public static string PictureHost = "http://h-adnmb-com.n1.yun.tf:8999/Public/Upload/";
+            public static string PictureHost = "http://h.adnmb.com/Public/Upload/";
             public static string GetThreadAPI = "{0}/Api/showf/id/{1}/page/{2}";
             public static string GetReplyAPI = "{0}/Api/thread/id/{1}/page/{2}";
             public static string GetRefAPI = "{0}/Api/ref?id={1}";

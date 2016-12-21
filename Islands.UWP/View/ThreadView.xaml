@@ -21,14 +21,14 @@
                       RelativePanel.AlignBottomWithPanel="True"/>
                 <TextBlock Name="title" Text="{x:Bind ItemTitle}" Visibility="{x:Bind IsHadTitle}"
                            IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled}"
-                           Foreground="Red" FontSize="{Binding TitleFontSize}"/>
+                           FontSize="{Binding TitleFontSize}"/>
                 <TextBlock Name="email" Text="{x:Bind ItemEmail}"
                            Visibility="{x:Bind IsHadEmail}"
                            IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled}"
-                           RelativePanel.Below="title" Foreground="Red" FontSize="{Binding TitleFontSize}"/>
+                           RelativePanel.Below="title" FontSize="{Binding TitleFontSize}"/>
                 <TextBlock Name="name" Text="{x:Bind ItemName}" Visibility="{x:Bind IsHadName}"
                            IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled}"
-                           RelativePanel.Below="email" Foreground="Red" FontSize="{Binding TitleFontSize}"/>
+                           RelativePanel.Below="email" FontSize="{Binding TitleFontSize}"/>
                 <TextBlock Name="txtCreateDate" Text="{x:Bind ItemCreateDate}"
                            IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled}"
                            RelativePanel.Below="name" Margin="0,0,5,0" FontSize="{Binding TitleFontSize}"/>

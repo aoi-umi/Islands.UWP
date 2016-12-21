@@ -18,16 +18,13 @@
         <StackPanel Name="threadSp" Margin="2">
             <RelativePanel>
                 <TextBlock Name="title" Text="{x:Bind ItemTitle}"
-                           Visibility="{x:Bind IsHadTitle}"
-                           Foreground="Red" FontSize="{Binding TitleFontSize}"/>
+                           Visibility="{x:Bind IsHadTitle}" FontSize="{Binding TitleFontSize}"/>
                 <TextBlock Name="email" Text="{x:Bind ItemEmail}"
                            Visibility="{x:Bind IsHadEmail}"
-                           RelativePanel.Below="title"
-                           Foreground="Red" FontSize="{Binding TitleFontSize}"/>
+                           RelativePanel.Below="title" FontSize="{Binding TitleFontSize}"/>
                 <TextBlock Name="name" Text="{x:Bind ItemName}"
                            Visibility="{x:Bind IsHadName}"
-                           RelativePanel.Below="email"
-                           Foreground="Red" FontSize="{Binding TitleFontSize}"/>
+                           RelativePanel.Below="email" FontSize="{Binding TitleFontSize}"/>
                 <TextBlock Name="txtCreateDate" Text="{x:Bind ItemCreateDate}"
                            RelativePanel.Below="name" FontSize="{Binding TitleFontSize}"/>
                 <TextBlock Name="id" Text="No."

@@ -45,6 +45,34 @@ namespace Islands.UWP.Data
             return imageUri;
         }
 
+        public static async Task<string> CopyImageToLocal(string toFileName)
+        {
+            var imageUri = "";
+            FileOpenPicker Picker = new FileOpenPicker();
+            Picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            Picker.ViewMode = PickerViewMode.List;
+            Picker.FileTypeFilter.Add(".jpg");
+            Picker.FileTypeFilter.Add(".jpeg");
+            Picker.FileTypeFilter.Add(".bmp");
+            Picker.FileTypeFilter.Add(".gif");
+            Picker.FileTypeFilter.Add(".png");
+            StorageFile file = await Picker.PickSingleFileAsync();
+            if (file != null && !string.IsNullOrEmpty(toFileName))
+            {
+                toFileName += file.Name.GetExt();
+                StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(Config.SavedImageFolder, CreationCollisionOption.OpenIfExists);
+                StorageFile outfile = await folder.CreateFileAsync(toFileName, CreationCollisionOption.ReplaceExisting);
+                if (outfile != null)
+                {
+                    CachedFileManager.DeferUpdates(file);
+                    await file.CopyAndReplaceAsync(outfile);
+                    FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+                }
+                imageUri = outfile.Path;
+            }
+            return imageUri;
+        }
+
         public static async Task<string> SetPath()
         {
             FolderPicker Picker = new FolderPicker();
@@ -100,26 +128,7 @@ namespace Islands.UWP.Data
 
             //StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             StorageFile file = await savePicker.PickSaveFileAsync();
-            if (file != null)
-            {
-                CachedFileManager.DeferUpdates(file);
-                var downloadFile = await StorageFile.CreateStreamedFileFromUriAsync(filename, uri, RandomAccessStreamReference.CreateFromUri(uri));
-                var readStream = await downloadFile.OpenReadAsync();
-                var inStream = readStream.AsStreamForRead().AsInputStream();
-                await downloadFile.CopyAndReplaceAsync(file);
-                //var buffer = await FileIO.ReadBufferAsync(downloadFile);
-                //await FileIO.WriteBufferAsync(file, buffer);
-                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
-                if (status == FileUpdateStatus.Failed)
-                {
-                    Message.ShowMessage("图片保存失败");
-                }
-                else
-                {
-                    Message.ShowMessage("图片保存成功");
-                }
-            }
-
+            SaveFile(file, filename, uri);
         }
 
         public static async void SaveFileWithoutDialog(string urlStr)
@@ -128,12 +137,15 @@ namespace Islands.UWP.Data
             string filename = Path.GetFileName(urlStr);
             StorageFolder folder = await KnownFolders.SavedPictures.CreateFolderAsync(Config.SavedImageFolder, CreationCollisionOption.OpenIfExists);
             StorageFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+            SaveFile(file, filename, uri);
+        }
+
+        private static async void SaveFile(StorageFile file, string filename, Uri uri)
+        {
             if (file != null)
             {
                 CachedFileManager.DeferUpdates(file);
                 var downloadFile = await StorageFile.CreateStreamedFileFromUriAsync(filename, uri, RandomAccessStreamReference.CreateFromUri(uri));
-                var readStream = await downloadFile.OpenReadAsync();
-                var inStream = readStream.AsStreamForRead().AsInputStream();
                 await downloadFile.CopyAndReplaceAsync(file);
                 FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
                 if (status == FileUpdateStatus.Failed)

@@ -33,7 +33,7 @@
         </Pivot>
         <local:SettingView x:Name="SettingControl"  Visibility="Collapsed"/>
         <Canvas>
-            <uaCtr:CircleMenu Height="40" Width="40" CircleRadius="80" Name="MovableMenu"
+            <uaCtr:CircleMenu Height="40" Width="40" CircleRadius="80" x:Name="MovableMenu"
                               Canvas.Left="150" IsOpen="False" Background="{StaticResource ThemeColor}" >
                 <Interactivity:Interaction.Behaviors>
                     <uaBeh:DragBehavior IsKeptMovePointCenter="False"/>

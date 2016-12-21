@@ -361,7 +361,7 @@ namespace Islands.UWP
 
         private async void SetImagePathButton_Click(object sender, RoutedEventArgs e)
         {
-            string path = await Data.File.SetLocalImage(null);
+            string path = await Data.File.CopyImageToLocal("Background");
             if (!string.IsNullOrEmpty(path))
             {
                 MainPage.Global.BackgroundImagePath = path;

@@ -92,7 +92,7 @@ namespace Islands.UWP
         {
             set
             {
-                if (value) txtUserid.Foreground = Config.PoColor;
+                if (value && txtUserid.Foreground != Config.AdminColor) txtUserid.Foreground = Config.PoColor;
             }
         }
         public bool IsTextSelectionEnabled { get; set; }        

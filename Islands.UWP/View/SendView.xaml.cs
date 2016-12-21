@@ -16,11 +16,9 @@ namespace Islands.UWP
     {
         public SendView()
         {
-            this.InitializeComponent();
-            EmojiBox.Items.Add("颜文字");
-            EmojiBox.SelectedIndex = 0;
-            foreach (var emoji in Config.Emoji)
-                EmojiBox.Items.Add(emoji);
+            this.InitializeComponent();         
+            KaomojiBox.ItemsSource = Config.Kaomoji;
+            KaomojiBox.SelectedIndex = 0;
             var i = InputPane.GetForCurrentView();
             InputPane.GetForCurrentView().Showing += SendView_Showing;
             InputPane.GetForCurrentView().Hiding += SendView_Hiding;
@@ -97,7 +95,7 @@ namespace Islands.UWP
 
         private void OnResponse(bool Success, Model.SendModel send)
         {
-            if (Response != null) Response(Success, send);
+            Response?.Invoke(Success, send);
         }
 
         private void OnSendClick(object sender, RoutedEventArgs e)
@@ -140,7 +138,7 @@ namespace Islands.UWP
                     islandCode = postModel.islandCode,
                     isMain = postModel.IsMain,
                     CookieValue = postModel.Cookie.CookieValue,
-                    sendDateTime = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")                                      
+                    sendDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")                                      
                 };
 
                 string originalContent = string.Empty;
@@ -169,6 +167,7 @@ namespace Islands.UWP
                 {
                     case IslandsCode.A:
                     case IslandsCode.Beitai:
+                        if (res.body.IndexOf("没有饼干") >= 0) throw new Exception("没有饼干");
                         if (res.body.IndexOf("回复成功") >= 0 || res.body.IndexOf("发帖成功") >= 0)
                             IsSuccess = true;
                         break;
@@ -177,7 +176,7 @@ namespace Islands.UWP
                         if (jobj["success"].ToString().ToLower() == "true")
                         {
                             IsSuccess = true;
-                            if(jobj["threadsId"] != null) ThreadId = jobj["threadsId"].ToString();
+                            if (jobj["threadsId"] != null) ThreadId = jobj["threadsId"].ToString();
                         }
                         break;
                 }
@@ -195,15 +194,15 @@ namespace Islands.UWP
             }
         }
 
-        private void EmojiBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void KaomojiBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (EmojiBox.SelectedIndex != 0)
+            if (KaomojiBox.SelectedIndex != 0)
             {
-                var emoji = EmojiBox.SelectedItem.ToString();
+                var Kaomoji = KaomojiBox.SelectedItem.ToString();
                 var start = SendContent.Document.Selection.StartPosition;
-                SendContent.Document.Selection.SetText(TextSetOptions.None, emoji);                
-                SendContent.Document.Selection.StartPosition = start + emoji.Length;
-                EmojiBox.SelectedIndex = 0;
+                SendContent.Document.Selection.SetText(TextSetOptions.None, Kaomoji);                
+                SendContent.Document.Selection.StartPosition = start + Kaomoji.Length;
+                KaomojiBox.SelectedIndex = 0;
             }
         }
 

@@ -1,10 +1,4 @@
-﻿using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-
-// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+﻿// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace Islands.UWP
 {
@@ -24,9 +18,7 @@ namespace Islands.UWP
             ItemMsg = (myReply.isMain ? "新串：" : "回复：") + myReply.sendId; 
             ItemThumb = ItemImage = myReply.sendImage;
             ItemContent = myReply.sendContent;
-
-            //if (!string.IsNullOrEmpty(ItemImage))
-            //    Data.File.SetLocalImage(image, ItemImage);
+            IsLocalImage = true;
         }
 
         public Model.SendModel myReply {get; set; }

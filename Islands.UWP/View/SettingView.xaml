@@ -48,9 +48,9 @@
                 <StackPanel Margin="5">
                     <RelativePanel>
                         <TextBlock Text="设置背景" FontSize="16"  RelativePanel.AlignVerticalCenterWithPanel="True"/>
-                        <Button Name="SetImagePathButton" RelativePanel.LeftOf="CancelButton" 
+                        <Button Name="SetImagePathButton" Content="&#xE25A;" RelativePanel.LeftOf="CancelButton" 
                                 Click="SetImagePathButton_Click" Style="{StaticResource NavButton}"/>
-                        <Button Name="CancelButton" RelativePanel.AlignRightWithPanel="True"
+                        <Button Name="CancelButton" Content="&#xE10A;" RelativePanel.AlignRightWithPanel="True"
                                 Click="CancelButton_Click" Style="{StaticResource NavButton}"/>
                     </RelativePanel>
                 </StackPanel>

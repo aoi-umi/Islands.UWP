@@ -84,7 +84,8 @@ namespace Islands.UWP
         public string ItemImage { get; set; }
         public string ItemContent { get; set; }
 
-        public bool NoImage { get; set; }        
+        public bool NoImage { get; set; }     
+        public bool IsLocalImage { get; set; }   
 
         public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
         public event ImageTappedEventHandler ImageTapped;
@@ -135,6 +136,8 @@ namespace Islands.UWP
                 progressRing.IsActive = true;
                 progressRing.Visibility = image.Visibility = Visibility.Visible;
                 showImageButton.Visibility = Visibility.Collapsed;
+                //if(IsLocalImage) Data.File.SetLocalImage(image, ItemImage);
+                //else
                 image.Source = new BitmapImage(new Uri(ItemThumb));
             }
         }
@@ -142,7 +145,7 @@ namespace Islands.UWP
         private void Image_ImageOpened(object sender, RoutedEventArgs e)
         {
             var bitmap = image.Source as BitmapImage;
-            if (bitmap != null && !(bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight)) image.Stretch = Stretch.Uniform;
+            if (bitmap != null && (bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight)) image.Stretch = Stretch.None;
             progressRing.IsActive = false;
             progressRing.Visibility = Visibility.Collapsed;
         }
@@ -152,15 +155,21 @@ namespace Islands.UWP
             if (!string.IsNullOrEmpty(ItemThumb))
             {
                 image.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
-                progressRing.IsActive = false;
-                progressRing.Visibility = Visibility.Collapsed;
             }
+            progressRing.IsActive = false;
+            progressRing.Visibility = Visibility.Collapsed;
         }
 
         protected override void OnDisconnectVisualChildren()
         {
             base.OnDisconnectVisualChildren();
+            RemoveEvent();
+        }
+
+        private void RemoveEvent()
+        {
             showImageButton.Click -= ShowImageButton_Click;
+            image.Source = null;
             image.Tapped -= Image_Tapped;
             image.PointerPressed -= Image_PointerPressed;
             image.ImageOpened -= Image_ImageOpened;

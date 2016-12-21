@@ -30,9 +30,7 @@ namespace Islands.UWP
                 Source = MainPage.Global
             };
             Helper.BindingHelper(bindingModel);
-        }
-
-        public bool IsInitRefresh = false;
+        }        
         public Model.PostRequest postReq;
         
         public string initTitle { set { Title.Text = value; } }

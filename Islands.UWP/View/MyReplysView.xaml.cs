@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -13,18 +11,23 @@ namespace Islands.UWP
     public sealed partial class MyReplysView : BaseListView
     {
 
-        public MyReplysView(IslandsCode islandCode)
+        public MyReplysView()
         {
             this.InitializeComponent();
-            this.IslandCode = islandCode;
-            InitMyReplyList(islandCode);
             DataContext = this;
+        }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            InitMyReplyList();
         }
 
         public List<Model.SendModel> myReplyList { get; set; }
         
         public void AddMyReply(Model.SendModel sm)
         {
+            if (myReplyList == null) return;
             myReplyList.Insert(0, sm);
             Items.Insert(0, new MyReplyView(sm, IslandCode) { Tag = sm });
             myReplyCount = myReplyList.Count.ToString();
@@ -47,17 +50,17 @@ namespace Islands.UWP
             }
         }
 
-        private async void InitMyReplyList(IslandsCode islandCode)
+        private async void InitMyReplyList()
         {
             IsLoading = true;
             Items.Clear();
             await Task.Run(() =>
             {
-                myReplyList = Data.Database.GetMyReplyList(islandCode);                
+                myReplyList = Data.Database.GetMyReplyList(IslandCode);                
             });
             foreach (var myreply in myReplyList)
             {
-                Items.Add(new MyReplyView(myreply, islandCode) { Tag = myreply });
+                Items.Add(new MyReplyView(myreply, IslandCode) { Tag = myreply });
             }
             myReplyCount = myReplyList.Count.ToString();
             IsLoading = false;
@@ -92,9 +95,9 @@ namespace Islands.UWP
             await Task.Run(() => {
                 count = Data.Database.DeleteByIDs(nameof(Model.SendModel), idList);
             });
-            Data.Message.ShowMessage($"成功删除{count}项");
-            if (count > 0) InitMyReplyList(IslandCode);
+            if (count > 0) InitMyReplyList();
             SelectionMode = ListViewSelectionMode.None;
+            Data.Message.ShowMessage($"成功删除{count}项");
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -105,7 +108,7 @@ namespace Islands.UWP
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            InitMyReplyList(IslandCode);
+            InitMyReplyList();
         }
     }
 }

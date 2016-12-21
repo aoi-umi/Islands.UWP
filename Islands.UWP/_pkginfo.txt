@@ -1,1 +1,1 @@
-D:\Project\VS2015\Islands.UWP\Islands.UWP\AppPackages\Islands.UWP_0.0.8.0\Islands.UWP_0.0.8.0_x86_arm.appxbundle
+D:\Project\VS2015\Islands.UWP\Islands.UWP\AppPackages\Islands.UWP_0.0.10.0\Islands.UWP_0.0.10.0_x86_arm.appxbundle

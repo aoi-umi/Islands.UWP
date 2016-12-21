@@ -12,18 +12,23 @@ namespace Islands.UWP
 {
     public sealed partial class MarksView : BaseListView
     {
-        public MarksView(IslandsCode islandCode)
+        public MarksView()
         {
             this.InitializeComponent();
-            this.IslandCode = islandCode;
             this.DataContext = MainPage.Global;
-            InitMarkList(islandCode);
+        }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            InitMarkList();
         }
 
         public List<Model.ThreadModel> markList { get; set; }        
 
         public void AddMark(Model.ThreadModel tm)
-        {            
+        {
+            if (markList == null) return;
             markList.Insert(0, tm);
             Items.Insert(0, new ThreadView(tm, IslandCode) { Tag = tm, NoImage = true });
             markCount = markList.Count.ToString();
@@ -50,17 +55,17 @@ namespace Islands.UWP
             }
         }
 
-        private async void InitMarkList(IslandsCode islandCode)
+        private async void InitMarkList()
         {
             IsLoading = true;
             Items.Clear();
             await Task.Run(() =>
             {
-                markList = Data.Database.GetMarkList(islandCode);
+                markList = Data.Database.GetMarkList(IslandCode);
             });
             foreach (var mark in markList)
             {
-                ThreadView t = new ThreadView(mark, islandCode);
+                ThreadView t = new ThreadView(mark, IslandCode);
                 t.NoImage = true;
                 Items.Add(t);
             }
@@ -97,9 +102,9 @@ namespace Islands.UWP
             await Task.Run(()=> {
                 count = Data.Database.DeleteByIDs(nameof(Model.ThreadModel), idList);
             });
-            Data.Message.ShowMessage($"成功删除{count}项");
-            if (count > 0) InitMarkList(IslandCode);
+            if (count > 0) InitMarkList();
             SelectionMode = ListViewSelectionMode.None;
+            Data.Message.ShowMessage($"成功删除{count}项");
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -110,7 +115,7 @@ namespace Islands.UWP
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            InitMarkList(IslandCode);
+            InitMarkList();
         }
     }
 }

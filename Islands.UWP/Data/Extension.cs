@@ -45,12 +45,18 @@ namespace Islands.UWP
         //引用处理
         public static string FixRef(this string str)
         {
-            return Regex.Replace(str, "(<Run Foreground=\"#789922\">)?(&gt;&gt;.*?(\\d+))(.*?</Run>)?", "<Hyperlink UnderlineStyle =\"None\" Foreground=\"#789922\">$2</Hyperlink>");
+            return Regex.Replace(str, "(<Run Foreground=\"#789922\">)?(&gt;&gt;(no\\.)?(\\d+))(.*?</Run>)?", "<Hyperlink UnderlineStyle =\"None\" Foreground=\"#789922\">$2</Hyperlink>", RegexOptions.IgnoreCase);
         }
 
         public static string FixEntity(this string str)
         {
             return Regex.Replace(str, "xff.{2};", "&#$0");
+        }
+
+        public static string GetExt(this string str)
+        {
+            int index = str.LastIndexOf(".");
+            return index >= 0 ? str.Substring(index) : string.Empty;
         }
     }
 }

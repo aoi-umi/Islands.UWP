@@ -57,7 +57,7 @@
         <TextBox Name="SendTitle" PlaceholderText="标题"/>
         <TextBox Name="SendEmail" PlaceholderText="Email"/>
         <TextBox Name="SendName" PlaceholderText="名字"/>
-        <ComboBox Name="EmojiBox" HorizontalAlignment="Stretch" SelectionChanged="EmojiBox_SelectionChanged"/>
+        <ComboBox Name="KaomojiBox" HorizontalAlignment="Stretch" SelectionChanged="KaomojiBox_SelectionChanged"/>
         <RichEditBox Name="SendContent" PlaceholderText="内容" AcceptsReturn="True" MinHeight="200"/>
         <StackPanel>
             <Button Name="TextToImage" Content="文字转图片" Click="TextToImage_Click"/>
