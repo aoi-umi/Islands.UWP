@@ -78,7 +78,7 @@ namespace Islands.UWP.Data
 
         public static async Task<int> ShowRef(string title, object content)
         {
-            ScrollViewer sv = new ScrollViewer() {MaxHeight = 500, VerticalScrollBarVisibility = ScrollBarVisibility.Auto};
+            ScrollViewer sv = new ScrollViewer() { MaxHeight = 500, VerticalScrollBarVisibility = ScrollBarVisibility.Auto};
             sv.Content = content;
             var dialog = new ContentDialog()
             {

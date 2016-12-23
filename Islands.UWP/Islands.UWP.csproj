@@ -118,6 +118,7 @@
     <Compile Include="HTMLConverter\htmlschema.cs" />
     <Compile Include="HTMLConverter\htmltokentype.cs" />
     <Compile Include="HTMLConverter\htmltoxamlconverter.cs" />
+    <Compile Include="Model\BaseItemModel.cs" />
     <Compile Include="Model\ReplyQueryResponse.cs" />
     <Compile Include="Model\ThreadResponseModel.cs" />
     <Compile Include="Model\ThreadQueryResponse.cs" />

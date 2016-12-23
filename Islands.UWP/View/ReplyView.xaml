@@ -34,7 +34,7 @@
                 <TextBlock Name="txtUserid" Text="{x:Bind ItemUid}"
                            RelativePanel.Below="txtCreateDate" FontSize="{Binding TitleFontSize}"/>
             </RelativePanel>
-            <ContentControl Name="txtContent" Content="{x:Bind replyContent}"/>
+            <ContentControl Name="txtContent" Content="{x:Bind ItemContentView}"/>
         </StackPanel>
     </Grid>
 </local:BaseItemView>

@@ -45,7 +45,7 @@
                            RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="id"
                            FontSize="{Binding TitleFontSize}"/>
             </RelativePanel>
-            <ContentControl Name="txtContent" Content="{x:Bind threadContent}"/>
+            <ContentControl Name="txtContent" Content="{x:Bind ItemContentView}"/>
         </StackPanel>
     </RelativePanel>
 </local:BaseItemView>
