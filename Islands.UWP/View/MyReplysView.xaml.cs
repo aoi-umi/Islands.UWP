@@ -24,18 +24,23 @@ namespace Islands.UWP
         }
 
         public List<Model.SendModel> myReplyList { get; set; }
-        
+
         public void AddMyReply(Model.SendModel sm)
         {
             if (myReplyList == null) return;
             myReplyList.Insert(0, sm);
-            Items.Insert(0, new MyReplyView(sm, IslandCode) { Tag = sm });
+            sm.islandCode = IslandCode;
+            Items.Insert(0, new MyReplyView() { MyReply = sm });
             myReplyCount = myReplyList.Count.ToString();
         }
 
-        private string myReplyCount { set {
+        private string myReplyCount
+        {
+            set
+            {
                 Title.Text = "我的回复(" + value + ")";
-            } }
+            }
+        }
 
         private bool IsCancelButtonVisible
         {
@@ -56,11 +61,12 @@ namespace Islands.UWP
             Items.Clear();
             await Task.Run(() =>
             {
-                myReplyList = Data.Database.GetMyReplyList(IslandCode);                
+                myReplyList = Data.Database.GetMyReplyList(IslandCode);
             });
             foreach (var myreply in myReplyList)
             {
-                Items.Add(new MyReplyView(myreply, IslandCode) { Tag = myreply });
+                myreply.islandCode = IslandCode;
+                Items.Add(new MyReplyView() { MyReply = myreply });
             }
             myReplyCount = myReplyList.Count.ToString();
             IsLoading = false;
@@ -87,12 +93,13 @@ namespace Islands.UWP
             }
             IsCancelButtonVisible = !IsCancelButtonVisible;
         }
-        
+
         private async void DeleteAsync()
         {
             int count = 0;
-            var idList = SelectedItems.Where(x => (x as MyReplyView) != null).Select(x => (x as MyReplyView).myReply._id).ToList();
-            await Task.Run(() => {
+            var idList = SelectedItems.Where(x => (x as MyReplyView) != null).Select(x => (x as MyReplyView).MyReply._id).ToList();
+            await Task.Run(() =>
+            {
                 count = Data.Database.DeleteByIDs(nameof(Model.SendModel), idList);
             });
             if (count > 0) InitMyReplyList();

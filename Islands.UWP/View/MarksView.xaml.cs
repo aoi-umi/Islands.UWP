@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -30,7 +28,8 @@ namespace Islands.UWP
         {
             if (markList == null) return;
             markList.Insert(0, tm);
-            Items.Insert(0, new ThreadView(tm, IslandCode) { Tag = tm, NoImage = true });
+            tm.islandCode = IslandCode;
+            Items.Insert(0, new ThreadView() {Thread = tm, NoImage = true });
             markCount = markList.Count.ToString();
         }
 
@@ -65,7 +64,8 @@ namespace Islands.UWP
             });
             foreach (var mark in markList)
             {
-                ThreadView t = new ThreadView(mark, IslandCode);
+                mark.islandCode = IslandCode;
+                ThreadView t = new ThreadView() { Thread = mark };
                 t.NoImage = true;
                 Items.Add(t);
             }
@@ -98,7 +98,7 @@ namespace Islands.UWP
         private async void DeleteAsync()
         {
             int count = 0;
-            var idList = SelectedItems.Where(x => (x as ThreadView) != null).Select(x => (x as ThreadView).thread._id).ToList();
+            var idList = SelectedItems.Where(x => (x as ThreadView) != null).Select(x => (x as ThreadView).Thread._id).ToList();
             await Task.Run(()=> {
                 count = Data.Database.DeleteByIDs(nameof(Model.ThreadModel), idList);
             });

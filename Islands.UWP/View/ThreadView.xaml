@@ -19,33 +19,33 @@
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.AlignTopWithPanel="True"
                       RelativePanel.AlignBottomWithPanel="True"/>
-                <TextBlock Name="title" Text="{x:Bind ItemTitle}" Visibility="{x:Bind IsHadTitle}"
-                           IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled}"
-                           FontSize="{Binding TitleFontSize}"/>
-                <TextBlock Name="email" Text="{x:Bind ItemEmail}"
-                           Visibility="{x:Bind IsHadEmail}"
-                           IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled}"
-                           RelativePanel.Below="title" FontSize="{Binding TitleFontSize}"/>
-                <TextBlock Name="name" Text="{x:Bind ItemName}" Visibility="{x:Bind IsHadName}"
-                           IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled}"
-                           RelativePanel.Below="email" FontSize="{Binding TitleFontSize}"/>
-                <TextBlock Name="txtCreateDate" Text="{x:Bind ItemCreateDate}"
-                           IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled}"
-                           RelativePanel.Below="name" Margin="0,0,5,0" FontSize="{Binding TitleFontSize}"/>
-                <TextBlock Name="id" Text="No." RelativePanel.LeftOf="txtId" FontSize="{Binding TitleFontSize}"/>
-                <TextBlock Name="txtId" Text="{x:Bind ItemNo}" IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled}"
-                           RelativePanel.AlignRightWithPanel="True" FontSize="{Binding TitleFontSize}"/>
-                <TextBlock Name="txtUserid" Text="{x:Bind ItemUid}"
-                           IsTextSelectionEnabled="{x:Bind IsTextSelectionEnabled}"
-                           RelativePanel.Below="txtCreateDate" FontSize="{Binding TitleFontSize}"/>
+                <TextBlock Name="title" Text="{Binding ItemTitle}" Visibility="{Binding IsHadTitle}"
+                           IsTextSelectionEnabled="{Binding IsTextSelectionEnabled}"
+                           FontSize="{Binding GlobalConfig.TitleFontSize}"/>
+                <TextBlock Name="email" Text="{Binding ItemEmail}"
+                           Visibility="{Binding IsHadEmail}"
+                           IsTextSelectionEnabled="{Binding IsTextSelectionEnabled}"
+                           RelativePanel.Below="title" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
+                <TextBlock Name="name" Text="{Binding ItemName}" Visibility="{Binding  IsHadName}"
+                           IsTextSelectionEnabled="{Binding IsTextSelectionEnabled}"
+                           RelativePanel.Below="email" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
+                <TextBlock Name="txtCreateDate" Text="{Binding ItemCreateDate}"
+                           IsTextSelectionEnabled="{Binding IsTextSelectionEnabled}"
+                           RelativePanel.Below="name" Margin="0,0,5,0" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
+                <TextBlock Name="id" Text="No." RelativePanel.LeftOf="txtId" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
+                <TextBlock Name="txtId" Text="{Binding ItemNo}" IsTextSelectionEnabled="{Binding IsTextSelectionEnabled}"
+                           RelativePanel.AlignRightWithPanel="True" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
+                <TextBlock Name="txtUserid" Text="{Binding ItemUid}"
+                           IsTextSelectionEnabled="{Binding IsTextSelectionEnabled}"
+                           RelativePanel.Below="txtCreateDate" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
                 <TextBlock Name="replyCount" Text="回复:"
                            RelativePanel.LeftOf="txtReplyCount" RelativePanel.Below="id"
-                           FontSize="{Binding TitleFontSize}"/>
-                <TextBlock Name="txtReplyCount" Text="{x:Bind ItemReplyCount}"
+                           FontSize="{Binding GlobalConfig.TitleFontSize}"/>
+                <TextBlock Name="txtReplyCount" Text="{Binding ItemReplyCount}"
                            RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="id"
-                           FontSize="{Binding TitleFontSize}"/>
+                           FontSize="{Binding GlobalConfig.TitleFontSize}"/>
             </RelativePanel>
-            <ContentControl Name="txtContent" Content="{x:Bind ItemContentView}"/>
+            <ContentControl Name="txtContent" Content="{Binding ItemContentView}"/>
         </StackPanel>
     </RelativePanel>
 </local:BaseItemView>

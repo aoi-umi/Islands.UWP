@@ -132,7 +132,8 @@ namespace Islands.UWP
                 Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
                 foreach (var thread in Threads)
                 {
-                    var tv = new ThreadView(thread, code);
+                    thread.islandCode = code;
+                    var tv = new ThreadView() { Thread = thread };
                     tv.ImageTapped += Image_ImageTapped;
                     Items.Add(tv);
                 }

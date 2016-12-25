@@ -12,23 +12,23 @@
     <Grid>
         <StackPanel Margin="2">
             <StackPanel>
-                <TextBlock Text="{x:Bind ItemTitle}" Visibility="{x:Bind IsHadTitle}"/>
-                <TextBlock Text="{x:Bind ItemEmail}" Visibility="{x:Bind IsHadEmail}"/>
-                <TextBlock Text="{x:Bind ItemName}" Visibility="{x:Bind IsHadName}"/>
-                <TextBlock Name="txtCreateDate" Text="{x:Bind ItemCreateDate}" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding ItemTitle}" Visibility="{Binding IsHadTitle}"/>
+                <TextBlock Text="{Binding ItemEmail}" Visibility="{Binding IsHadEmail}"/>
+                <TextBlock Text="{Binding ItemName}" Visibility="{Binding IsHadName}"/>
+                <TextBlock Name="txtCreateDate" Text="{Binding ItemCreateDate}" Margin="0,0,5,0"/>
             </StackPanel>
             <RelativePanel>
                 <TextBlock Name="id" Text="No."/>
-                <TextBlock Name="txtId" Text="{x:Bind ItemNo}" 
+                <TextBlock Name="txtId" Text="{Binding ItemNo}" 
                            Margin="0,0,5,0" RelativePanel.RightOf="id"/>
                 <TextBlock Name="userid" Text="ID:"
                            RelativePanel.RightOf="txtId" Visibility="Collapsed" />
                 <TextBlock Name="txtUserid" Text=""
                            RelativePanel.RightOf="userid" Visibility="Collapsed" />
-                <TextBlock Name="txtMsg" Text="{x:Bind ItemMsg}"
+                <TextBlock Name="txtMsg" Text="{Binding ItemMsg}"
                            RelativePanel.AlignRightWithPanel="True" />
             </RelativePanel>
-            <TextBlock Name="txtContent" Text="{x:Bind ItemContent}" TextWrapping="Wrap"/>
+            <TextBlock Name="txtContent" Text="{Binding ItemContent}" TextWrapping="Wrap"/>
         </StackPanel>
     </Grid>
 </local:BaseItemView>

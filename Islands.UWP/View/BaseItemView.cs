@@ -22,11 +22,14 @@ namespace Islands.UWP
         private static string ShowImageButtonName = "ShowImageButton";
         private static string ProgressRingName = "ProgressRing";
         private static string ImageName = "Image";
+        private static string ImageViewName = "ImageView";
+        private static string GifTextViewName = "GifTextView";
         public BaseItemView()
         {
             this.DefaultStyleKey = typeof(BaseItemView);
         }
 
+        #region DependencyProperty
         public FrameworkElement TopContent
         {
             get { return (FrameworkElement)GetValue(TopContentProperty); }
@@ -44,58 +47,11 @@ namespace Islands.UWP
         
         public static readonly DependencyProperty BottomContentProperty =
             DependencyProperty.Register(nameof(BottomContent), typeof(FrameworkElement), typeof(BaseItemView), new PropertyMetadata(null));
-
-        public Visibility IsHadTitle
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(ItemTitle) && ItemTitle != "标题:" && ItemTitle != "无标题")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-        public Visibility IsHadEmail
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(ItemEmail) && ItemEmail != "email:")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-        public Visibility IsHadName
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(ItemName) && ItemName != "名字:" && ItemName != "无名氏")
-                    return Visibility.Visible;
-                return Visibility.Collapsed;
-            }
-        }
-
-        public string ItemTitle { get; set; }
-        public string ItemEmail { get; set; }
-        public string ItemName { get; set; }
+        #endregion       
+       
         public string ItemNo { get; set; }
-        public string ItemCreateDate { get; set; }
-        public string ItemMsg { get; set; }
-        public string ItemUid { get; set; }
-        public string ItemReplyCount { get; set; }
         public string ItemThumb { get; set; }
-        public string ItemImage { get; set; }
-        public string ItemContent { get; set; }
-        public RichTextBlock ItemContentView
-        {
-            get
-            {
-                if (rtb == null)
-                {
-                    rtb = ContentConvert(ItemContent);
-                }
-                return rtb;
-            }
-        }
-
+        public string ItemImage { get; set; }    
         public string Host { get; set; }
         public string GetRefAPI { get; set; }
         public bool IsAdmin { get; set; }
@@ -106,56 +62,22 @@ namespace Islands.UWP
 
         public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
         public event ImageTappedEventHandler ImageTapped;
-
+        
         private Button showImageButton { get; set; }
         private ProgressRing progressRing { get; set; }
+        private Grid imageView { get; set; }
         private Image image { get; set; }
-        protected RichTextBlock rtb { get; set; }
+        private Grid gifTextView { get; set; }
         protected IslandsCode IslandCode { get; set; }
 
-        protected void BaseInit(BaseItemModel baseItemModel)
+        protected void BaseInit(ViewModel.ItemViewModel itemViewModel)
         {
-            #region Init
-            ItemTitle = baseItemModel.title;
-            ItemEmail = baseItemModel.email;
-            ItemName = baseItemModel.name;
-            ItemNo = baseItemModel.id;
-            ItemContent = baseItemModel.content;
-            switch (IslandCode)
-            {
-                case IslandsCode.A:
-                    if (baseItemModel.admin == "1") IsAdmin = true;
-                    if (!string.IsNullOrEmpty(baseItemModel.img))
-                    {
-                        ItemThumb = (Config.A.PictureHost + "thumb/" + baseItemModel.img + baseItemModel.ext);
-                        ItemImage = (Config.A.PictureHost + "image/" + baseItemModel.img + baseItemModel.ext);
-                    }
-                    ItemCreateDate = baseItemModel.now;
-                    ItemUid = baseItemModel.userid;
-                    break;
-                case IslandsCode.Beitai:
-                    if (baseItemModel.admin == "1") IsAdmin = true;
-                    if (!string.IsNullOrEmpty(baseItemModel.img))
-                    {
-                        ItemThumb = (Config.B.PictureHost + "thumb/" + baseItemModel.img + baseItemModel.ext);
-                        ItemImage = (Config.B.PictureHost + "image/" + baseItemModel.img + baseItemModel.ext);
-                    }
-                    ItemCreateDate = baseItemModel.now;
-                    ItemUid = baseItemModel.userid;
-                    break;
-                case IslandsCode.Koukuko:
-                    if (baseItemModel.uid.IndexOf("<font color=\"red\">") >= 0)
-                    {
-                        IsAdmin = true;
-                        baseItemModel.uid = Regex.Replace(baseItemModel.uid, "</?[^>]*/?>", "");
-                    }
-                    if (!string.IsNullOrEmpty(baseItemModel.thumb)) ItemThumb = (Config.K.PictureHost + baseItemModel.thumb);
-                    if (!string.IsNullOrEmpty(baseItemModel.image)) ItemImage = (Config.K.PictureHost + baseItemModel.image);
-                    ItemCreateDate = new DateTime(1970, 1, 1).ToLocalTime().AddMilliseconds(Convert.ToDouble(baseItemModel.createdAt)).ToString("yyyy-MM-dd HH:mm:ss");
-                    ItemUid = baseItemModel.uid;
-                    break;
-            }
-            #endregion
+            Host = itemViewModel.Host;
+            GetRefAPI = itemViewModel.GetRefAPI;
+            ItemNo = itemViewModel.ItemNo;
+            ItemThumb = itemViewModel.ItemThumb;
+            ItemImage = itemViewModel.ItemImage;
+            IsAdmin = itemViewModel.IsAdmin;
         }
 
         protected override void OnApplyTemplate()
@@ -164,6 +86,8 @@ namespace Islands.UWP
             showImageButton = GetTemplateChild(ShowImageButtonName) as Button;
             progressRing = GetTemplateChild(ProgressRingName) as ProgressRing;
             image = GetTemplateChild(ImageName) as Image;
+            imageView = GetTemplateChild(ImageViewName) as Grid;
+            gifTextView = GetTemplateChild(GifTextViewName) as Grid;
             image.Tag = ItemImage;
             if (!string.IsNullOrEmpty(ItemThumb))
             {
@@ -175,69 +99,26 @@ namespace Islands.UWP
                 image.ImageOpened += Image_ImageOpened;
                 image.ImageFailed += Image_ImageFailed;
             }
-            switch (IslandCode)
-            {
-                case IslandsCode.A: GetRefAPI = Config.A.GetRefAPI; Host = Config.A.Host; break;
-                case IslandsCode.Koukuko: GetRefAPI = Config.K.GetRefAPI; Host = Config.K.Host; break;
-                case IslandsCode.Beitai: GetRefAPI = Config.B.GetRefAPI; Host = Config.B.Host; break;
-            }
-        }
+        }        
 
-        protected RichTextBlock ContentConvert(string content)
+        public void SetRefClick(RichTextBlock rtb)
         {
-            try
+            if (rtb == null) return;
+            foreach (var block in rtb.Blocks)
             {
-                string Host = string.Empty;
-                switch (IslandCode)
+                Paragraph p = block as Paragraph;
+                if (p != null)
                 {
-                    case IslandsCode.A: Host = Config.A.Host; break;
-                    case IslandsCode.Beitai: Host = Config.B.Host; break;
-                    case IslandsCode.Koukuko: Host = Config.K.Host; break;
-                    default: rtb = new RichTextBlock(); break;
-                }
-                //补全host
-                string s = content.FixHost(Host);
-                //链接处理
-                s = s.FixLinkTag();
-                //if (islandCode == IslandsCode.Koukuko) s = Regex.Replace(s, "\\[ref tid=\"(\\d+)\"/\\]", "&gt;&gt;No.$1");
-                s = HTMLConverter.HtmlToXamlConverter.ConvertHtmlToXaml(s, true);
-                //引用处理
-                s = s.FixRef();
-                s = s.Replace("&#xFFFF;", "");
-                if (IslandCode == IslandsCode.Koukuko) s = s.FixEntity();
-                rtb = (RichTextBlock)XamlReader.Load(s);
-            }
-            catch (Exception ex)
-            {
-                rtb = new RichTextBlock();
-                Paragraph p = new Paragraph();
-                p.Inlines.Add(new Run() { Text = content });
-                p.Inlines.Add(new Run() { Text = "\r\n*转换失败:" + ex.Message, Foreground = Config.ErrorColor });
-                rtb.Blocks.Add(p);
-            }
-            Binding b = new Binding() { Source = this.DataContext, Path = new PropertyPath("ContentFontSize") };
-            BindingOperations.SetBinding(rtb, RichTextBlock.FontSizeProperty, b);
-            rtb.TextWrapping = TextWrapping.Wrap;
-            rtb.IsTextSelectionEnabled = IsTextSelectionEnabled;
-            if (IsTextSelectionEnabled)
-            {
-                foreach (var block in rtb.Blocks)
-                {
-                    Paragraph p = block as Paragraph;
-                    if (p != null)
+                    foreach (var inline in p.Inlines)
                     {
-                        foreach (var inline in p.Inlines)
+                        Hyperlink h = inline as Hyperlink;
+                        if (h != null && h.UnderlineStyle == UnderlineStyle.None)
                         {
-                            Hyperlink h = inline as Hyperlink;
-                            if (h != null && h.UnderlineStyle == UnderlineStyle.None)
-                            {
-                                h.Click += Ref_Click;
-                            }
+                            h.Click += Ref_Click;
                         }
                     }
                 }
             }
-            return rtb;
         }
 
         virtual protected void OnRefClick(string RefText)
@@ -280,7 +161,7 @@ namespace Islands.UWP
             {
                 NoImage = false;
                 progressRing.IsActive = true;
-                progressRing.Visibility = image.Visibility = Visibility.Visible;
+                progressRing.Visibility = imageView.Visibility = Visibility.Visible;
                 showImageButton.Visibility = Visibility.Collapsed;
                 //if(IsLocalImage) Data.File.SetLocalImage(image, ItemImage);
                 //else
@@ -294,6 +175,7 @@ namespace Islands.UWP
             if (bitmap != null && (bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight)) image.Stretch = Stretch.None;
             progressRing.IsActive = false;
             progressRing.Visibility = Visibility.Collapsed;
+            if (ItemImage.ToLower().EndsWith(".gif")) gifTextView.Visibility = Visibility.Visible;
         }
 
         private void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)

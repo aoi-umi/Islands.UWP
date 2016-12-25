@@ -122,6 +122,7 @@
     <Compile Include="Model\ReplyQueryResponse.cs" />
     <Compile Include="Model\ThreadResponseModel.cs" />
     <Compile Include="Model\ThreadQueryResponse.cs" />
+    <Compile Include="ViewModel\ItemViewModel.cs" />
     <Compile Include="View\BaseContentView.cs" />
     <Compile Include="View\BaseItemView.cs" />
     <Compile Include="View\BaseListView.cs" />

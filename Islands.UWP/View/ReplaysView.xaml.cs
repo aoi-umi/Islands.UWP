@@ -155,7 +155,8 @@ namespace Islands.UWP
                 int.TryParse(top.replyCount, out _replyCount);
                 if (Items.Count == 0 && top != null)
                 {
-                    var tv = new ThreadView(top, code) { Tag = top, IsTextSelectionEnabled = true, Background = null };
+                    top.islandCode = code;
+                    var tv = new ThreadView() {Thread = top, IsTextSelectionEnabled = true, Background = null };
                     tv.ImageTapped += Image_ImageTapped;
                     tv.IsPo = true;
                     Items.Add(tv);
@@ -184,7 +185,8 @@ namespace Islands.UWP
                         if (currId <= lastId) continue;
                         lastReply = reply;
                     }
-                    var rv = new ReplyView(reply, code);
+                    reply.islandCode = code;
+                    var rv = new ReplyView() { Reply = reply };
                     if ((code == IslandsCode.Koukuko && reply.uid == top.uid) || (code != IslandsCode.Koukuko && reply.userid == top.userid))
                         rv.IsPo = true;
                     rv.ImageTapped += Image_ImageTapped;
