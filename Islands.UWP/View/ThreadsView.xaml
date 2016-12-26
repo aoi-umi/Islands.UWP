@@ -15,6 +15,11 @@
         </Style>
         <local:IsShowMenuButtonConverter x:Key="IsShowMenuButtonConverter"/>
     </local:BaseListView.Resources>
+    <!--<local:BaseListView.ItemTemplate>
+        <DataTemplate>
+            <local:ThreadView Thread="{Binding}"/>
+        </DataTemplate>
+    </local:BaseListView.ItemTemplate>-->
     <local:BaseListView.TopContent>
         <RelativePanel 
             Grid.Row="0"

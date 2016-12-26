@@ -35,8 +35,6 @@ namespace Islands.UWP
         public int pageSize { get; set; }
         public string currThread { get; set; }      
 
-        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
-        public event ImageTappedEventHandler ImageTapped;
         public delegate void MarkSuccessEventHandler(Object sender, Model.ThreadModel t);
         public event MarkSuccessEventHandler MarkSuccess;
         public delegate void MenuClickEventHandler(Object sender, RoutedEventArgs e);
@@ -157,7 +155,6 @@ namespace Islands.UWP
                 {
                     top.islandCode = code;
                     var tv = new ThreadView() {Thread = top, IsTextSelectionEnabled = true, Background = null };
-                    tv.ImageTapped += Image_ImageTapped;
                     tv.IsPo = true;
                     Items.Add(tv);
                 }
@@ -189,7 +186,6 @@ namespace Islands.UWP
                     var rv = new ReplyView() { Reply = reply };
                     if ((code == IslandsCode.Koukuko && reply.uid == top.uid) || (code != IslandsCode.Koukuko && reply.userid == top.userid))
                         rv.IsPo = true;
-                    rv.ImageTapped += Image_ImageTapped;
                     Items.Add(rv);
                 }
                 if (Replys.Count < pageSize || (currPage - 1) * pageSize + Replys.Count == replyCount)
@@ -235,12 +231,6 @@ namespace Islands.UWP
             var page = await Data.Message.GotoPageYesOrNo();
             if (page > 0)
                 _Refresh(page);
-        }
-
-        //点击图片
-        private void Image_ImageTapped(object sender, TappedRoutedEventArgs e)
-        {
-            ImageTapped?.Invoke(sender, e);
         }
 
         //点击收藏

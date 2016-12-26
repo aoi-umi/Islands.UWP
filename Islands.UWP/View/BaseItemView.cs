@@ -59,9 +59,6 @@ namespace Islands.UWP
         public bool NoImage { get; set; }     
         public bool IsLocalImage { get; set; }
         public bool IsTextSelectionEnabled { get; set; }
-
-        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
-        public event ImageTappedEventHandler ImageTapped;
         
         private Button showImageButton { get; set; }
         private ProgressRing progressRing { get; set; }
@@ -94,7 +91,6 @@ namespace Islands.UWP
                 if (!NoImage) ShowImage();
                 else showImageButton.Visibility = Visibility.Visible;
                 showImageButton.Click += ShowImageButton_Click;
-                image.Tapped += Image_Tapped;
                 image.PointerPressed += Image_PointerPressed;
                 image.ImageOpened += Image_ImageOpened;
                 image.ImageFailed += Image_ImageFailed;
@@ -138,11 +134,6 @@ namespace Islands.UWP
                 }
             }
             OnRefClick(refText);
-        }
-
-        private void Image_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            ImageTapped?.Invoke(sender, e);
         }
 
         private void Image_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -198,7 +189,6 @@ namespace Islands.UWP
         {
             showImageButton.Click -= ShowImageButton_Click;
             image.Source = null;
-            image.Tapped -= Image_Tapped;
             image.PointerPressed -= Image_PointerPressed;
             image.ImageOpened -= Image_ImageOpened;
             image.ImageFailed -= Image_ImageFailed;

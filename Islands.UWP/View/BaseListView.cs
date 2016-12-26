@@ -88,7 +88,8 @@ namespace Islands.UWP
             listView = GetTemplateChild(ListViewName) as ListView;
 
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
-            listView.ItemsSource = Items;
+            listView.ItemsSource = Items;// ItemsSource;              
+            listView.ItemTemplate = ItemTemplate;
             listView.ItemClick += ListView_ItemClick;
         }
 

@@ -94,13 +94,11 @@ namespace Islands.UWP
 
             ThreadControl.ItemClick += ThreadControl_ThreadClick;
             ThreadControl.SwitchButton.Click += SwitchButton_Click;
-            ThreadControl.ImageTapped += Control_ImageTapped;
             ThreadControl.SendButton.Click += SendButton_Click;
             ThreadControl.MenuClick += Control_MenuClick;
 
             ReplyControl.SwitchButton.Click += SwitchButton_Click;
             ReplyControl.MarkSuccess += ReplyControl_MarkSuccess;
-            ReplyControl.ImageTapped += Control_ImageTapped;
             ReplyControl.SendButton.Click += SendButton_Click;
             ReplyControl.MenuClick += Control_MenuClick;
 
@@ -205,6 +203,13 @@ namespace Islands.UWP
                 mainNavigationList.SelectedIndex = 5;
                 mainSplitView.Content = ImageControl;
             }
+        }
+
+        public void ShowImage(string imgPath)
+        {
+            ImageControl.imageUrl = imgPath;
+            mainNavigationList.SelectedIndex = 5;
+            mainSplitView.Content = ImageControl;
         }
 
         private void SwitchButton_Click(object sender, RoutedEventArgs e)

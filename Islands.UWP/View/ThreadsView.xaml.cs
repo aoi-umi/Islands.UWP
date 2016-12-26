@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Islands.UWP.Model;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using UmiAoi.UWP;
 using Windows.UI.Xaml;
@@ -30,18 +32,19 @@ namespace Islands.UWP
                 Source = MainPage.Global
             };
             Helper.BindingHelper(bindingModel);
+            list = new ObservableCollection<ThreadModel>();
+            //ItemsSource = list;
         }        
-        public Model.PostRequest postReq;
+        private ObservableCollection<ThreadModel> list { get; set; }
+        public PostRequest postReq;
         
         public string initTitle { set { Title.Text = value; } }
-        public Model.ForumModel currForum { get; set; }
+        public ForumModel currForum { get; set; }
         
-        public delegate void ImageTappedEventHandler(Object sender, TappedRoutedEventArgs e);
-        public event ImageTappedEventHandler ImageTapped;
         public delegate void MenuClickEventHandler(Object sender, RoutedEventArgs e);
         public event MenuClickEventHandler MenuClick;
 
-        public void RefreshById(Model.ForumModel forum)
+        public void RefreshById(ForumModel forum)
         {
             currForum = forum;
             postReq.ID = forum.forumValue;
@@ -88,11 +91,12 @@ namespace Islands.UWP
         {
             currPage = page;     
             try
-            {                
+            {
                 for (var i = Items.Count - 1; i >= 0; i--)
                 {
                     Items.RemoveAt(i);
                 }
+                list.Clear();
                 postReq.Page = page;
                 GetThreadList(postReq, IslandCode);
             }
@@ -134,8 +138,9 @@ namespace Islands.UWP
                 {
                     thread.islandCode = code;
                     var tv = new ThreadView() { Thread = thread };
-                    tv.ImageTapped += Image_ImageTapped;
                     Items.Add(tv);
+                    var x = thread as ThreadModel;
+                    list.Add(thread);
                 }
                 ++currPage;
             }
@@ -165,12 +170,6 @@ namespace Islands.UWP
             {
                 base.OnItemClick(sender, e);
             }
-        }
-
-        //点击图片
-        private void Image_ImageTapped(object sender, TappedRoutedEventArgs e)
-        {
-            ImageTapped?.Invoke(sender, e);
         }
 
         private void Menu_Click(object sender, RoutedEventArgs e)

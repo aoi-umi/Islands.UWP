@@ -31,7 +31,16 @@ namespace Islands.UWP.ViewModel
         public string ItemImage { get; set; }
         public string ItemContent { get; set; }
         public bool IsAdmin { get; private set; }
-        public bool IsTextSelectionEnabled { get; set; }
+        public bool IsTextSelectionEnabled
+        {
+            get { return _IsTextSelectionEnabled; }
+            set {
+                _IsTextSelectionEnabled = value;
+                if (ItemContentView != null)
+                    ItemContentView.IsTextSelectionEnabled = value;
+            }
+        }
+        private bool _IsTextSelectionEnabled { get; set; }
         private IslandsCode IslandCode { get; set; }
         public ItemViewModel(MyGlobal global, BaseItemModel baseItem)
         {
@@ -116,7 +125,6 @@ namespace Islands.UWP.ViewModel
                 BindingMode = BindingMode.OneWay
             });
             rtb.TextWrapping = TextWrapping.Wrap;
-            rtb.IsTextSelectionEnabled = IsTextSelectionEnabled;
             return rtb;
         }
         private void Init(BaseItemModel baseItemModel)

@@ -1,4 +1,5 @@
-﻿using Islands.UWP.ViewModel;
+﻿using Islands.UWP.Model;
+using Islands.UWP.ViewModel;
 using System;
 using Windows.UI.Xaml;
 
@@ -14,13 +15,24 @@ namespace Islands.UWP
             NoImage = MainPage.Global.NoImage;
         }
 
-        public Model.ThreadModel Thread { get; set; }
+        public ThreadModel Thread
+        {
+            get { return (ThreadModel)GetValue(ThreadProperty); }
+            set { SetValue(ThreadProperty, value); }
+        }
+        
+        public static readonly DependencyProperty ThreadProperty =
+            DependencyProperty.Register(nameof(Thread), typeof(ThreadModel), typeof(ThreadView), new PropertyMetadata(null));
+
+
+        //public Model.ThreadModel Thread { get; set; }
 
         protected override void OnApplyTemplate()
         {
             var viewModel = new ItemViewModel(MainPage.Global, Thread);
             viewModel.IsTextSelectionEnabled = IsTextSelectionEnabled;
             viewModel.ItemReplyCount = Thread.replyCount;
+            if (IsTextSelectionEnabled) SetRefClick(viewModel.ItemContentView);
             BaseInit(viewModel);
             DataContext = viewModel;
 

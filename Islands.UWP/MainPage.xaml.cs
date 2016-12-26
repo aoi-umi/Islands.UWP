@@ -23,14 +23,12 @@ namespace Islands.UWP
                 statusBar.ForegroundColor = Colors.White;
                 statusBar.BackgroundColor = Colors.Black;
                 statusBar.BackgroundOpacity = 1;
-                // 在全屏状态下，是否显示系统 UI，比如标题栏和任务栏                
-                //view.ExitFullScreenMode();
-                //statusBar.BackgroundColor = Colors.Transparent;
             }
 
             this.InitializeComponent();
             Loaded += MainPage_Loaded;
             DataContext = Global;
+            #region init pivot content
             MainControl mainControlA = new MainControl()
             {
                 Host = Config.A.Host,
@@ -75,6 +73,7 @@ namespace Islands.UWP
             };
             mainControlB.Init();
             pivotItemB.Content = mainControlB;
+            #endregion
 
             mainControlA.SettingTapped += SettingTapped;
             mainControlK.SettingTapped += SettingTapped;
@@ -86,6 +85,16 @@ namespace Islands.UWP
 
             MovableMenu.ItemsTapped += MovableMenu_ItemsTapped;
             InitSetting();
+        }
+
+        public MainControl CurrentControl
+        {
+            get
+            {
+                var ele = mainPivot.SelectedItem as PivotItem;
+                return ele == null ? null : ele.Content as MainControl;
+                
+            }
         }
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
