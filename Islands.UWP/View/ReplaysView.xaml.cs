@@ -37,8 +37,6 @@ namespace Islands.UWP
 
         public delegate void MarkSuccessEventHandler(Object sender, Model.ThreadModel t);
         public event MarkSuccessEventHandler MarkSuccess;
-        public delegate void MenuClickEventHandler(Object sender, RoutedEventArgs e);
-        public event MenuClickEventHandler MenuClick;
 
         public void GetReplyListByID(string threadId, int markId)
         {
@@ -66,7 +64,8 @@ namespace Islands.UWP
         private TextBlock ReplyStatusBox = new TextBlock()
         {
             Text = "还未看过任何串(つд⊂)",
-            HorizontalAlignment = HorizontalAlignment.Center
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
         };
         private int markId { get; set; }
         private int currPage { get; set; }
@@ -167,7 +166,12 @@ namespace Islands.UWP
                 }
 
                 if ((Items.Count - 1) % (pageSize + 1) == 0)
-                    Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
+                    Items.Add(new TextBlock()
+                    {
+                        Text = "Page " + req.Page,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center
+                    });
 
                 Replys = Replys.OrderBy(x => int.Parse(x.id)).ToList();
                 foreach (var reply in Replys)
@@ -263,11 +267,6 @@ namespace Islands.UWP
         private void OnMarkSuccess()
         {
             MarkSuccess?.Invoke(this, top);
-        }
-
-        private void Menu_Click(object sender, RoutedEventArgs e)
-        {
-            MenuClick?.Invoke(sender, e);
         }
     }
 }

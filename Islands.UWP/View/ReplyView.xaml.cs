@@ -19,9 +19,8 @@ namespace Islands.UWP
 
         protected override void OnApplyTemplate()
         {
-            var viewModel = new ItemViewModel(MainPage.Global, Reply);
+            var viewModel = new ItemViewModel() { GlobalConfig = MainPage.Global, BaseItem = Reply };
             viewModel.IsTextSelectionEnabled = IsTextSelectionEnabled;
-            SetRefClick(viewModel.ItemContentView);
             BaseInit(viewModel);
             DataContext = viewModel;
 

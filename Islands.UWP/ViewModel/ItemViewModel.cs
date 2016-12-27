@@ -12,7 +12,20 @@ namespace Islands.UWP.ViewModel
     public class ItemViewModel
     {
         public MyGlobal GlobalConfig { get; set; }
-        public BaseItemModel BaseItem { get; set; }
+        public BaseItemModel BaseItem
+        {
+            get
+            { return _BaseItem; }
+            set
+            {
+                if (_BaseItem != value)
+                {
+                    _BaseItem = value;
+                    InitByBaseItem();
+                }
+            }
+        }
+        private BaseItemModel _BaseItem { get; set; }
         public Visibility IsHadTitle { get; private set; }
         public Visibility IsHadEmail { get; private set; }
         public Visibility IsHadName { get; private set; }
@@ -42,10 +55,20 @@ namespace Islands.UWP.ViewModel
         }
         private bool _IsTextSelectionEnabled { get; set; }
         private IslandsCode IslandCode { get; set; }
-        public ItemViewModel(MyGlobal global, BaseItemModel baseItem)
+        public ItemViewModel()
+        {      
+        }
+
+        public ItemViewModel(BaseItemModel baseItem)
         {
-            GlobalConfig = global;
-            Init(baseItem);
+            BaseItem = baseItem;
+            InitByBaseItem();
+        }
+
+        private void InitByBaseItem()
+        {
+            if (BaseItem == null) BaseItem = new BaseItemModel();
+            Init(BaseItem);
             InitVisibility();
             if (ItemContentView == null)
             {
@@ -55,6 +78,7 @@ namespace Islands.UWP.ViewModel
 
         public ItemViewModel(SendModel myReply)
         {
+            if (myReply == null) return;
             ItemTitle = string.IsNullOrEmpty(myReply.sendTitle) ? "" : "标题:" + myReply.sendTitle;
             ItemEmail = string.IsNullOrEmpty(myReply.sendEmail) ? "" : "email:" + myReply.sendEmail;
             ItemName = string.IsNullOrEmpty(myReply.sendName) ? "" : "名字:" + myReply.sendName;
@@ -85,7 +109,8 @@ namespace Islands.UWP.ViewModel
         }
         private RichTextBlock ContentConvert(string content)
         {
-            RichTextBlock rtb;
+            RichTextBlock rtb = null;
+            if (string.IsNullOrEmpty(content)) return rtb;
             try
             {
                 string Host = string.Empty;

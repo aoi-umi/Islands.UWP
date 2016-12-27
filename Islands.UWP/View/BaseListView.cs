@@ -8,12 +8,11 @@ using Windows.UI.Xaml.Controls;
 
 namespace Islands.UWP
 {
-    public class BaseListView : ItemsControl
+    public class BaseListView : ListView
     {
-        public BaseListView():base()
-
+        public BaseListView() : base()
         {
-            this.DefaultStyleKey = typeof(BaseListView);        
+            this.DefaultStyleKey = typeof(BaseListView);
         }
 
         #region DependencyProperty
@@ -22,8 +21,7 @@ namespace Islands.UWP
             get { return (FrameworkElement)GetValue(TopContentProperty); }
             set { SetValue(TopContentProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for TopContent.  This enables animation, styling, binding, etc...
+        
         public static readonly DependencyProperty TopContentProperty =
             DependencyProperty.Register(nameof(TopContent), typeof(FrameworkElement), typeof(BaseListView), new PropertyMetadata(null));
 
@@ -32,8 +30,7 @@ namespace Islands.UWP
             get { return (FrameworkElement)GetValue(BottomContentProperty); }
             set { SetValue(BottomContentProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for BottomContent.  This enables animation, styling, binding, etc...
+        
         public static readonly DependencyProperty BottomContentProperty =
             DependencyProperty.Register(nameof(BottomContent), typeof(FrameworkElement), typeof(BaseListView), new PropertyMetadata(null));
 
@@ -42,8 +39,7 @@ namespace Islands.UWP
             get { return (bool)GetValue(IsLoadingProperty); }
             set { SetValue(IsLoadingProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for IsLoading.  This enables animation, styling, binding, etc...
+        
         public static readonly DependencyProperty IsLoadingProperty =
             DependencyProperty.Register(nameof(IsLoading), typeof(bool), typeof(BaseListView), new PropertyMetadata(false));
 
@@ -52,45 +48,24 @@ namespace Islands.UWP
             get { return (double)GetValue(MaskOpacityProperty); }
             set { SetValue(MaskOpacityProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for MaskOpacity.  This enables animation, styling, binding, etc...
+        
         public static readonly DependencyProperty MaskOpacityProperty =
             DependencyProperty.Register(nameof(MaskOpacity), typeof(double), typeof(BaseListView), new PropertyMetadata(0.0));
-
-        public ListViewSelectionMode SelectionMode
-        {
-            get { return (ListViewSelectionMode)GetValue(SelectionModeProperty); }
-            set { SetValue(SelectionModeProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for SelectionMode.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty SelectionModeProperty =
-            DependencyProperty.Register(nameof(SelectionMode), typeof(ListViewSelectionMode), typeof(BaseListView), new PropertyMetadata(ListViewSelectionMode.None));
-
-        public IList<Object> SelectedItems => listView.SelectedItems;
         #endregion
-
-        public delegate void ItemsClickEventHandler(Object sender, ItemClickEventArgs e);
-        public event ItemsClickEventHandler ItemClick;
 
         public IslandsCode IslandCode { get; set; }
         protected DeviceFamily DeviceFamily { get { return Helper.CurrDeviceFamily; } }
         private static string ScrollViewerName = "ScrollViewer";
-        private static string ListViewName = "ListView";
         private ScrollViewer scrollViewer { get; set; }
-        private ListView listView { get; set; }
         private ProgressRing progressRing { get; set; }
         private FrameworkElement maskView { get; set; }
         protected override void OnApplyTemplate()
         {
+            var x = Items;
             base.OnApplyTemplate();
             scrollViewer = GetTemplateChild(ScrollViewerName) as ScrollViewer;
-            listView = GetTemplateChild(ListViewName) as ListView;
 
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
-            listView.ItemsSource = Items;// ItemsSource;              
-            listView.ItemTemplate = ItemTemplate;
-            listView.ItemClick += ListView_ItemClick;
         }
 
         protected virtual void OnScrollToEnd()
@@ -106,16 +81,6 @@ namespace Islands.UWP
             {
                 OnScrollToEnd();
             }
-        }
-
-        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            OnItemClick(sender, e);
-        }
-
-        protected virtual void OnItemClick(object sender, ItemClickEventArgs e)
-        {
-            ItemClick?.Invoke(this, e);
         }
     }
 }

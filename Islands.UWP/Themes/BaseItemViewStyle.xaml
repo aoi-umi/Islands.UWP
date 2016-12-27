@@ -20,7 +20,7 @@
                                     <Image x:Name="Image" Stretch="Uniform" MaxHeight="200" MaxWidth="200" CacheMode="BitmapCache" DataContext="{Binding}">
                                         <Interactivity:Interaction.Behaviors>
                                             <Core:EventTriggerBehavior EventName="Tapped">
-                                                <viewModel:ItemAction/>
+                                                <viewModel:Actions ActionType="ImageTapped"/>
                                             </Core:EventTriggerBehavior>
                                         </Interactivity:Interaction.Behaviors>
                                     </Image>

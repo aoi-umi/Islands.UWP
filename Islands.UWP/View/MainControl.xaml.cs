@@ -95,12 +95,10 @@ namespace Islands.UWP
             ThreadControl.ItemClick += ThreadControl_ThreadClick;
             ThreadControl.SwitchButton.Click += SwitchButton_Click;
             ThreadControl.SendButton.Click += SendButton_Click;
-            ThreadControl.MenuClick += Control_MenuClick;
 
             ReplyControl.SwitchButton.Click += SwitchButton_Click;
             ReplyControl.MarkSuccess += ReplyControl_MarkSuccess;
             ReplyControl.SendButton.Click += SendButton_Click;
-            ReplyControl.MenuClick += Control_MenuClick;
 
             MarkControl.ItemClick += MarkControl_MarkClick;
             MarkControl.BackButton.Click += BackButton_Click;
@@ -119,9 +117,9 @@ namespace Islands.UWP
             mainSplitView.Content = ThreadControl;
         }
 
-        private void Control_MenuClick(object sender, RoutedEventArgs e)
+        public void MenuToggle()
         {
-            mainSplitView.IsPaneOpen = true;
+            mainSplitView.IsPaneOpen = !mainSplitView.IsPaneOpen;
         }
 
         private void ListBoxItem_Tapped(object sender, TappedRoutedEventArgs e)
@@ -221,6 +219,7 @@ namespace Islands.UWP
 
         private void MarkControl_MarkClick(object sender, ItemClickEventArgs e)
         {
+            if (MarkControl.SelectionMode != ListViewSelectionMode.None) return;
             ThreadView tv = e.ClickedItem as ThreadView;
             if (tv != null)
             {
@@ -237,6 +236,7 @@ namespace Islands.UWP
 
         private void MyReplysControl_MyReplyClick(object sender, ItemClickEventArgs e)
         {
+            if(MyReplysControl.SelectionMode != ListViewSelectionMode.None) return;
             MyReplyView mpv = e.ClickedItem as MyReplyView;
             if (mpv != null)
             {

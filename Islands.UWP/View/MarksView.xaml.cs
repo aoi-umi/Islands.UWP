@@ -73,14 +73,14 @@ namespace Islands.UWP
             IsLoading = false;
         }
 
-        protected override void OnItemClick(object sender, ItemClickEventArgs e)
-        {
-            ThreadView tv = e.ClickedItem as ThreadView;
-            if (tv != null && SelectionMode != ListViewSelectionMode.Multiple)
-            {
-                base.OnItemClick(sender, e);
-            }
-        }
+        //protected override void OnItemClick(object sender, ItemClickEventArgs e)
+        //{
+        //    ThreadView tv = e.ClickedItem as ThreadView;
+        //    if (tv != null && SelectionMode != ListViewSelectionMode.Multiple)
+        //    {
+        //        base.OnItemClick(sender, e);
+        //    }
+        //}
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {

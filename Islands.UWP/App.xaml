@@ -3,6 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Islands.UWP"
+    
+    xmlns:viewModel="using:Islands.UWP.ViewModel"
     RequestedTheme="Light">
     <Application.Resources>
         <ResourceDictionary>
@@ -30,9 +32,23 @@
                     <Style TargetType="TextBlock" x:Key="TitleFontSize">
                         <Setter Property="FontSize" Value="12"/>
                     </Style>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Margin" Value="0,0,14,0"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="ThemeColor" Color="{ThemeResource SystemAccentColor}" Opacity="0.4"/>
+            <local:ItemToViewModelConverter x:Key="ItemToViewModelConverter"/>
+            <viewModel:ItemDataTemplateSelector x:Key="ItemDataTemplateSelector"/>
+            <DataTemplate x:Key="ThreadDataTemplate">
+                <local:ThreadView DataContext="{Binding Data, Converter={StaticResource ItemToViewModelConverter}}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="PageInfoDataTemplate">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Data}"/>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

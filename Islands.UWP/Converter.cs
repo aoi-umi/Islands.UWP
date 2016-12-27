@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Islands.UWP.Model;
+using Islands.UWP.ViewModel;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -32,6 +34,26 @@ namespace Islands.UWP
                 return (double)0;
             }
             return (double)35;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
+        }
+    }
+
+    public class ItemToViewModelConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {            
+            var viewModel = new ItemViewModel()
+            {
+                GlobalConfig = MainPage.Global,
+                BaseItem = value as BaseItemModel,                
+            };
+            var t = value as ThreadModel;
+            if (t != null) viewModel.ItemReplyCount = t.replyCount;
+            return (ItemViewModel)viewModel;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

@@ -71,15 +71,15 @@ namespace Islands.UWP
             myReplyCount = myReplyList.Count.ToString();
             IsLoading = false;
         }
-        protected override void OnItemClick(object sender, ItemClickEventArgs e)
-        {
-            MyReplyView view = e.ClickedItem as MyReplyView;
-            if (view != null)
-            {
-                if (view != null && SelectionMode != ListViewSelectionMode.Multiple)
-                    base.OnItemClick(sender, e);
-            }
-        }
+        //protected override void OnItemClick(object sender, ItemClickEventArgs e)
+        //{
+        //    MyReplyView view = e.ClickedItem as MyReplyView;
+        //    if (view != null)
+        //    {
+        //        if (view != null && SelectionMode != ListViewSelectionMode.Multiple)
+        //            base.OnItemClick(sender, e);
+        //    }
+        //}
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {

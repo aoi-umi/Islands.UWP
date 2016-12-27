@@ -9,7 +9,7 @@ namespace Islands.UWP
 {
     public sealed partial class ThreadView : BaseItemView
     {
-        public ThreadView()
+        public ThreadView() : base()
         {
             InitializeComponent();
             NoImage = MainPage.Global.NoImage;
@@ -24,19 +24,15 @@ namespace Islands.UWP
         public static readonly DependencyProperty ThreadProperty =
             DependencyProperty.Register(nameof(Thread), typeof(ThreadModel), typeof(ThreadView), new PropertyMetadata(null));
 
-
-        //public Model.ThreadModel Thread { get; set; }
-
-        protected override void OnApplyTemplate()
+        protected override void OnLoaded()
         {
-            var viewModel = new ItemViewModel(MainPage.Global, Thread);
-            viewModel.IsTextSelectionEnabled = IsTextSelectionEnabled;
-            viewModel.ItemReplyCount = Thread.replyCount;
-            if (IsTextSelectionEnabled) SetRefClick(viewModel.ItemContentView);
-            BaseInit(viewModel);
-            DataContext = viewModel;
+            base.OnLoaded();
+            //var viewModel = new ItemViewModel(MainPage.Global, Thread);
+            //viewModel.IsTextSelectionEnabled = IsTextSelectionEnabled;
+            //if (IsTextSelectionEnabled) SetRefClick(viewModel.ItemContentView);
 
-            base.OnApplyTemplate();
+            var vm = DataContext as ItemViewModel;
+            BaseInit(vm);
             if (IsAdmin) txtUserid.Foreground = Config.AdminColor;
             else if (IsPo) txtUserid.Foreground = Config.PoColor;
         }

@@ -1,4 +1,5 @@
 ﻿using Islands.UWP.Model;
+using Islands.UWP.ViewModel;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -16,12 +17,12 @@ namespace Islands.UWP
 {
     public sealed partial class ThreadsView : BaseListView
     {
-        public ThreadsView()
+        public ThreadsView() : base()
         {
             InitializeComponent();
             this.DataContext = MainPage.Global;
             ThreadStatusBox.Tapped += ThreadStatusBox_Tapped;
-            Items.Add(ThreadStatusBox);
+            //Items.Add(ThreadStatusBox);
             currPage = 1;
             var bindingModel = new BindingModel()
             {
@@ -32,17 +33,17 @@ namespace Islands.UWP
                 Source = MainPage.Global
             };
             Helper.BindingHelper(bindingModel);
-            list = new ObservableCollection<ThreadModel>();
-            //ItemsSource = list;
-        }        
-        private ObservableCollection<ThreadModel> list { get; set; }
+            list = new ObservableCollection<DataModel>();
+            ItemsSource = list;
+            //ItemsSource = new List<string> { "123", "465848"};
+            //list.Add(new ThreadModel() { content = "123" });
+        }
+
+        private ObservableCollection<DataModel> list { get; set; }
         public PostRequest postReq;
         
         public string initTitle { set { Title.Text = value; } }
-        public ForumModel currForum { get; set; }
-        
-        public delegate void MenuClickEventHandler(Object sender, RoutedEventArgs e);
-        public event MenuClickEventHandler MenuClick;
+        public ForumModel currForum { get; set; }        
 
         public void RefreshById(ForumModel forum)
         {
@@ -55,7 +56,8 @@ namespace Islands.UWP
         private TextBlock ThreadStatusBox = new TextBlock()
         {
             Text = "什么也没有(つд⊂),点我加载",
-            HorizontalAlignment = HorizontalAlignment.Center
+            HorizontalAlignment = HorizontalAlignment.Center,            
+            VerticalAlignment = VerticalAlignment.Center
         };
         private string _Title { set { Title.Text = value; } }
         private int currPage { get; set; }
@@ -76,13 +78,13 @@ namespace Islands.UWP
         {            
             IsLoading = true;
             IsHitTestVisible = false;
-            Items.Remove(ThreadStatusBox);
+            //Items.Remove(ThreadStatusBox);
             message = "点我加载";
         }
 
         private void DataLoaded()
         {
-            Items.Add(ThreadStatusBox);
+            //Items.Add(ThreadStatusBox);
             IsLoading = false;
             IsHitTestVisible = true;
         }
@@ -92,10 +94,10 @@ namespace Islands.UWP
             currPage = page;     
             try
             {
-                for (var i = Items.Count - 1; i >= 0; i--)
-                {
-                    Items.RemoveAt(i);
-                }
+                //for (var i = Items.Count - 1; i >= 0; i--)
+                //{
+                //    Items.RemoveAt(i);
+                //}
                 list.Clear();
                 postReq.Page = page;
                 GetThreadList(postReq, IslandCode);
@@ -121,7 +123,7 @@ namespace Islands.UWP
             }
         }
 
-        private async void GetThreadList(Model.PostRequest req, IslandsCode code)
+        private async void GetThreadList(PostRequest req, IslandsCode code)
         {
             if (IsLoading) return;
             DataLoading();
@@ -133,14 +135,15 @@ namespace Islands.UWP
                 Data.Convert.ResStringToThreadList(res, code, out Threads);                
                 if (Threads == null || Threads.Count == 0)
                     throw new Exception("什么也没有");
-                Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center });
+                //Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center,VerticalAlignment = VerticalAlignment.Center });
                 foreach (var thread in Threads)
                 {
                     thread.islandCode = code;
-                    var tv = new ThreadView() { Thread = thread };
-                    Items.Add(tv);
-                    var x = thread as ThreadModel;
-                    list.Add(thread);
+                    //var tv = new ThreadView() { Thread = thread };
+                    //Items.Add(tv);
+                    //var x = thread as ThreadModel;
+                    var dataModel = new DataModel() { DataType = DataTypes.Thread, Data = thread };
+                    list.Add(dataModel);
                 }
                 ++currPage;
             }
@@ -160,21 +163,6 @@ namespace Islands.UWP
             var page = await Data.Message.GotoPageYesOrNo();
             if (page > 0)
                 _Refresh(page);
-        }
-
-        //点击串
-        protected override void OnItemClick(object sender, ItemClickEventArgs e)
-        {
-            ThreadView tv = e.ClickedItem as ThreadView;
-            if (tv != null)
-            {
-                base.OnItemClick(sender, e);
-            }
-        }
-
-        private void Menu_Click(object sender, RoutedEventArgs e)
-        {
-            MenuClick?.Invoke(sender, e);
-        }        
+        }    
     }   
 }

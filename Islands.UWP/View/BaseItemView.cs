@@ -1,4 +1,5 @@
 ﻿using Islands.UWP.Model;
+using Islands.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace Islands.UWP
         private static string ImageName = "Image";
         private static string ImageViewName = "ImageView";
         private static string GifTextViewName = "GifTextView";
-        public BaseItemView()
+        public BaseItemView() : base()
         {
             this.DefaultStyleKey = typeof(BaseItemView);
         }
@@ -47,8 +48,12 @@ namespace Islands.UWP
         
         public static readonly DependencyProperty BottomContentProperty =
             DependencyProperty.Register(nameof(BottomContent), typeof(FrameworkElement), typeof(BaseItemView), new PropertyMetadata(null));
-        #endregion       
-       
+        #endregion
+
+        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MyPropertyProperty =
+            DependencyProperty.Register("MyProperty", typeof(string), typeof(BaseItemView), new PropertyMetadata(null));
+
         public string ItemNo { get; set; }
         public string ItemThumb { get; set; }
         public string ItemImage { get; set; }    
@@ -67,14 +72,16 @@ namespace Islands.UWP
         private Grid gifTextView { get; set; }
         protected IslandsCode IslandCode { get; set; }
 
-        protected void BaseInit(ViewModel.ItemViewModel itemViewModel)
+        protected void BaseInit(ItemViewModel itemViewModel)
         {
+            if (itemViewModel == null) itemViewModel = new ItemViewModel();
             Host = itemViewModel.Host;
             GetRefAPI = itemViewModel.GetRefAPI;
             ItemNo = itemViewModel.ItemNo;
             ItemThumb = itemViewModel.ItemThumb;
             ItemImage = itemViewModel.ItemImage;
-            IsAdmin = itemViewModel.IsAdmin;
+            IsAdmin = itemViewModel.IsAdmin;            
+            if (IsTextSelectionEnabled) SetRefClick(itemViewModel.ItemContentView);
         }
 
         protected override void OnApplyTemplate()
@@ -95,9 +102,19 @@ namespace Islands.UWP
                 image.ImageOpened += Image_ImageOpened;
                 image.ImageFailed += Image_ImageFailed;
             }
-        }        
+            Loaded += BaseItemView_Loaded;
+        }
 
-        public void SetRefClick(RichTextBlock rtb)
+        private void BaseItemView_Loaded(object sender, RoutedEventArgs e)
+        {
+            OnLoaded();
+        }
+
+        virtual protected void OnLoaded()
+        {
+        }
+
+        private void SetRefClick(RichTextBlock rtb)
         {
             if (rtb == null) return;
             foreach (var block in rtb.Blocks)
