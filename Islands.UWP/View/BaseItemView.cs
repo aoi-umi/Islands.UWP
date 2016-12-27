@@ -50,10 +50,6 @@ namespace Islands.UWP
             DependencyProperty.Register(nameof(BottomContent), typeof(FrameworkElement), typeof(BaseItemView), new PropertyMetadata(null));
         #endregion
 
-        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MyPropertyProperty =
-            DependencyProperty.Register("MyProperty", typeof(string), typeof(BaseItemView), new PropertyMetadata(null));
-
         public string ItemNo { get; set; }
         public string ItemThumb { get; set; }
         public string ItemImage { get; set; }    
@@ -112,6 +108,8 @@ namespace Islands.UWP
 
         virtual protected void OnLoaded()
         {
+            var vm = DataContext as ItemViewModel;
+            BaseInit(vm);
         }
 
         private void SetRefClick(RichTextBlock rtb)

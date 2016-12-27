@@ -10,13 +10,15 @@ namespace Islands.UWP.ViewModel
     {
         public DataTypes DataType { get; set; }
         public object Data { get; set; }
+        //public bool IsTextSelectionEnabled { get; set; }
     }
 
     public enum DataTypes
     {
-        Thread = 0,
-        Reply = 1,
-        PageInfo = 2,
-        BottomInfo = 3
+        Thread,
+        Reply,
+        MyReply,
+        PageInfo,
+        BottomInfo
     }
 }

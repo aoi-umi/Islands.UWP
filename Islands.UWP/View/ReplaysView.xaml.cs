@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Islands.UWP.ViewModel;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Islands.UWP
         {
             InitializeComponent();
             this.DataContext = MainPage.Global;
-            Items.Add(ReplyStatusBox);
+            //Items.Add(ReplyStatusBox);
             ReplyStatusBox.Tapped += ReplyStatusBox_Tapped;
             var bindingModel = new BindingModel()
             {
@@ -38,12 +39,11 @@ namespace Islands.UWP
         public delegate void MarkSuccessEventHandler(Object sender, Model.ThreadModel t);
         public event MarkSuccessEventHandler MarkSuccess;
 
-        public void GetReplyListByID(string threadId, int markId)
+        public void GetReplyListByID(string threadId)
         {
             currThread = threadId;
             try
             {
-                this.markId = markId;
                 replyId = threadId;
                 postReq.ID = threadId;
                 _Refresh(1);
@@ -67,7 +67,6 @@ namespace Islands.UWP
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center
         };
-        private int markId { get; set; }
         private int currPage { get; set; }
         private int allPage
         {
@@ -99,13 +98,13 @@ namespace Islands.UWP
         {
             IsLoading = true;
             IsHitTestVisible = false;
-            Items.Remove(ReplyStatusBox);
+            //Items.Remove(ReplyStatusBox);
             message = "点我加载";
         }
 
         private void DataLoaded()
         {
-            Items.Add(ReplyStatusBox);
+            //Items.Add(ReplyStatusBox);
             IsLoading = false;
             IsHitTestVisible = true;
         }
@@ -116,10 +115,7 @@ namespace Islands.UWP
             IsGetAllReply = false;
             replyCount = 0;
             currPage = page;
-            for (var i = Items.Count - 1; i >= 0; i--)
-            {
-                Items.RemoveAt(i);
-            }
+            list.Clear();
             try
             {
                 postReq.Page = currPage;
@@ -146,16 +142,16 @@ namespace Islands.UWP
                 top = null;
                 Data.Convert.ResStringToThreadAndReplyList(res, code, out top, out Replys);
                 top.islandCode = code;
-                top._id = markId;
 
                 int _replyCount;
-                int.TryParse(top.replyCount, out _replyCount);
-                if (Items.Count == 0 && top != null)
+                int.TryParse(top.replyCount, out _replyCount); 
+                if (list.Count == 0 && top != null)
                 {
                     top.islandCode = code;
-                    var tv = new ThreadView() {Thread = top, IsTextSelectionEnabled = true, Background = null };
-                    tv.IsPo = true;
-                    Items.Add(tv);
+                    var model = new DataModel() { DataType = DataTypes.Thread, Data = top };
+                    //var tv = new ThreadView() {Thread = top, IsTextSelectionEnabled = true, Background = null };
+                    //tv.IsPo = true;
+                    list.Add(model);
                 }
                 replyCount = _replyCount;
                 txtReplyCount = _replyCount.ToString();
@@ -165,12 +161,11 @@ namespace Islands.UWP
                     throw new Exception("已经没有了");
                 }
 
-                if ((Items.Count - 1) % (pageSize + 1) == 0)
-                    Items.Add(new TextBlock()
+                if ((list.Count - 1) % (pageSize + 1) == 0)
+                    list.Add(new DataModel()
                     {
-                        Text = "Page " + req.Page,
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center
+                        DataType = DataTypes.PageInfo,
+                        Data = "Page " + req.Page,
                     });
 
                 Replys = Replys.OrderBy(x => int.Parse(x.id)).ToList();
@@ -187,10 +182,11 @@ namespace Islands.UWP
                         lastReply = reply;
                     }
                     reply.islandCode = code;
-                    var rv = new ReplyView() { Reply = reply };
-                    if ((code == IslandsCode.Koukuko && reply.uid == top.uid) || (code != IslandsCode.Koukuko && reply.userid == top.userid))
-                        rv.IsPo = true;
-                    Items.Add(rv);
+                    //var rv = new ReplyView() { Reply = reply };
+                    //if ((code == IslandsCode.Koukuko && reply.uid == top.uid) || (code != IslandsCode.Koukuko && reply.userid == top.userid))
+                    //    rv.IsPo = true;
+                    //Items.Add(rv);
+                    list.Add(new DataModel() { DataType = DataTypes.Reply, Data = reply });
                 }
                 if (Replys.Count < pageSize || (currPage - 1) * pageSize + Replys.Count == replyCount)
                 {

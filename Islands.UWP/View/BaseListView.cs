@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Islands.UWP.ViewModel;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UmiAoi.UWP;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -13,6 +15,8 @@ namespace Islands.UWP
         public BaseListView() : base()
         {
             this.DefaultStyleKey = typeof(BaseListView);
+            list = new ObservableCollection<DataModel>();
+            ItemsSource = list;
         }
 
         #region DependencyProperty
@@ -53,6 +57,7 @@ namespace Islands.UWP
             DependencyProperty.Register(nameof(MaskOpacity), typeof(double), typeof(BaseListView), new PropertyMetadata(0.0));
         #endregion
 
+        protected ObservableCollection<DataModel> list { get; set; }
         public IslandsCode IslandCode { get; set; }
         protected DeviceFamily DeviceFamily { get { return Helper.CurrDeviceFamily; } }
         private static string ScrollViewerName = "ScrollViewer";

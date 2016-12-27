@@ -14,13 +14,14 @@ namespace Islands.UWP
             IsLocalImage = true;
         }
         public SendModel MyReply { get; set; }
-        protected override void OnApplyTemplate()
-        {
-            var viewModel = new ItemViewModel(MyReply);
-            BaseInit(viewModel);
-            DataContext = viewModel;
-            base.OnApplyTemplate();
-        }
+    
+        //protected override void OnApplyTemplate()
+        //{
+        //    var viewModel = new ItemViewModel(MyReply);
+        //    BaseInit(viewModel);
+        //    DataContext = viewModel;
+        //    base.OnApplyTemplate();
+        //}
 
     }
 }

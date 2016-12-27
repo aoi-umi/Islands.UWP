@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Islands.UWP.Model;
+using Islands.UWP.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -178,12 +180,16 @@ namespace Islands.UWP
 
         private void ThreadControl_ThreadClick(object sender, ItemClickEventArgs e)
         {
-            ThreadView tv = e.ClickedItem as ThreadView;
-            if (tv != null)
+            var model = e.ClickedItem as DataModel;
+            if (model != null && model.DataType == DataTypes.Thread)
             {
-                IsMain = false;
-                mainSplitView.Content = ReplyControl;                
-                ReplyControl.GetReplyListByID(tv.ItemNo, 0);
+                var item = model.Data as BaseItemModel;
+                if (item != null)
+                {
+                    IsMain = false;
+                    mainSplitView.Content = ReplyControl;
+                    ReplyControl.GetReplyListByID(item.id);
+                }
             }
         }
 
@@ -220,47 +226,47 @@ namespace Islands.UWP
         private void MarkControl_MarkClick(object sender, ItemClickEventArgs e)
         {
             if (MarkControl.SelectionMode != ListViewSelectionMode.None) return;
-            ThreadView tv = e.ClickedItem as ThreadView;
-            if (tv != null)
+            var model = e.ClickedItem as DataModel;
+            if (model != null && model.DataType == DataTypes.Thread)
             {
-                IsMain = false;
-                mainSplitView.Content = ReplyControl;
-                mainNavigationList.SelectedIndex = 1;
-                var tm = tv.Tag as Model.ThreadModel;
-                var id = 1;
-                if (tm != null)
-                    id = tm._id;
-                ReplyControl.GetReplyListByID(tv.ItemNo, id);
+                var item = model.Data as BaseItemModel;
+                if (item != null)
+                {
+                    IsMain = false;
+                    mainSplitView.Content = ReplyControl;
+                    mainNavigationList.SelectedIndex = 1;
+                    ReplyControl.GetReplyListByID(item.id);
+                }
             }
         }
 
         private void MyReplysControl_MyReplyClick(object sender, ItemClickEventArgs e)
         {
             if(MyReplysControl.SelectionMode != ListViewSelectionMode.None) return;
-            MyReplyView mpv = e.ClickedItem as MyReplyView;
-            if (mpv != null)
+            var model = e.ClickedItem as DataModel;
+            if (model != null && model.DataType == DataTypes.MyReply)
             {
-                IsMain = false;
-                var myreply = mpv.Tag as Model.SendModel;
-                if (myreply != null)
+                var item = model.Data as SendModel;
+                if (item != null)
                 {
-                    if (myreply.isMain && !string.IsNullOrEmpty(myreply.ThreadId))
+                    if (item.isMain && !string.IsNullOrEmpty(item.ThreadId))
                     {
                         IsMain = false;
                         BackToHome();
-                        ReplyControl.GetReplyListByID(myreply.ThreadId, 0);
+                        ReplyControl.GetReplyListByID(item.ThreadId);
                     }
-                    else if (!myreply.isMain && !string.IsNullOrEmpty(myreply.sendId))
+                    else if (!item.isMain && !string.IsNullOrEmpty(item.sendId))
                     {
                         IsMain = false;
                         BackToHome();
-                        ReplyControl.GetReplyListByID(myreply.sendId, 0);
+                        ReplyControl.GetReplyListByID(item.sendId);
                     }
-                    else {
+                    else
+                    {
                         Data.Message.ShowMessage("无法跳转到该串");
                     }
                 }
-            }
+            }            
         }
 
         private void SendControl_SendClick(object sender, RoutedEventArgs e)
@@ -372,7 +378,7 @@ namespace Islands.UWP
             {
                 IsMain = false;
                 BackToHome();
-                ReplyControl.GetReplyListByID(thread.ToString(), 0);
+                ReplyControl.GetReplyListByID(thread.ToString());
             }
         }
     }

@@ -24,6 +24,10 @@ namespace Islands.UWP.ViewModel
                 {
                     case DataTypes.Thread:
                         return resources["ThreadDataTemplate"] as DataTemplate;
+                    case DataTypes.Reply:
+                        return resources["ReplyDataTemplate"] as DataTemplate;
+                    case DataTypes.MyReply:
+                        return resources["MyReplyDataTemplate"] as DataTemplate;
                     case DataTypes.PageInfo:
                         return resources["PageInfoDataTemplate"] as DataTemplate;
                 }

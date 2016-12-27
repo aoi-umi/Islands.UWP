@@ -32,14 +32,9 @@ namespace Islands.UWP
                 Path = nameof(MaskOpacity),
                 Source = MainPage.Global
             };
-            Helper.BindingHelper(bindingModel);
-            list = new ObservableCollection<DataModel>();
-            ItemsSource = list;
-            //ItemsSource = new List<string> { "123", "465848"};
-            //list.Add(new ThreadModel() { content = "123" });
+            Helper.BindingHelper(bindingModel);            
         }
 
-        private ObservableCollection<DataModel> list { get; set; }
         public PostRequest postReq;
         
         public string initTitle { set { Title.Text = value; } }
@@ -94,10 +89,6 @@ namespace Islands.UWP
             currPage = page;     
             try
             {
-                //for (var i = Items.Count - 1; i >= 0; i--)
-                //{
-                //    Items.RemoveAt(i);
-                //}
                 list.Clear();
                 postReq.Page = page;
                 GetThreadList(postReq, IslandCode);
@@ -135,13 +126,10 @@ namespace Islands.UWP
                 Data.Convert.ResStringToThreadList(res, code, out Threads);                
                 if (Threads == null || Threads.Count == 0)
                     throw new Exception("什么也没有");
-                //Items.Add(new TextBlock() { Text = "Page " + req.Page, HorizontalAlignment = HorizontalAlignment.Center,VerticalAlignment = VerticalAlignment.Center });
+                list.Add(new DataModel() { DataType = DataTypes.PageInfo, Data = "Page " + req.Page });
                 foreach (var thread in Threads)
                 {
                     thread.islandCode = code;
-                    //var tv = new ThreadView() { Thread = thread };
-                    //Items.Add(tv);
-                    //var x = thread as ThreadModel;
                     var dataModel = new DataModel() { DataType = DataTypes.Thread, Data = thread };
                     list.Add(dataModel);
                 }

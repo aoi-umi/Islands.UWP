@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Islands.UWP.Model;
+using Islands.UWP.ViewModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -30,7 +32,8 @@ namespace Islands.UWP
             if (myReplyList == null) return;
             myReplyList.Insert(0, sm);
             sm.islandCode = IslandCode;
-            Items.Insert(0, new MyReplyView() { MyReply = sm });
+            //Items.Insert(0, new MyReplyView() { MyReply = sm });
+            list.Insert(0, new DataModel() { DataType = DataTypes.MyReply, Data = sm });
             myReplyCount = myReplyList.Count.ToString();
         }
 
@@ -58,7 +61,7 @@ namespace Islands.UWP
         private async void InitMyReplyList()
         {
             IsLoading = true;
-            Items.Clear();
+            list.Clear();
             await Task.Run(() =>
             {
                 myReplyList = Data.Database.GetMyReplyList(IslandCode);
@@ -66,20 +69,11 @@ namespace Islands.UWP
             foreach (var myreply in myReplyList)
             {
                 myreply.islandCode = IslandCode;
-                Items.Add(new MyReplyView() { MyReply = myreply });
+                list.Add(new DataModel() { DataType = DataTypes.MyReply, Data = myreply });
             }
             myReplyCount = myReplyList.Count.ToString();
             IsLoading = false;
         }
-        //protected override void OnItemClick(object sender, ItemClickEventArgs e)
-        //{
-        //    MyReplyView view = e.ClickedItem as MyReplyView;
-        //    if (view != null)
-        //    {
-        //        if (view != null && SelectionMode != ListViewSelectionMode.Multiple)
-        //            base.OnItemClick(sender, e);
-        //    }
-        //}
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
@@ -97,7 +91,13 @@ namespace Islands.UWP
         private async void DeleteAsync()
         {
             int count = 0;
-            var idList = SelectedItems.Where(x => (x as MyReplyView) != null).Select(x => (x as MyReplyView).MyReply._id).ToList();
+            var idList = SelectedItems.Where(x =>
+            {
+                var model = (x as DataModel);
+                if (model != null && (model.Data as SendModel) != null) return true;
+                return false;
+            }).Select(x => ((x as DataModel).Data as SendModel)._id).ToList();
+
             await Task.Run(() =>
             {
                 count = Data.Database.DeleteByIDs(nameof(Model.SendModel), idList);

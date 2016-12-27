@@ -184,8 +184,8 @@ namespace Islands.UWP.ViewModel
                     }
                     ItemCreateDate = baseItemModel.now;
                     ItemUid = baseItemModel.userid;
-                    GetRefAPI = Config.K.GetRefAPI;
-                    Host = Config.K.Host;
+                    GetRefAPI = Config.B.GetRefAPI;
+                    Host = Config.B.Host;
                     break;
                 case IslandsCode.Koukuko:
                     if (baseItemModel.uid.IndexOf("<font color=\"red\">") >= 0)
@@ -197,8 +197,8 @@ namespace Islands.UWP.ViewModel
                     if (!string.IsNullOrEmpty(baseItemModel.image)) ItemImage = (Config.K.PictureHost + baseItemModel.image);
                     ItemCreateDate = new DateTime(1970, 1, 1).ToLocalTime().AddMilliseconds(Convert.ToDouble(baseItemModel.createdAt)).ToString("yyyy-MM-dd HH:mm:ss");
                     ItemUid = baseItemModel.uid;
-                    GetRefAPI = Config.B.GetRefAPI;
-                    Host = Config.B.Host;
+                    GetRefAPI = Config.K.GetRefAPI;
+                    Host = Config.K.Host;
                     break;
             }
             #endregion

@@ -15,24 +15,16 @@ namespace Islands.UWP
             NoImage = MainPage.Global.NoImage;
         }
 
-        public ThreadModel Thread
-        {
-            get { return (ThreadModel)GetValue(ThreadProperty); }
-            set { SetValue(ThreadProperty, value); }
-        }
-        
-        public static readonly DependencyProperty ThreadProperty =
-            DependencyProperty.Register(nameof(Thread), typeof(ThreadModel), typeof(ThreadView), new PropertyMetadata(null));
+        public ThreadModel Thread { get; set; }        
 
         protected override void OnLoaded()
         {
+            if (DataContext == null)
+            {
+                var viewModel = new ItemViewModel() { GlobalConfig = MainPage.Global, BaseItem = Thread };
+                DataContext = viewModel;
+            }
             base.OnLoaded();
-            //var viewModel = new ItemViewModel(MainPage.Global, Thread);
-            //viewModel.IsTextSelectionEnabled = IsTextSelectionEnabled;
-            //if (IsTextSelectionEnabled) SetRefClick(viewModel.ItemContentView);
-
-            var vm = DataContext as ItemViewModel;
-            BaseInit(vm);
             if (IsAdmin) txtUserid.Foreground = Config.AdminColor;
             else if (IsPo) txtUserid.Foreground = Config.PoColor;
         }

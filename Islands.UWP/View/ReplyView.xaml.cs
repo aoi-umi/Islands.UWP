@@ -17,14 +17,16 @@ namespace Islands.UWP
 
         public Model.ReplyModel Reply { get; set; }
 
-        protected override void OnApplyTemplate()
+        protected override void OnLoaded()
         {
-            var viewModel = new ItemViewModel() { GlobalConfig = MainPage.Global, BaseItem = Reply };
-            viewModel.IsTextSelectionEnabled = IsTextSelectionEnabled;
-            BaseInit(viewModel);
-            DataContext = viewModel;
-
-            base.OnApplyTemplate();
+            if (DataContext == null)
+            {
+                var viewModel = new ItemViewModel() { GlobalConfig = MainPage.Global, BaseItem = Reply };
+                viewModel.IsTextSelectionEnabled = IsTextSelectionEnabled;
+                BaseInit(viewModel);
+                DataContext = viewModel;
+            }
+            base.OnLoaded();
             if (IsAdmin) txtUserid.Foreground = Config.AdminColor;
             else if (IsPo) txtUserid.Foreground = Config.PoColor;
         }

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Islands.UWP.Model;
+using Islands.UWP.ViewModel;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -29,7 +32,8 @@ namespace Islands.UWP
             if (markList == null) return;
             markList.Insert(0, tm);
             tm.islandCode = IslandCode;
-            Items.Insert(0, new ThreadView() {Thread = tm, NoImage = true });
+            list.Insert(0, new DataModel() { DataType = DataTypes.Thread, Data = tm });
+            //Items.Insert(0, new ThreadView() {Thread = tm, NoImage = true });
             markCount = markList.Count.ToString();
         }
 
@@ -57,7 +61,8 @@ namespace Islands.UWP
         private async void InitMarkList()
         {
             IsLoading = true;
-            Items.Clear();
+            //Items.Clear();
+            list.Clear();
             await Task.Run(() =>
             {
                 markList = Data.Database.GetMarkList(IslandCode);
@@ -65,22 +70,14 @@ namespace Islands.UWP
             foreach (var mark in markList)
             {
                 mark.islandCode = IslandCode;
-                ThreadView t = new ThreadView() { Thread = mark };
-                t.NoImage = true;
-                Items.Add(t);
+                //ThreadView t = new ThreadView() { Thread = mark };
+                //t.NoImage = true;
+                //Items.Add(t);
+                list.Add(new DataModel() { DataType = DataTypes.Thread, Data = mark });
             }
             markCount = markList.Count.ToString();
             IsLoading = false;
         }
-
-        //protected override void OnItemClick(object sender, ItemClickEventArgs e)
-        //{
-        //    ThreadView tv = e.ClickedItem as ThreadView;
-        //    if (tv != null && SelectionMode != ListViewSelectionMode.Multiple)
-        //    {
-        //        base.OnItemClick(sender, e);
-        //    }
-        //}
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
@@ -98,9 +95,14 @@ namespace Islands.UWP
         private async void DeleteAsync()
         {
             int count = 0;
-            var idList = SelectedItems.Where(x => (x as ThreadView) != null).Select(x => (x as ThreadView).Thread._id).ToList();
+            var idList = SelectedItems.Where(x =>
+            {
+                var model = (x as DataModel);
+                if (model != null && (model.Data as ThreadModel) != null) return true;
+                return false;
+            }).Select(x => ((x as DataModel).Data as ThreadModel)._id).ToList();
             await Task.Run(()=> {
-                count = Data.Database.DeleteByIDs(nameof(Model.ThreadModel), idList);
+                count = Data.Database.DeleteByIDs(nameof(ThreadModel), idList);
             });
             if (count > 0) InitMarkList();
             SelectionMode = ListViewSelectionMode.None;

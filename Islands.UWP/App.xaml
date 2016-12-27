@@ -46,6 +46,12 @@
             <DataTemplate x:Key="ThreadDataTemplate">
                 <local:ThreadView DataContext="{Binding Data, Converter={StaticResource ItemToViewModelConverter}}"/>
             </DataTemplate>
+            <DataTemplate x:Key="ReplyDataTemplate">
+                <local:ReplyView DataContext="{Binding Data, Converter={StaticResource ItemToViewModelConverter}}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="MyReplyDataTemplate">
+                <local:MyReplyView DataContext="{Binding Data, Converter={StaticResource ItemToViewModelConverter}}"/>
+            </DataTemplate>
             <DataTemplate x:Key="PageInfoDataTemplate">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Data}"/>
             </DataTemplate>

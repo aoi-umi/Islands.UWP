@@ -45,14 +45,22 @@ namespace Islands.UWP
     public class ItemToViewModelConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
-        {            
-            var viewModel = new ItemViewModel()
+        {
+            ItemViewModel viewModel = null;
+            if (value is SendModel)
             {
-                GlobalConfig = MainPage.Global,
-                BaseItem = value as BaseItemModel,                
-            };
-            var t = value as ThreadModel;
-            if (t != null) viewModel.ItemReplyCount = t.replyCount;
+                viewModel = new ItemViewModel(value as SendModel);
+            }
+            else
+            {
+                viewModel = new ItemViewModel()
+                {
+                    GlobalConfig = MainPage.Global,
+                    BaseItem = value as BaseItemModel,
+                };
+                var t = value as ThreadModel;
+                if (t != null) viewModel.ItemReplyCount = t.replyCount;
+            }
             return (ItemViewModel)viewModel;
         }
 
