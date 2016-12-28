@@ -32,7 +32,7 @@ namespace Islands.UWP
             if (markList == null) return;
             markList.Insert(0, tm);
             tm.islandCode = IslandCode;
-            list.Insert(0, new DataModel() { DataType = DataTypes.Thread, Data = tm });
+            ItemList.Insert(0, new DataModel() { DataType = DataTypes.Thread, Data = tm });
             //Items.Insert(0, new ThreadView() {Thread = tm, NoImage = true });
             markCount = markList.Count.ToString();
         }
@@ -62,7 +62,7 @@ namespace Islands.UWP
         {
             IsLoading = true;
             //Items.Clear();
-            list.Clear();
+            ItemList.Clear();
             await Task.Run(() =>
             {
                 markList = Data.Database.GetMarkList(IslandCode);
@@ -73,7 +73,7 @@ namespace Islands.UWP
                 //ThreadView t = new ThreadView() { Thread = mark };
                 //t.NoImage = true;
                 //Items.Add(t);
-                list.Add(new DataModel() { DataType = DataTypes.Thread, Data = mark });
+                ItemList.Add(new DataModel() { DataType = DataTypes.Thread, Data = mark });
             }
             markCount = markList.Count.ToString();
             IsLoading = false;

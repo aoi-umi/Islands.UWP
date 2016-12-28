@@ -15,8 +15,8 @@ namespace Islands.UWP
         public BaseListView() : base()
         {
             this.DefaultStyleKey = typeof(BaseListView);
-            list = new ObservableCollection<DataModel>();
-            ItemsSource = list;
+            ItemList = new ObservableCollection<DataModel>();
+            ItemsSource = ItemList;
         }
 
         #region DependencyProperty
@@ -57,16 +57,13 @@ namespace Islands.UWP
             DependencyProperty.Register(nameof(MaskOpacity), typeof(double), typeof(BaseListView), new PropertyMetadata(0.0));
         #endregion
 
-        protected ObservableCollection<DataModel> list { get; set; }
+        protected ObservableCollection<DataModel> ItemList { get; set; }
         public IslandsCode IslandCode { get; set; }
         protected DeviceFamily DeviceFamily { get { return Helper.CurrDeviceFamily; } }
         private static string ScrollViewerName = "ScrollViewer";
         private ScrollViewer scrollViewer { get; set; }
-        private ProgressRing progressRing { get; set; }
-        private FrameworkElement maskView { get; set; }
         protected override void OnApplyTemplate()
         {
-            var x = Items;
             base.OnApplyTemplate();
             scrollViewer = GetTemplateChild(ScrollViewerName) as ScrollViewer;
 

@@ -33,7 +33,7 @@ namespace Islands.UWP
             myReplyList.Insert(0, sm);
             sm.islandCode = IslandCode;
             //Items.Insert(0, new MyReplyView() { MyReply = sm });
-            list.Insert(0, new DataModel() { DataType = DataTypes.MyReply, Data = sm });
+            ItemList.Insert(0, new DataModel() { DataType = DataTypes.MyReply, Data = sm });
             myReplyCount = myReplyList.Count.ToString();
         }
 
@@ -61,7 +61,7 @@ namespace Islands.UWP
         private async void InitMyReplyList()
         {
             IsLoading = true;
-            list.Clear();
+            ItemList.Clear();
             await Task.Run(() =>
             {
                 myReplyList = Data.Database.GetMyReplyList(IslandCode);
@@ -69,7 +69,7 @@ namespace Islands.UWP
             foreach (var myreply in myReplyList)
             {
                 myreply.islandCode = IslandCode;
-                list.Add(new DataModel() { DataType = DataTypes.MyReply, Data = myreply });
+                ItemList.Add(new DataModel() { DataType = DataTypes.MyReply, Data = myreply });
             }
             myReplyCount = myReplyList.Count.ToString();
             IsLoading = false;

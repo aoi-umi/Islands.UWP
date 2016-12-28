@@ -50,12 +50,12 @@ namespace Islands.UWP
 
         public void Init()
         {
-            Model.ForumModel currForum;
+            ForumModel currForum;
             ForumsListInit(IslandCode, out currForum);
 
             ThreadControl = new ThreadsView()
             {
-                postReq = new Model.PostRequest()
+                postReq = new PostRequest()
                 {
                     Host = Host,
                     API = GetThreadAPI,
@@ -68,7 +68,7 @@ namespace Islands.UWP
 
             ReplyControl = new ReplysView()
             {
-                postReq = new Model.PostRequest
+                postReq = new PostRequest
                 {
                     Host = Host,
                     API = GetReplyAPI
@@ -87,7 +87,7 @@ namespace Islands.UWP
                 {
                     islandCode = IslandCode,
                     Host = Host,
-                    Cookie = new Model.CookieModel()
+                    Cookie = new CookieModel()
                 },
                 islandCode = IslandCode
             };
@@ -334,7 +334,7 @@ namespace Islands.UWP
                     break;
             }
             var groupName = "";
-            Group<Model.ForumModel> group = new Group<Model.ForumModel>();
+            Group<ForumModel> group = new Group<Model.ForumModel>();
             List<Group<Model.ForumModel>> groups = new List<Group<Model.ForumModel>>();
             foreach (var forum in forums) {
                 var split = forum.Split(',');

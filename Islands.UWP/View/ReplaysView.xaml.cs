@@ -19,7 +19,6 @@ namespace Islands.UWP
         {
             InitializeComponent();
             this.DataContext = MainPage.Global;
-            //Items.Add(ReplyStatusBox);
             ReplyStatusBox.Tapped += ReplyStatusBox_Tapped;
             var bindingModel = new BindingModel()
             {
@@ -30,6 +29,7 @@ namespace Islands.UWP
                 Source = MainPage.Global
             };
             Helper.BindingHelper(bindingModel);
+            ItemList.Add(StatusItem);
         }
         
         public Model.PostRequest postReq;
@@ -58,9 +58,14 @@ namespace Islands.UWP
         {
             set
             {
-                ReplyStatusBox.Text = value;
+                StatusItem .Data = value;
             }
         }
+        private DataModel StatusItem = new DataModel()
+        {
+            DataType = DataTypes.PageInfo,
+            Data = "还未看过任何串(つд⊂)",
+        };
         private TextBlock ReplyStatusBox = new TextBlock()
         {
             Text = "还未看过任何串(つд⊂)",
@@ -98,13 +103,13 @@ namespace Islands.UWP
         {
             IsLoading = true;
             IsHitTestVisible = false;
-            //Items.Remove(ReplyStatusBox);
+            ItemList.Remove(StatusItem);
             message = "点我加载";
         }
 
         private void DataLoaded()
         {
-            //Items.Add(ReplyStatusBox);
+            ItemList.Add(StatusItem);
             IsLoading = false;
             IsHitTestVisible = true;
         }
@@ -115,7 +120,7 @@ namespace Islands.UWP
             IsGetAllReply = false;
             replyCount = 0;
             currPage = page;
-            list.Clear();
+            ItemList.Clear();
             try
             {
                 postReq.Page = currPage;
@@ -145,13 +150,13 @@ namespace Islands.UWP
 
                 int _replyCount;
                 int.TryParse(top.replyCount, out _replyCount); 
-                if (list.Count == 0 && top != null)
+                if (ItemList.Count == 0 && top != null)
                 {
                     top.islandCode = code;
                     var model = new DataModel() { DataType = DataTypes.Thread, Data = top };
                     //var tv = new ThreadView() {Thread = top, IsTextSelectionEnabled = true, Background = null };
                     //tv.IsPo = true;
-                    list.Add(model);
+                    ItemList.Add(model);
                 }
                 replyCount = _replyCount;
                 txtReplyCount = _replyCount.ToString();
@@ -161,8 +166,8 @@ namespace Islands.UWP
                     throw new Exception("已经没有了");
                 }
 
-                if ((list.Count - 1) % (pageSize + 1) == 0)
-                    list.Add(new DataModel()
+                if ((ItemList.Count - 1) % (pageSize + 1) == 0)
+                    ItemList.Add(new DataModel()
                     {
                         DataType = DataTypes.PageInfo,
                         Data = "Page " + req.Page,
@@ -185,8 +190,7 @@ namespace Islands.UWP
                     //var rv = new ReplyView() { Reply = reply };
                     //if ((code == IslandsCode.Koukuko && reply.uid == top.uid) || (code != IslandsCode.Koukuko && reply.userid == top.userid))
                     //    rv.IsPo = true;
-                    //Items.Add(rv);
-                    list.Add(new DataModel() { DataType = DataTypes.Reply, Data = reply });
+                    ItemList.Add(new DataModel() { DataType = DataTypes.Reply, Data = reply });
                 }
                 if (Replys.Count < pageSize || (currPage - 1) * pageSize + Replys.Count == replyCount)
                 {

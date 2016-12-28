@@ -21,8 +21,6 @@ namespace Islands.UWP
         {
             InitializeComponent();
             this.DataContext = MainPage.Global;
-            ThreadStatusBox.Tapped += ThreadStatusBox_Tapped;
-            //Items.Add(ThreadStatusBox);
             currPage = 1;
             var bindingModel = new BindingModel()
             {
@@ -32,7 +30,8 @@ namespace Islands.UWP
                 Path = nameof(MaskOpacity),
                 Source = MainPage.Global
             };
-            Helper.BindingHelper(bindingModel);            
+            Helper.BindingHelper(bindingModel);
+            ItemList.Add(StatusItem);       
         }
 
         public PostRequest postReq;
@@ -48,15 +47,14 @@ namespace Islands.UWP
             _Refresh(1);
         }
 
-        private TextBlock ThreadStatusBox = new TextBlock()
+        private DataModel StatusItem = new DataModel()
         {
-            Text = "什么也没有(つд⊂),点我加载",
-            HorizontalAlignment = HorizontalAlignment.Center,            
-            VerticalAlignment = VerticalAlignment.Center
+            DataType = DataTypes.PageInfo,
+            Data = "什么也没有(つд⊂),点我加载",
         };
         private string _Title { set { Title.Text = value; } }
         private int currPage { get; set; }
-        private string message { set { ThreadStatusBox.Text = value; } }
+        private string message { set { StatusItem.Data = value; } }
 
         private void ThreadStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -73,13 +71,13 @@ namespace Islands.UWP
         {            
             IsLoading = true;
             IsHitTestVisible = false;
-            //Items.Remove(ThreadStatusBox);
+            ItemList.Remove(StatusItem);
             message = "点我加载";
         }
 
         private void DataLoaded()
         {
-            //Items.Add(ThreadStatusBox);
+            ItemList.Add(StatusItem);
             IsLoading = false;
             IsHitTestVisible = true;
         }
@@ -89,7 +87,7 @@ namespace Islands.UWP
             currPage = page;     
             try
             {
-                list.Clear();
+                ItemList.Clear();
                 postReq.Page = page;
                 GetThreadList(postReq, IslandCode);
             }
@@ -126,12 +124,12 @@ namespace Islands.UWP
                 Data.Convert.ResStringToThreadList(res, code, out Threads);                
                 if (Threads == null || Threads.Count == 0)
                     throw new Exception("什么也没有");
-                list.Add(new DataModel() { DataType = DataTypes.PageInfo, Data = "Page " + req.Page });
+                ItemList.Add(new DataModel() { DataType = DataTypes.PageInfo, Data = "Page " + req.Page });
                 foreach (var thread in Threads)
                 {
                     thread.islandCode = code;
                     var dataModel = new DataModel() { DataType = DataTypes.Thread, Data = thread };
-                    list.Add(dataModel);
+                    ItemList.Add(dataModel);
                 }
                 ++currPage;
             }
