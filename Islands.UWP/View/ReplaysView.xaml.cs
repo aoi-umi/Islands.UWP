@@ -19,7 +19,6 @@ namespace Islands.UWP
         {
             InitializeComponent();
             this.DataContext = MainPage.Global;
-            ReplyStatusBox.Tapped += ReplyStatusBox_Tapped;
             var bindingModel = new BindingModel()
             {
                 BindingMode = BindingMode.OneWay,
@@ -29,7 +28,7 @@ namespace Islands.UWP
                 Source = MainPage.Global
             };
             Helper.BindingHelper(bindingModel);
-            ItemList.Add(StatusItem);
+            ItemList.Add(BottomInfoItem);
         }
         
         public Model.PostRequest postReq;
@@ -58,19 +57,13 @@ namespace Islands.UWP
         {
             set
             {
-                StatusItem .Data = value;
+                BottomInfoItem .Data = value;
             }
         }
-        private DataModel StatusItem = new DataModel()
+        private DataModel BottomInfoItem = new DataModel()
         {
-            DataType = DataTypes.PageInfo,
+            DataType = DataTypes.BottomInfo,
             Data = "还未看过任何串(つд⊂)",
-        };
-        private TextBlock ReplyStatusBox = new TextBlock()
-        {
-            Text = "还未看过任何串(つд⊂)",
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center
         };
         private int currPage { get; set; }
         private int allPage
@@ -94,6 +87,12 @@ namespace Islands.UWP
             GetReplyList(postReq, IslandCode);
         }
 
+        public void BottomRefresh()
+        {
+            postReq.Page = currPage;
+            GetReplyList(postReq, IslandCode);
+        }
+
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             _Refresh(1);
@@ -103,13 +102,13 @@ namespace Islands.UWP
         {
             IsLoading = true;
             IsHitTestVisible = false;
-            ItemList.Remove(StatusItem);
+            ItemList.Remove(BottomInfoItem);
             message = "点我加载";
         }
 
         private void DataLoaded()
         {
-            ItemList.Add(StatusItem);
+            ItemList.Add(BottomInfoItem);
             IsLoading = false;
             IsHitTestVisible = true;
         }

@@ -35,6 +35,9 @@ namespace Islands.UWP.ViewModel
                     case ActionTypes.MenuTapped:
                         CurrentControl?.MenuToggle();
                         break;
+                    case ActionTypes.BottomInfoTapped:
+                        CurrentControl?.BottomRefresh();
+                        break;
                 }
                 
             }
@@ -63,8 +66,9 @@ namespace Islands.UWP.ViewModel
 
     public enum ActionTypes
     {
-        None = 0,
-        ImageTapped = 1,
-        MenuTapped = 2,
+        None,
+        ImageTapped,
+        MenuTapped,
+        BottomInfoTapped,
     }
 }

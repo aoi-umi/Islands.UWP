@@ -1,6 +1,7 @@
 ﻿using Islands.UWP.ViewModel;
 using System;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -16,6 +17,11 @@ namespace Islands.UWP
         }
 
         public Model.ReplyModel Reply { get; set; }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+        }
 
         protected override void OnLoaded()
         {
@@ -38,6 +44,7 @@ namespace Islands.UWP
             string id = RefText.ToLower().Replace(">>", "").Replace("no.", "");
             if (string.IsNullOrEmpty(id)) return;
             //从list寻找
+            //var p = VisualTreeHelper.GetParent(this);
             var lv = this.Parent as ReplysView;
             if (lv != null)
             {

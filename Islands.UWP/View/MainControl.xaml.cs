@@ -178,6 +178,20 @@ namespace Islands.UWP
             }
         }
 
+        public void ShowImage(string imgPath)
+        {
+            ImageControl.imageUrl = imgPath;
+            mainNavigationList.SelectedIndex = 5;
+            mainSplitView.Content = ImageControl;
+        }
+
+        public void BottomRefresh()
+        {
+            if (IsMain) ThreadControl.BottomRefresh();
+            else ReplyControl.BottomRefresh();
+        }
+
+        #region private
         private void ThreadControl_ThreadClick(object sender, ItemClickEventArgs e)
         {
             var model = e.ClickedItem as DataModel;
@@ -198,23 +212,16 @@ namespace Islands.UWP
             MarkControl.AddMark(t);
         }
 
-        private void Control_ImageTapped(object sender, TappedRoutedEventArgs e)
-        {
-            var image = sender as Image;
-            if (image != null)
-            {
-                ImageControl.imageUrl = image.Tag.ToString();
-                mainNavigationList.SelectedIndex = 5;
-                mainSplitView.Content = ImageControl;
-            }
-        }
-
-        public void ShowImage(string imgPath)
-        {
-            ImageControl.imageUrl = imgPath;
-            mainNavigationList.SelectedIndex = 5;
-            mainSplitView.Content = ImageControl;
-        }
+        //private void Control_ImageTapped(object sender, TappedRoutedEventArgs e)
+        //{
+        //    var image = sender as Image;
+        //    if (image != null)
+        //    {
+        //        ImageControl.imageUrl = image.Tag.ToString();
+        //        mainNavigationList.SelectedIndex = 5;
+        //        mainSplitView.Content = ImageControl;
+        //    }
+        //}
 
         private void SwitchButton_Click(object sender, RoutedEventArgs e)
         {
@@ -381,6 +388,7 @@ namespace Islands.UWP
                 ReplyControl.GetReplyListByID(thread.ToString());
             }
         }
+        #endregion
     }
 
     public enum MenuType

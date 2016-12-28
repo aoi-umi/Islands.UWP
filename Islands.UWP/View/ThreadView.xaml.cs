@@ -15,7 +15,12 @@ namespace Islands.UWP
             NoImage = MainPage.Global.NoImage;
         }
 
-        public ThreadModel Thread { get; set; }        
+        public ThreadModel Thread { get; set; }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+        }
 
         protected override void OnLoaded()
         {

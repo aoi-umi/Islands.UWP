@@ -28,6 +28,7 @@ namespace Islands.UWP
         public BaseItemView() : base()
         {
             this.DefaultStyleKey = typeof(BaseItemView);
+            Loaded += BaseItemView_Loaded;
         }
 
         #region DependencyProperty
@@ -36,7 +37,7 @@ namespace Islands.UWP
             get { return (FrameworkElement)GetValue(TopContentProperty); }
             set { SetValue(TopContentProperty, value); }
         }
-        
+
         public static readonly DependencyProperty TopContentProperty =
             DependencyProperty.Register(nameof(TopContent), typeof(FrameworkElement), typeof(BaseItemView), new PropertyMetadata(null));
 
@@ -45,22 +46,22 @@ namespace Islands.UWP
             get { return (FrameworkElement)GetValue(BottomContentProperty); }
             set { SetValue(BottomContentProperty, value); }
         }
-        
+
         public static readonly DependencyProperty BottomContentProperty =
             DependencyProperty.Register(nameof(BottomContent), typeof(FrameworkElement), typeof(BaseItemView), new PropertyMetadata(null));
         #endregion
 
         public string ItemNo { get; set; }
         public string ItemThumb { get; set; }
-        public string ItemImage { get; set; }    
+        public string ItemImage { get; set; }
         public string Host { get; set; }
         public string GetRefAPI { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsPo { get; set; }
-        public bool NoImage { get; set; }     
+        public bool NoImage { get; set; }
         public bool IsLocalImage { get; set; }
         public bool IsTextSelectionEnabled { get; set; }
-        
+
         private Button showImageButton { get; set; }
         private ProgressRing progressRing { get; set; }
         private Grid imageView { get; set; }
@@ -76,7 +77,7 @@ namespace Islands.UWP
             ItemNo = itemViewModel.ItemNo;
             ItemThumb = itemViewModel.ItemThumb;
             ItemImage = itemViewModel.ItemImage;
-            IsAdmin = itemViewModel.IsAdmin;            
+            IsAdmin = itemViewModel.IsAdmin;
             if (IsTextSelectionEnabled) SetRefClick(itemViewModel.ItemContentView);
         }
 
@@ -87,8 +88,28 @@ namespace Islands.UWP
             progressRing = GetTemplateChild(ProgressRingName) as ProgressRing;
             image = GetTemplateChild(ImageName) as Image;
             imageView = GetTemplateChild(ImageViewName) as Grid;
-            gifTextView = GetTemplateChild(GifTextViewName) as Grid;
-            image.Tag = ItemImage;
+            gifTextView = GetTemplateChild(GifTextViewName) as Grid;            
+        }
+
+        private void RemoveEvent()
+        {
+            showImageButton.Click -= ShowImageButton_Click;
+            image.Source = null;
+            image.PointerPressed -= Image_PointerPressed;
+            image.ImageOpened -= Image_ImageOpened;
+            image.ImageFailed -= Image_ImageFailed;
+        }
+
+        private void BaseItemView_Loaded(object sender, RoutedEventArgs e)
+        {
+            OnLoaded();
+            Loaded -= BaseItemView_Loaded;
+        }
+
+        virtual protected void OnLoaded()
+        {
+            var vm = DataContext as ItemViewModel;
+            BaseInit(vm);
             if (!string.IsNullOrEmpty(ItemThumb))
             {
                 if (!NoImage) ShowImage();
@@ -98,18 +119,6 @@ namespace Islands.UWP
                 image.ImageOpened += Image_ImageOpened;
                 image.ImageFailed += Image_ImageFailed;
             }
-            Loaded += BaseItemView_Loaded;
-        }
-
-        private void BaseItemView_Loaded(object sender, RoutedEventArgs e)
-        {
-            OnLoaded();
-        }
-
-        virtual protected void OnLoaded()
-        {
-            var vm = DataContext as ItemViewModel;
-            BaseInit(vm);
         }
 
         private void SetRefClick(RichTextBlock rtb)
@@ -198,15 +207,6 @@ namespace Islands.UWP
         {
             base.OnDisconnectVisualChildren();
             RemoveEvent();
-        }
-
-        private void RemoveEvent()
-        {
-            showImageButton.Click -= ShowImageButton_Click;
-            image.Source = null;
-            image.PointerPressed -= Image_PointerPressed;
-            image.ImageOpened -= Image_ImageOpened;
-            image.ImageFailed -= Image_ImageFailed;
         }
     }
 }

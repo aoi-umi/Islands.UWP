@@ -1,13 +1,10 @@
 ﻿using Islands.UWP.Model;
 using Islands.UWP.ViewModel;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using UmiAoi.UWP;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 
@@ -31,7 +28,7 @@ namespace Islands.UWP
                 Source = MainPage.Global
             };
             Helper.BindingHelper(bindingModel);
-            ItemList.Add(StatusItem);       
+            ItemList.Add(BottomInfoItem);       
         }
 
         public PostRequest postReq;
@@ -47,16 +44,22 @@ namespace Islands.UWP
             _Refresh(1);
         }
 
-        private DataModel StatusItem = new DataModel()
+        private DataModel BottomInfoItem = new DataModel()
         {
-            DataType = DataTypes.PageInfo,
+            DataType = DataTypes.BottomInfo,
             Data = "什么也没有(つд⊂),点我加载",
         };
         private string _Title { set { Title.Text = value; } }
         private int currPage { get; set; }
-        private string message { set { StatusItem.Data = value; } }
+        private string message { set { BottomInfoItem.Data = value; } }
 
         private void ThreadStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            postReq.Page = currPage;
+            GetThreadList(postReq, IslandCode);
+        }
+
+        public void BottomRefresh()
         {
             postReq.Page = currPage;
             GetThreadList(postReq, IslandCode);
@@ -71,13 +74,13 @@ namespace Islands.UWP
         {            
             IsLoading = true;
             IsHitTestVisible = false;
-            ItemList.Remove(StatusItem);
+            ItemList.Remove(BottomInfoItem);
             message = "点我加载";
         }
 
         private void DataLoaded()
         {
-            ItemList.Add(StatusItem);
+            ItemList.Add(BottomInfoItem);
             IsLoading = false;
             IsHitTestVisible = true;
         }

@@ -25,14 +25,13 @@ namespace Islands.UWP
             InitMyReplyList();
         }
 
-        public List<Model.SendModel> myReplyList { get; set; }
+        public List<SendModel> myReplyList { get; set; }
 
-        public void AddMyReply(Model.SendModel sm)
+        public void AddMyReply(SendModel sm)
         {
             if (myReplyList == null) return;
             myReplyList.Insert(0, sm);
             sm.islandCode = IslandCode;
-            //Items.Insert(0, new MyReplyView() { MyReply = sm });
             ItemList.Insert(0, new DataModel() { DataType = DataTypes.MyReply, Data = sm });
             myReplyCount = myReplyList.Count.ToString();
         }

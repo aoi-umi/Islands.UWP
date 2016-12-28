@@ -30,6 +30,8 @@ namespace Islands.UWP.ViewModel
                         return resources["MyReplyDataTemplate"] as DataTemplate;
                     case DataTypes.PageInfo:
                         return resources["PageInfoDataTemplate"] as DataTemplate;
+                    case DataTypes.BottomInfo:
+                        return resources["BottomInfoDataTemplate"] as DataTemplate;
                 }
             }
             return base.SelectTemplateCore(item);
