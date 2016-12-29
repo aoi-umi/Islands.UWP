@@ -8,10 +8,10 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <CollectionViewSource x:Name="forumGroup" IsSourceGrouped="True"/>
-        <local:IsShowMenuConverter x:Key="IsShowMenuConverter"/>
+        <local:IsHideMenuConverter x:Key="IsHideMenuConverter"/>
     </UserControl.Resources>
     <Grid>
-        <SplitView Name="mainSplitView" CompactPaneLength="{Binding IsHideMenu,Converter={StaticResource IsShowMenuConverter}}" OpenPaneLength="100" DisplayMode="CompactOverlay">
+        <SplitView Name="mainSplitView" CompactPaneLength="{Binding IsHideMenu,Converter={StaticResource IsHideMenuConverter}}" OpenPaneLength="100" DisplayMode="CompactOverlay">
             <SplitView.Pane>
                 <ListBox Name="mainNavigationList"
                          SelectionMode="Single">

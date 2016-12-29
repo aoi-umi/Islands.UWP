@@ -42,6 +42,9 @@
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+
+            <local:IsShowMenuButtonConverter x:Key="IsShowMenuButtonConverter"/>
+
             <SolidColorBrush x:Key="ThemeColor" Color="{ThemeResource SystemAccentColor}" Opacity="0.4"/>
             <local:ItemToViewModelConverter x:Key="ItemToViewModelConverter"/>
             <viewModel:ItemDataTemplateSelector x:Key="ItemDataTemplateSelector"/>

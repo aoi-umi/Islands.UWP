@@ -112,8 +112,9 @@ namespace Islands.UWP
             SelectionMode = ListViewSelectionMode.None;
         }
 
-        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        protected override void OnRefresh()
         {
+            base.OnRefresh();
             InitMyReplyList();
         }
     }

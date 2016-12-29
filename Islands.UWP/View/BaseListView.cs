@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using UmiAoi.UWP;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 // The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
 
@@ -28,6 +29,16 @@ namespace Islands.UWP
         
         public static readonly DependencyProperty TopContentProperty =
             DependencyProperty.Register(nameof(TopContent), typeof(FrameworkElement), typeof(BaseListView), new PropertyMetadata(null));
+
+        public Brush TopContentBackground
+        {
+            get { return (Brush)GetValue(TopContentBackgroundProperty); }
+            set { SetValue(TopContentBackgroundProperty, value); }
+        }
+        
+        public static readonly DependencyProperty TopContentBackgroundProperty =
+            DependencyProperty.Register(nameof(TopContentBackground), typeof(Brush), typeof(BaseListView), new PropertyMetadata(null));
+
 
         public FrameworkElement BottomContent
         {
@@ -55,18 +66,33 @@ namespace Islands.UWP
         
         public static readonly DependencyProperty MaskOpacityProperty =
             DependencyProperty.Register(nameof(MaskOpacity), typeof(double), typeof(BaseListView), new PropertyMetadata(0.0));
+
+        public string Title
+        {
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
+        }
+        
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register(nameof(Title), typeof(string), typeof(BaseListView), new PropertyMetadata(null));
+
         #endregion
 
-        protected ObservableCollection<DataModel> ItemList { get; set; }
         public IslandsCode IslandCode { get; set; }
+        protected ObservableCollection<DataModel> ItemList { get; set; }
         protected DeviceFamily DeviceFamily { get { return Helper.CurrDeviceFamily; } }
+
         private static string ScrollViewerName = "ScrollViewer";
+        private static string RefreshButtonName = "RefreshButton";
         private ScrollViewer scrollViewer { get; set; }
+        private Button refreshButton { get; set; }
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             scrollViewer = GetTemplateChild(ScrollViewerName) as ScrollViewer;
+            refreshButton = GetTemplateChild(RefreshButtonName) as Button;
 
+            refreshButton.DataContext = this;
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
         }
 
@@ -83,6 +109,15 @@ namespace Islands.UWP
             {
                 OnScrollToEnd();
             }
+        }
+
+        public void Refresh()
+        {
+            OnRefresh();
+        }
+
+        protected virtual void OnRefresh()
+        {
         }
     }
 }

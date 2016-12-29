@@ -26,6 +26,7 @@ namespace Islands.UWP
         {
             if (DataContext == null)
             {
+                return;
                 var viewModel = new ItemViewModel() { GlobalConfig = MainPage.Global, BaseItem = Thread };
                 DataContext = viewModel;
             }

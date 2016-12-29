@@ -1,4 +1,5 @@
-﻿using Islands.UWP.ViewModel;
+﻿using Islands.UWP.Model;
+using Islands.UWP.ViewModel;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -30,12 +31,12 @@ namespace Islands.UWP
             Helper.BindingHelper(bindingModel);
             ItemList.Add(BottomInfoItem);
         }
-        
-        public Model.PostRequest postReq;
+
+        public PostRequest postReq;
         public int pageSize { get; set; }
         public string currThread { get; set; }      
 
-        public delegate void MarkSuccessEventHandler(Object sender, Model.ThreadModel t);
+        public delegate void MarkSuccessEventHandler(Object sender, ThreadModel t);
         public event MarkSuccessEventHandler MarkSuccess;
 
         public void GetReplyListByID(string threadId)
@@ -45,7 +46,7 @@ namespace Islands.UWP
             {
                 replyId = threadId;
                 postReq.ID = threadId;
-                _Refresh(1);
+                Refresh();
             }
             catch (Exception ex)
             {
@@ -78,8 +79,8 @@ namespace Islands.UWP
         private bool IsGetAllReply = false;
         private string replyId {set { Title.Text= value; } }
         private string txtReplyCount { set { ListCount.Text = "(" +value + "," + allPage + "P)"; } }
-        private Model.ThreadModel top = null;
-        private Model.ReplyModel lastReply = null;
+        private ThreadModel top = null;
+        private ReplyModel lastReply = null;
 
         private void ReplyStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -91,11 +92,6 @@ namespace Islands.UWP
         {
             postReq.Page = currPage;
             GetReplyList(postReq, IslandCode);
-        }
-
-        private void RefreshButton_Click(object sender, RoutedEventArgs e)
-        {
-            _Refresh(1);
         }
 
         private void DataLoading()
@@ -113,7 +109,12 @@ namespace Islands.UWP
             IsHitTestVisible = true;
         }
 
-        private void _Refresh(int page)
+        protected override void OnRefresh()
+        {
+            base.OnRefresh();
+            Refresh(1);
+        }
+        private void Refresh(int page)
         {
             lastReply = null;
             IsGetAllReply = false;
@@ -131,7 +132,7 @@ namespace Islands.UWP
             }
         }
 
-        private async void GetReplyList(Model.PostRequest req, IslandsCode code)
+        private async void GetReplyList(PostRequest req, IslandsCode code)
         {
             if (IsLoading) return;
             txtReplyCount = "0";
@@ -142,7 +143,7 @@ namespace Islands.UWP
             {
                 if (string.IsNullOrEmpty(req.ID)) throw new Exception("串号为空");
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
-                List<Model.ReplyModel> Replys = null;
+                List<ReplyModel> Replys = null;
                 top = null;
                 Data.Convert.ResStringToThreadAndReplyList(res, code, out top, out Replys);
                 top.islandCode = code;
@@ -233,7 +234,7 @@ namespace Islands.UWP
         {
             var page = await Data.Message.GotoPageYesOrNo();
             if (page > 0)
-                _Refresh(page);
+                Refresh(page);
         }
 
         //点击收藏

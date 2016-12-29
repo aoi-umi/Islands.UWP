@@ -5,26 +5,12 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" ItemTemplate="{StaticResource ThreadDataTemplate}">
+    mc:Ignorable="d"   MinHeight="400" MinWidth="200" ItemTemplate="{StaticResource ThreadDataTemplate}">
     <local:BaseListView.Resources>
-        <Style TargetType="TextBox">
-            <Setter Property="IsReadOnly" Value="True"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Margin" Value="0"/>
-            <Setter Property="Padding" Value="0"/>
-        </Style>
     </local:BaseListView.Resources>
     <local:BaseListView.TopContent>
-        <RelativePanel Background="{StaticResource ThemeColor}">
-            <Button Name="Menu" Content="&#xE700;"
-                    RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"
-                    Style="{StaticResource NavButton}" Visibility="Collapsed"/>
-            <TextBlock Name="Title" Text="收藏"
-                       RelativePanel.RightOf="Menu" FontSize="22"/>
-            <Button Name="RefreshButton" Content="&#xE117;"
-                    RelativePanel.AlignRightWithPanel="True" Style="{StaticResource NavButton}"
-                    Click="RefreshButton_Click"/>
+        <RelativePanel>
+            <TextBlock Name="Title" Text="收藏" FontSize="22"/>
         </RelativePanel>
     </local:BaseListView.TopContent>
     <local:BaseListView.BottomContent>

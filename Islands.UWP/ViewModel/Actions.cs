@@ -17,40 +17,46 @@ namespace Islands.UWP.ViewModel
             get { return (ActionTypes)GetValue(ActionTypeProperty); }
             set { SetValue(ActionTypeProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for ActionType.  This enables animation, styling, binding, etc...
+        
         public static readonly DependencyProperty ActionTypeProperty =
             DependencyProperty.Register(nameof(ActionType), typeof(ActionTypes), typeof(Actions), new PropertyMetadata(ActionTypes.None));
 
         public object Execute(object sender, object parameter)
         {
-            var ele = sender as FrameworkElement;
-            if (ele != null)
+            var ele = sender as FrameworkElement;            
+            switch (ActionType)
             {
-                switch (ActionType)
-                {
-                    case ActionTypes.ImageTapped:
+                case ActionTypes.ImageTapped:
+                    if(ele != null)
                         ImageTapped(ele.DataContext);
-                        break;
-                    case ActionTypes.MenuTapped:
-                        CurrentControl?.MenuToggle();
-                        break;
-                    case ActionTypes.BottomInfoTapped:
-                        CurrentControl?.BottomRefresh();
-                        break;
-                }
-                
+                    break;
+                case ActionTypes.MenuTapped:
+                    CurrentControl?.MenuToggle();
+                    break;
+                case ActionTypes.BottomInfoTapped:
+                case ActionTypes.RefreshTapped:
+                    if(ele != null)
+                    {
+                        RefreshTapped(ele.DataContext);
+                    }
+                    break;
             }
             return true;
         }
 
-        private void ImageTapped(object DataContext)
+        private void ImageTapped(object dataContext)
         {
-            var model = DataContext as ItemViewModel;
+            var model = dataContext as ItemViewModel;
             if (model != null)
             {
                 CurrentControl?.ShowImage(model.ItemImage);
             }
+        }
+
+        private void RefreshTapped(object dataContext)
+        {
+            var model = dataContext as BaseListView;
+            model?.Refresh();
         }
 
         private MainControl CurrentControl
@@ -70,5 +76,6 @@ namespace Islands.UWP.ViewModel
         ImageTapped,
         MenuTapped,
         BottomInfoTapped,
+        RefreshTapped,
     }
 }

@@ -63,8 +63,8 @@ namespace Islands.UWP
                 },
                 IslandCode = IslandCode,
                 currForum = currForum,
-                initTitle = currForum.forumName
-            };
+                initTitle = currForum.forumName,
+        };
 
             ReplyControl = new ReplysView()
             {
@@ -74,10 +74,13 @@ namespace Islands.UWP
                     API = GetReplyAPI
                 },
                 IslandCode = IslandCode,
-                pageSize = PageSize
+                pageSize = PageSize,
             };
 
-            MarkControl = new MarksView() { IslandCode = IslandCode };
+            MarkControl = new MarksView()
+            {
+                IslandCode = IslandCode,
+            };
 
             ImageControl = new ImageView();
 
@@ -92,7 +95,10 @@ namespace Islands.UWP
                 islandCode = IslandCode
             };
 
-            MyReplysControl = new MyReplysView() { IslandCode = IslandCode };
+            MyReplysControl = new MyReplysView()
+            {
+                IslandCode = IslandCode,
+            };
 
             ThreadControl.ItemClick += ThreadControl_ThreadClick;
             ThreadControl.SwitchButton.Click += SwitchButton_Click;
@@ -183,6 +189,25 @@ namespace Islands.UWP
             ImageControl.imageUrl = imgPath;
             mainNavigationList.SelectedIndex = 5;
             mainSplitView.Content = ImageControl;
+        }
+
+        public void Refresh(string type)
+        {
+            switch (type)
+            {
+                case "":
+                    ThreadControl.Refresh();
+                    break;
+                //case ActionTypes.ReplyRefresh:
+                //    ThreadControl.Refresh();
+                //    break;
+                //case ActionTypes.MyReplyRefresh:
+                //    ThreadControl.Refresh();
+                //    break;
+                //case ActionTypes.MarkRefresh:
+                //    ThreadControl.Refresh();
+                //    break;
+            }
         }
 
         public void BottomRefresh()

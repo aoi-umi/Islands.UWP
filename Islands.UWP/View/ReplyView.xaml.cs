@@ -13,7 +13,7 @@ namespace Islands.UWP
         {
             InitializeComponent();
             NoImage = MainPage.Global.NoImage;
-            IsTextSelectionEnabled = true;
+            IsTextSelectionEnabled = true;            
         }
 
         public Model.ReplyModel Reply { get; set; }
@@ -21,12 +21,13 @@ namespace Islands.UWP
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-        }
+        }        
 
         protected override void OnLoaded()
         {
             if (DataContext == null)
             {
+                return;
                 var viewModel = new ItemViewModel() { GlobalConfig = MainPage.Global, BaseItem = Reply };
                 viewModel.IsTextSelectionEnabled = IsTextSelectionEnabled;
                 BaseInit(viewModel);

@@ -10,47 +10,16 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d" MinHeight="400" MinWidth="200" ItemTemplateSelector="{StaticResource ItemDataTemplateSelector}">
-    <local:BaseListView.Resources>
-        <Style TargetType="TextBox">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Margin" Value="0"/>
-            <Setter Property="Padding" Value="0"/>
-        </Style>
-        <local:IsShowMenuButtonConverter x:Key="IsShowMenuButtonConverter"/>
-        <local:ItemToViewModelConverter x:Key="ItemToViewModelConverter"/>
+<local:BaseListView.Resources>
     </local:BaseListView.Resources>
-    <!--<local:BaseListView.ItemTemplate>
-        <DataTemplate>
-            <local:ThreadView DataContext="{Binding Converter={StaticResource ItemToViewModelConverter}}"/>
-        </DataTemplate>
-    </local:BaseListView.ItemTemplate>-->
     <local:BaseListView.TopContent>
-        <RelativePanel 
-            Grid.Row="0"
-            Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
-            <Button Name="Menu" Content="&#xE700;"
-                    RelativePanel.AlignLeftWithPanel="True" Background="Transparent"
-                    Style="{StaticResource NavButton}"
-                    Visibility="{Binding IsHideMenu, Converter={StaticResource IsShowMenuButtonConverter}}">
-                <Interactivity:Interaction.Behaviors>
-                    <Core:EventTriggerBehavior EventName="Tapped">
-                        <viewModel:Actions ActionType="MenuTapped"/>
-                    </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
-            </Button>
-            <TextBlock Name="Title" Text=""
-                       RelativePanel.RightOf="Menu"
-                       FontSize="22"/>
-            <Button Name="RefreshButton" Content="&#xE117;"
-                    RelativePanel.AlignRightWithPanel="True"
-                    Style="{StaticResource NavButton}"
-                    Click="RefreshButton_Click"/>
+        <RelativePanel Grid.Row="0">
+            <TextBlock Name="Title" Text="" FontSize="22"/>
         </RelativePanel>
     </local:BaseListView.TopContent>
     <local:BaseListView.BottomContent>
         <RelativePanel Grid.Row="2"
-                       Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
+                       Background="{ThemeResource ThemeColor}">
             <Button Name="SwitchButton"
                     x:FieldModifier="public"
                     Content="&#xE13C;" Style="{StaticResource NavButton}"/>
@@ -64,9 +33,4 @@
                     Style="{StaticResource NavButton}"/>
         </RelativePanel>
     </local:BaseListView.BottomContent>
-    <!--<ListViewItem Background="AliceBlue">123</ListViewItem>
-    <ListViewItem Background="AliceBlue">
-        <Button Content="122" Background="BlueViolet" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-    </ListViewItem>
-    <TextBlock Text="123" TextAlignment="Center" VerticalAlignment="Center"/>-->
 </local:BaseListView>

@@ -1,6 +1,5 @@
 ﻿using Islands.UWP.WinRTExceptions;
 using System;
-using UmiAoi.UWP;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.ViewManagement;

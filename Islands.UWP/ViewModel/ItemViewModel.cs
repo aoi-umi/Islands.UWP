@@ -152,6 +152,7 @@ namespace Islands.UWP.ViewModel
             rtb.TextWrapping = TextWrapping.Wrap;
             return rtb;
         }
+
         private void Init(BaseItemModel baseItemModel)
         {
             #region Init

@@ -24,7 +24,7 @@ namespace Islands.UWP
         }
     }
 
-    public class IsShowMenuConverter : IValueConverter
+    public class IsHideMenuConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

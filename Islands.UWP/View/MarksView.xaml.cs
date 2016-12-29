@@ -1,7 +1,6 @@
 ﻿using Islands.UWP.Model;
 using Islands.UWP.ViewModel;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -25,9 +24,9 @@ namespace Islands.UWP
             InitMarkList();
         }
 
-        public List<Model.ThreadModel> markList { get; set; }        
+        public List<ThreadModel> markList { get; set; }        
 
-        public void AddMark(Model.ThreadModel tm)
+        public void AddMark(ThreadModel tm)
         {
             if (markList == null) return;
             markList.Insert(0, tm);
@@ -61,7 +60,6 @@ namespace Islands.UWP
         private async void InitMarkList()
         {
             IsLoading = true;
-            //Items.Clear();
             ItemList.Clear();
             await Task.Run(() =>
             {
@@ -115,8 +113,9 @@ namespace Islands.UWP
             SelectionMode = ListViewSelectionMode.None;
         }
 
-        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        protected override void OnRefresh()
         {
+            base.OnRefresh();
             InitMarkList();
         }
     }

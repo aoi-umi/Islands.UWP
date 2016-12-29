@@ -41,7 +41,7 @@ namespace Islands.UWP
             currForum = forum;
             postReq.ID = forum.forumValue;
             _Title = forum.forumName;
-            _Refresh(1);
+            Refresh();
         }
 
         private DataModel BottomInfoItem = new DataModel()
@@ -53,21 +53,10 @@ namespace Islands.UWP
         private int currPage { get; set; }
         private string message { set { BottomInfoItem.Data = value; } }
 
-        private void ThreadStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            postReq.Page = currPage;
-            GetThreadList(postReq, IslandCode);
-        }
-
         public void BottomRefresh()
         {
             postReq.Page = currPage;
             GetThreadList(postReq, IslandCode);
-        }
-
-        private void RefreshButton_Click(object sender, RoutedEventArgs e)
-        {
-            _Refresh(1);
         }
 
         private void DataLoading()
@@ -85,7 +74,13 @@ namespace Islands.UWP
             IsHitTestVisible = true;
         }
 
-        private void _Refresh(int page)
+        protected override void OnRefresh()
+        {
+            base.OnRefresh();
+            Refresh(1);
+        }
+
+        private void Refresh(int page)
         {
             currPage = page;     
             try
@@ -123,7 +118,7 @@ namespace Islands.UWP
             try
             {
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
-                List<Model.ThreadResponseModel> Threads = null;
+                List<ThreadResponseModel> Threads = null;
                 Data.Convert.ResStringToThreadList(res, code, out Threads);                
                 if (Threads == null || Threads.Count == 0)
                     throw new Exception("什么也没有");
@@ -151,7 +146,7 @@ namespace Islands.UWP
         {
             var page = await Data.Message.GotoPageYesOrNo();
             if (page > 0)
-                _Refresh(page);
+                Refresh(page);
         }    
     }   
 }
