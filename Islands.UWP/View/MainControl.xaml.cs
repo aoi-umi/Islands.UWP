@@ -63,8 +63,8 @@ namespace Islands.UWP
                 },
                 IslandCode = IslandCode,
                 currForum = currForum,
-                initTitle = currForum.forumName,
-        };
+                Title = currForum.forumName,
+            };
 
             ReplyControl = new ReplysView()
             {
@@ -102,11 +102,9 @@ namespace Islands.UWP
 
             ThreadControl.ItemClick += ThreadControl_ThreadClick;
             ThreadControl.SwitchButton.Click += SwitchButton_Click;
-            ThreadControl.SendButton.Click += SendButton_Click;
 
             ReplyControl.SwitchButton.Click += SwitchButton_Click;
             ReplyControl.MarkSuccess += ReplyControl_MarkSuccess;
-            ReplyControl.SendButton.Click += SendButton_Click;
 
             MarkControl.ItemClick += MarkControl_MarkClick;
             MarkControl.BackButton.Click += BackButton_Click;
@@ -235,18 +233,7 @@ namespace Islands.UWP
         private void ReplyControl_MarkSuccess(object sender, Model.ThreadModel t)
         {
             MarkControl.AddMark(t);
-        }
-
-        //private void Control_ImageTapped(object sender, TappedRoutedEventArgs e)
-        //{
-        //    var image = sender as Image;
-        //    if (image != null)
-        //    {
-        //        ImageControl.imageUrl = image.Tag.ToString();
-        //        mainNavigationList.SelectedIndex = 5;
-        //        mainSplitView.Content = ImageControl;
-        //    }
-        //}
+        }        
 
         private void SwitchButton_Click(object sender, RoutedEventArgs e)
         {
@@ -301,12 +288,7 @@ namespace Islands.UWP
             }            
         }
 
-        private void SendControl_SendClick(object sender, RoutedEventArgs e)
-        {
-            BackToHome();
-        }
-
-        private void SendControl_Response(bool Success, Model.SendModel send)
+        private void SendControl_Response(bool Success, SendModel send)
         {
             if (Success)
             {
@@ -319,7 +301,20 @@ namespace Islands.UWP
             }
         }
 
-        private void SendButton_Click(object sender, RoutedEventArgs e)
+        private void SendControl_SendClick(object sender, RoutedEventArgs e)
+        {
+            BackToHome();
+        }
+
+        public void OnSendTapped()
+        {
+            if (mainSplitView.Content != SendControl)
+            {
+                GotoSendView();
+            }
+        }
+
+        private void GotoSendView()
         {
             if (IsMain)
             {
@@ -328,7 +323,8 @@ namespace Islands.UWP
                 SendControl.postModel.Id = ThreadControl.currForum.forumValue;
                 if (IslandCode == IslandsCode.Koukuko) SendControl.postModel.Id += "#" + ThreadControl.currForum.forumGroupId;
             }
-            else {
+            else
+            {
                 SendControl.title = ReplyControl.currThread;
                 SendControl.postModel.Api = PostReplyAPI;
                 SendControl.postModel.Id = ReplyControl.currThread;

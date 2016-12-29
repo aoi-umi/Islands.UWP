@@ -14,8 +14,7 @@
     </local:BaseListView.Resources>
     <local:BaseListView.TopContent>
         <RelativePanel>
-            <TextBlock Name="Title" FontSize="24"/>
-            <TextBlock Name="ListCount" FontSize="24" RelativePanel.RightOf="Title"/>
+            <TextBlock Name="ListCount" FontSize="24"/>
             <Button Name="MarkButton" Content="&#xE734;" Style="{StaticResource NavButton}" RelativePanel.AlignRightWithPanel="True" Click="MarkButton_Click"/>
         </RelativePanel>
     </local:BaseListView.TopContent>
@@ -23,15 +22,18 @@
         <RelativePanel Background="{StaticResource ThemeColor}">
             <Button Name="SwitchButton" x:FieldModifier="public"
                     Content="&#xE13C;" Style="{StaticResource NavButton}"/>
-
             <Button Name="GotoPageButton" Content="&#xE0AB;"
                     Style="{StaticResource NavButton}" RelativePanel.RightOf="SwitchButton"
                     Click="GotoPageButton_Click"/>
-
-            <Button Name="SendButton" x:FieldModifier="public"
-                    Content="&#xE724;" RelativePanel.AlignRightWithPanel="True"
-                    Style="{StaticResource NavButton}"/>
-
+            <Button Name="SendButton" Content="&#xE724;" 
+                    RelativePanel.AlignRightWithPanel="True"
+                    Style="{StaticResource NavButton}">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="Tapped">
+                        <viewModel:Actions ActionType="SendTapped"/>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
         </RelativePanel>
     </local:BaseListView.BottomContent>
 </local:BaseListView>

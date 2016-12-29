@@ -8,11 +8,6 @@
     mc:Ignorable="d"  MinHeight="400" MinWidth="200" ItemTemplate="{StaticResource MyReplyDataTemplate}">
     <local:BaseListView.Resources>
     </local:BaseListView.Resources>
-    <local:BaseListView.TopContent>
-        <RelativePanel>
-            <TextBlock Name="Title" Text="我的回复" FontSize="22"/>
-        </RelativePanel>
-    </local:BaseListView.TopContent>
     <local:BaseListView.BottomContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
             <Button Name="BackButton" x:FieldModifier="public" Content="&#xE80F;"

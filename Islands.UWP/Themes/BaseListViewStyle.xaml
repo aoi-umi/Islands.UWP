@@ -14,6 +14,7 @@
         <Setter Property="Padding" Value="0"/>
         <Setter Property="SelectionMode" Value="None"/>
         <Setter Property="TopContentBackground" Value="{ThemeResource ThemeColor}"/>
+        <Setter Property="Title" Value="Title"/>
 
         <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="TabNavigation" Value="Once"/>
@@ -59,7 +60,7 @@
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
                                     <ContentPresenter Grid.Column="2" Content="{TemplateBinding TopContent}"/>
-                                    <TextBlock Text="{TemplateBinding Title}"/>
+                                    <TextBlock Grid.Column="1" Text="{TemplateBinding Title}" FontSize="24" VerticalAlignment="Stretch"/>
                                     <Button Grid.Column="0" x:Name="MenuButton" Content="&#xE700;" Style="{StaticResource NavButton}" 
                                             Visibility="{Binding IsHideMenu, Converter={StaticResource IsShowMenuButtonConverter}}">
                                         <Interactivity:Interaction.Behaviors>

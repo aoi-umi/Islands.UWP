@@ -10,13 +10,6 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d" MinHeight="400" MinWidth="200" ItemTemplateSelector="{StaticResource ItemDataTemplateSelector}">
-<local:BaseListView.Resources>
-    </local:BaseListView.Resources>
-    <local:BaseListView.TopContent>
-        <RelativePanel Grid.Row="0">
-            <TextBlock Name="Title" Text="" FontSize="22"/>
-        </RelativePanel>
-    </local:BaseListView.TopContent>
     <local:BaseListView.BottomContent>
         <RelativePanel Grid.Row="2"
                        Background="{ThemeResource ThemeColor}">
@@ -28,9 +21,14 @@
                     RelativePanel.RightOf="SwitchButton"
                     Click="GotoPageButton_Click"/>
             <Button Name="SendButton" Content="&#xE724;"
-                    x:FieldModifier="public"
                     RelativePanel.AlignRightWithPanel="True"
-                    Style="{StaticResource NavButton}"/>
+                    Style="{StaticResource NavButton}">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="Tapped">
+                        <viewModel:Actions ActionType="SendTapped"/>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
         </RelativePanel>
     </local:BaseListView.BottomContent>
 </local:BaseListView>

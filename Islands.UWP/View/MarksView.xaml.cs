@@ -40,7 +40,7 @@ namespace Islands.UWP
         {
             set
             {
-                Title.Text = "收藏(" + value + ")";
+                Title = "收藏(" + value + ")";
             }
         }
 

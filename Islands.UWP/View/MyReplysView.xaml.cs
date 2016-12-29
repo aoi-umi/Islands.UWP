@@ -40,7 +40,7 @@ namespace Islands.UWP
         {
             set
             {
-                Title.Text = "我的回复(" + value + ")";
+                Title = "我的回复(" + value + ")";
             }
         }
 

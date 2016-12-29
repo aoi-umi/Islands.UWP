@@ -62,10 +62,8 @@
                     <TextBlock Text="字体大小" FontSize="16"/>
                     <Slider Name="TitleFontSizeSlider" Value="10" Minimum="1" Maximum="100"/>
                     <Slider Name="ContentFontSizeSlider" Value="16" Minimum="1" Maximum="100"/>
-                    <TextBlock Name="Title" Text="标题"
-                           FontSize="{Binding ElementName=TitleFontSizeSlider,Path=Value,Mode=OneWay}"/>
-                    <TextBlock Name="Content" Text="内容"
-                           FontSize="{Binding ElementName=ContentFontSizeSlider,Path=Value,Mode=OneWay}"/>
+                    <TextBlock Text="标题" FontSize="{Binding ElementName=TitleFontSizeSlider,Path=Value,Mode=OneWay}"/>
+                    <TextBlock Text="内容" FontSize="{Binding ElementName=ContentFontSizeSlider,Path=Value,Mode=OneWay}"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

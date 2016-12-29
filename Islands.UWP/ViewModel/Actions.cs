@@ -1,10 +1,4 @@
-﻿using Islands.UWP.Model;
-using Microsoft.Xaml.Interactivity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xaml.Interactivity;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -34,11 +28,16 @@ namespace Islands.UWP.ViewModel
                     CurrentControl?.MenuToggle();
                     break;
                 case ActionTypes.BottomInfoTapped:
+                    CurrentControl?.BottomRefresh();
+                    break;
                 case ActionTypes.RefreshTapped:
                     if(ele != null)
                     {
                         RefreshTapped(ele.DataContext);
                     }
+                    break;
+                case ActionTypes.SendTapped:
+                    CurrentControl?.OnSendTapped();
                     break;
             }
             return true;
@@ -77,5 +76,6 @@ namespace Islands.UWP.ViewModel
         MenuTapped,
         BottomInfoTapped,
         RefreshTapped,
+        SendTapped,
     }
 }

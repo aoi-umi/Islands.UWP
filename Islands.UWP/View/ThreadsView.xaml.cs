@@ -33,14 +33,13 @@ namespace Islands.UWP
 
         public PostRequest postReq;
         
-        public string initTitle { set { Title.Text = value; } }
         public ForumModel currForum { get; set; }        
 
         public void RefreshById(ForumModel forum)
         {
             currForum = forum;
             postReq.ID = forum.forumValue;
-            _Title = forum.forumName;
+            Title = forum.forumName;
             Refresh();
         }
 
@@ -49,7 +48,6 @@ namespace Islands.UWP
             DataType = DataTypes.BottomInfo,
             Data = "什么也没有(つд⊂),点我加载",
         };
-        private string _Title { set { Title.Text = value; } }
         private int currPage { get; set; }
         private string message { set { BottomInfoItem.Data = value; } }
 
@@ -80,8 +78,9 @@ namespace Islands.UWP
             Refresh(1);
         }
 
-        private void Refresh(int page)
+        public void Refresh(int page)
         {
+            if (page <= 0) return;
             currPage = page;     
             try
             {

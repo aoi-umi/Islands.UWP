@@ -44,7 +44,7 @@ namespace Islands.UWP
             currThread = threadId;
             try
             {
-                replyId = threadId;
+                Title = threadId;
                 postReq.ID = threadId;
                 Refresh();
             }
@@ -77,7 +77,6 @@ namespace Islands.UWP
         }
         private int replyCount { get; set; }
         private bool IsGetAllReply = false;
-        private string replyId {set { Title.Text= value; } }
         private string txtReplyCount { set { ListCount.Text = "(" +value + "," + allPage + "P)"; } }
         private ThreadModel top = null;
         private ReplyModel lastReply = null;
@@ -114,8 +113,10 @@ namespace Islands.UWP
             base.OnRefresh();
             Refresh(1);
         }
-        private void Refresh(int page)
+
+        public void Refresh(int page)
         {
+            if (page <= 0) return;
             lastReply = null;
             IsGetAllReply = false;
             replyCount = 0;

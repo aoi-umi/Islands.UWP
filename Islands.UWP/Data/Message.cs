@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
@@ -22,7 +23,7 @@ namespace Islands.UWP.Data
         {
             InputScope inputScope = new InputScope();
             inputScope.Names.Add(new InputScopeName() { NameValue = InputScopeNameValue.Number });
-            TextBox inputBox = new TextBox() { InputScope = inputScope }; 
+            TextBox inputBox = new TextBox() { InputScope = inputScope, VerticalContentAlignment = VerticalAlignment.Center }; 
              var dialog = new ContentDialog()
             {
                 Title = "输入页数",
@@ -51,7 +52,7 @@ namespace Islands.UWP.Data
         {
             InputScope inputScope = new InputScope();
             inputScope.Names.Add(new InputScopeName() { NameValue = InputScopeNameValue.Number });
-            TextBox inputBox = new TextBox() { InputScope = inputScope };
+            TextBox inputBox = new TextBox() { InputScope = inputScope, VerticalContentAlignment = VerticalAlignment.Center };
             var dialog = new ContentDialog()
             {
                 Title = "输入串号",

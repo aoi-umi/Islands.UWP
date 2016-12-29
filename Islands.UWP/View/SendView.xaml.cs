@@ -101,7 +101,6 @@ namespace Islands.UWP
         private void OnSendClick(object sender, RoutedEventArgs e)
         {
             if (Response != null) SendClick(sender, e);
-            this.IsHitTestVisible = true;
         }
 
         private void EmptyButton_Click(object sender, RoutedEventArgs e)
@@ -119,7 +118,12 @@ namespace Islands.UWP
             else txtImageUri = await Data.File.SetLocalImage(SendImage);
         }
 
-        private async void SendButton_Click(object sender, RoutedEventArgs e)
+        private void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            Send(e);
+        }
+
+        private async void Send(RoutedEventArgs e)
         {
             try
             {
@@ -138,7 +142,7 @@ namespace Islands.UWP
                     islandCode = postModel.islandCode,
                     isMain = postModel.IsMain,
                     CookieValue = postModel.Cookie.CookieValue,
-                    sendDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")                                      
+                    sendDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
 
                 string originalContent = string.Empty;
@@ -159,7 +163,8 @@ namespace Islands.UWP
                     send.sendContent = "[分享图片]";
 
                 IsHitTestVisible = false;
-                OnSendClick(sender, e);
+                IsLoading = true;
+                OnSendClick(this, e);
                 var res = await Data.Http.PostData(send);
                 bool IsSuccess = false;
                 string ThreadId = "";
@@ -183,15 +188,17 @@ namespace Islands.UWP
                 if (IsSuccess)
                 {
                     if (!string.IsNullOrEmpty(originalContent)) send.sendContent += "\r\n" + originalContent;
-                    EmptyButton_Click(null,null);
+                    EmptyButton_Click(null, null);
                 }
                 send.ThreadId = ThreadId;
                 OnResponse(IsSuccess, send);
             }
-            catch (Exception ex) {
-                this.IsHitTestVisible = true;
+            catch (Exception ex)
+            {
                 Data.Message.ShowMessage(ex.Message);
             }
+            this.IsHitTestVisible = true;
+            IsLoading = false;
         }
 
         private void KaomojiBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

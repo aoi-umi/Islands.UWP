@@ -1,4 +1,5 @@
-﻿using Islands.UWP.ViewModel;
+﻿using Islands.UWP.Model;
+using Islands.UWP.ViewModel;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
@@ -38,6 +39,14 @@ namespace Islands.UWP
             else if (IsPo) txtUserid.Foreground = Config.PoColor;
         }
 
+        private DependencyObject GetParent(DependencyObject reference, Type targetType)
+        {
+            var parent = VisualTreeHelper.GetParent(reference);
+            if (parent == null || parent.GetType() == targetType)
+                return parent;
+            return GetParent(parent, targetType);
+        }
+
         protected override async void OnRefClick(string RefText)
         {
             base.OnRefClick(RefText);
@@ -45,34 +54,36 @@ namespace Islands.UWP
             string id = RefText.ToLower().Replace(">>", "").Replace("no.", "");
             if (string.IsNullOrEmpty(id)) return;
             //从list寻找
-            //var p = VisualTreeHelper.GetParent(this);
-            var lv = this.Parent as ReplysView;
+            var lv = GetParent(this, typeof(ReplysView)) as ReplysView;
             if (lv != null)
             {
                 foreach (var lvi in lv.Items)
                 {
-                    ThreadView tv = lvi as ThreadView;
-                    if (tv != null && tv.Thread != null && tv.Thread.id == id)
+                    var model = lvi as DataModel;
+                    if (model != null)
                     {
-                        tv.Thread.islandCode = IslandCode;
-                        ThreadView thread = new ThreadView()
+                        var item = model.Data as BaseItemModel;
+                        if (item != null && item.id == id)
                         {
-                            Thread = tv.Thread,
-                            Margin = new Thickness(0, 0, 5, 0),
-                            Background = null,
-                            IsTextSelectionEnabled = true
-                        };
-                        await Data.Message.ShowRef(RefText, thread);
-                        return;
-                    }
-                    ReplyView rv = lvi as ReplyView;
-                    if (rv != null && rv.Reply != null && rv.Reply.id == id)
-                    {
-                        rv.Reply.islandCode = IslandCode;
-                        ReplyView reply = new ReplyView() { Reply = rv.Reply, Margin = new Thickness(0, 0, 5, 0) };
-                        await Data.Message.ShowRef(RefText, reply);
-                        return;
-                    }
+                            if (item is ThreadModel)
+                            {
+                                ThreadView thread = new ThreadView()
+                                {
+                                    Thread = item as ThreadModel,
+                                    Margin = new Thickness(0, 0, 5, 0),
+                                    IsTextSelectionEnabled = true
+                                };
+                                await Data.Message.ShowRef(RefText, thread);
+                                return;
+                            }
+                            else if (item is ReplyModel)
+                            {
+                                ReplyView reply = new ReplyView() { Reply = item as ReplyModel, Margin = new Thickness(0, 0, 5, 0) };
+                                await Data.Message.ShowRef(RefText, reply);
+                                return;
+                            }
+                        }
+                    }                    
                 }
             }
 
@@ -81,7 +92,7 @@ namespace Islands.UWP
             {
                 string req = String.Format(GetRefAPI, Host, id);
                 string res = await Data.Http.GetData(req);
-                Model.ReplyModel rm = Data.Convert.RefStringToReplyModel(res, IslandCode);
+                ReplyModel rm = Data.Convert.RefStringToReplyModel(res, IslandCode);
                 rm.islandCode = IslandCode;
                 ReplyView reply = new ReplyView() {Reply = rm, Margin = new Thickness(0, 0, 5, 0) };
                 await Data.Message.ShowRef(RefText, reply);
