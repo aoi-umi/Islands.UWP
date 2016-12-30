@@ -39,6 +39,12 @@ namespace Islands.UWP.ViewModel
                 case ActionTypes.SendTapped:
                     CurrentControl?.OnSendTapped();
                     break;
+                case ActionTypes.GotoPageTapped:
+                    CurrentControl?.ThreadOrReplyGotoPage();
+                    break;
+                case ActionTypes.BackTapped:
+                    CurrentControl?.Back();
+                    break;
             }
             return true;
         }
@@ -77,5 +83,7 @@ namespace Islands.UWP.ViewModel
         BottomInfoTapped,
         RefreshTapped,
         SendTapped,
+        GotoPageTapped,
+        BackTapped,
     }
 }

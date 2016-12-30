@@ -43,6 +43,7 @@ namespace Islands.UWP.ViewModel
         public string ItemThumb { get; set; }
         public string ItemImage { get; set; }
         public string ItemContent { get; set; }
+        public bool IsPo { get; set; }
         public bool IsAdmin { get; private set; }
         public bool IsTextSelectionEnabled
         {
@@ -150,6 +151,7 @@ namespace Islands.UWP.ViewModel
                 BindingMode = BindingMode.OneWay
             });
             rtb.TextWrapping = TextWrapping.Wrap;
+            rtb.IsTextSelectionEnabled = false;
             return rtb;
         }
 

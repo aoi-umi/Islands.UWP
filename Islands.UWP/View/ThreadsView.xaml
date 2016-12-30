@@ -14,12 +14,22 @@
         <RelativePanel Grid.Row="2"
                        Background="{ThemeResource ThemeColor}">
             <Button Name="SwitchButton"
-                    x:FieldModifier="public"
-                    Content="&#xE13C;" Style="{StaticResource NavButton}"/>
+                    Content="&#xE13C;" Style="{StaticResource NavButton}">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="Tapped">
+                        <viewModel:Actions ActionType="BackTapped"/>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
             <Button Name="GotoPageButton" Content="&#xE0AB;"
                     Style="{StaticResource NavButton}"
-                    RelativePanel.RightOf="SwitchButton"
-                    Click="GotoPageButton_Click"/>
+                    RelativePanel.RightOf="SwitchButton">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="Tapped">
+                        <viewModel:Actions ActionType="GotoPageTapped"/>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
             <Button Name="SendButton" Content="&#xE724;"
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}">

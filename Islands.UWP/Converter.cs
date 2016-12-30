@@ -46,20 +46,30 @@ namespace Islands.UWP
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            var dataModel = value as DataModel;
+            var type = dataModel.DataType;
+            var item = dataModel.Data;
             ItemViewModel viewModel = null;
-            if (value is SendModel)
+            switch (type)
             {
-                viewModel = new ItemViewModel(value as SendModel);
-            }
-            else
-            {
-                viewModel = new ItemViewModel()
-                {
-                    GlobalConfig = MainPage.Global,
-                    BaseItem = value as BaseItemModel,
-                };
-                var t = value as ThreadModel;
-                if (t != null) viewModel.ItemReplyCount = t.replyCount;
+                case DataTypes.Thread:
+                case DataTypes.Reply:
+                    viewModel = new ItemViewModel()
+                    {
+                        GlobalConfig = MainPage.Global,
+                        BaseItem = item as BaseItemModel,
+                    };
+                    if (type == DataTypes.Thread) viewModel.ItemReplyCount = (item as ThreadModel).replyCount;
+                    var para = dataModel.Parameter as ItemParameter;
+                    if (para != null)
+                    {
+                        viewModel.IsPo = para.IsPo;
+                        viewModel.IsTextSelectionEnabled = para.IsTextSelectionEnabled;
+                    }
+                    break;
+                case DataTypes.MyReply:
+                    viewModel = new ItemViewModel(item as SendModel);
+                    break;
             }
             return (ItemViewModel)viewModel;
         }

@@ -1,5 +1,8 @@
-﻿using Islands.UWP.ViewModel;
+﻿using Islands.UWP.Model;
+using Islands.UWP.ViewModel;
 using System;
+using System.Threading.Tasks;
+using UmiAoi.UWP;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -71,7 +74,8 @@ namespace Islands.UWP
             ItemThumb = itemViewModel.ItemThumb;
             ItemImage = itemViewModel.ItemImage;
             IsAdmin = itemViewModel.IsAdmin;
-            if (IsTextSelectionEnabled) SetRefClick(itemViewModel.ItemContentView);
+            //if (IsTextSelectionEnabled)
+                SetRefClick(itemViewModel.ItemContentView);
         }
 
         protected override void OnApplyTemplate()
@@ -150,7 +154,49 @@ namespace Islands.UWP
                     refText = r.Text;
                 }
             }
-            OnRefClick(refText);
+            refText = refText.ToLower().Replace(">>", "").Replace("no.", "");
+            if(!string.IsNullOrEmpty(refText))
+                OnRefClick(refText);
+        }
+
+        protected object GetRefByList(string RefText)
+        {
+            var list = Helper.GetParent(this, typeof(ReplysView)) as ReplysView;
+            if (list != null)
+            {
+                foreach (var lvi in list.Items)
+                {
+                    var model = lvi as DataModel;
+                    if (model != null)
+                    {
+                        var item = model.Data as BaseItemModel;
+                        if (item != null && item.id == RefText)
+                        {
+                            if (item is ThreadModel)
+                            {
+                                ThreadView thread = new ThreadView() { Thread = item as ThreadModel, Margin = new Thickness(0, 0, 5, 0) };
+                                return thread;
+                            }
+                            else if (item is ReplyModel)
+                            {
+                                ReplyView reply = new ReplyView() { Reply = item as ReplyModel, Margin = new Thickness(0, 0, 5, 0) };                                
+                                return reply;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        protected async Task<object> GetRefByApi(string RefText)
+        {
+            string req = String.Format(GetRefAPI, Host, RefText);
+            string res = await Data.Http.GetData(req);
+            ReplyModel rm = Data.Convert.RefStringToReplyModel(res, IslandCode);
+            rm.islandCode = IslandCode;
+            ReplyView reply = new ReplyView() { Reply = rm, Margin = new Thickness(0, 0, 5, 0) };
+            return reply;
         }
 
         private void Image_PointerPressed(object sender, PointerRoutedEventArgs e)

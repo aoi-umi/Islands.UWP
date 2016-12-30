@@ -154,9 +154,12 @@ namespace Islands.UWP
                 if (ItemList.Count == 0 && top != null)
                 {
                     top.islandCode = code;
-                    var model = new DataModel() { DataType = DataTypes.Thread, Data = top };
-                    //var tv = new ThreadView() {Thread = top, IsTextSelectionEnabled = true, Background = null };
-                    //tv.IsPo = true;
+                    var model = new DataModel()
+                    {
+                        DataType = DataTypes.Thread,
+                        Data = top,
+                        Parameter = new ItemParameter() { IsPo = true, IsTextSelectionEnabled = true }
+                    };
                     ItemList.Add(model);
                 }
                 replyCount = _replyCount;
@@ -188,10 +191,16 @@ namespace Islands.UWP
                         lastReply = reply;
                     }
                     reply.islandCode = code;
-                    //var rv = new ReplyView() { Reply = reply };
-                    //if ((code == IslandsCode.Koukuko && reply.uid == top.uid) || (code != IslandsCode.Koukuko && reply.userid == top.userid))
-                    //    rv.IsPo = true;
-                    ItemList.Add(new DataModel() { DataType = DataTypes.Reply, Data = reply });
+                    
+                    var dataModel = new DataModel()
+                    {
+                        DataType = DataTypes.Reply,
+                        Data = reply,
+                        Parameter = new ItemParameter() { IsTextSelectionEnabled = true }
+                    };
+                    if ((code == IslandsCode.Koukuko && reply.uid == top.uid) || (code != IslandsCode.Koukuko && reply.userid == top.userid))
+                        (dataModel.Parameter as ItemParameter).IsPo = true;
+                    ItemList.Add(dataModel);
                 }
                 if (Replys.Count < pageSize || (currPage - 1) * pageSize + Replys.Count == replyCount)
                 {
@@ -229,13 +238,6 @@ namespace Islands.UWP
                     message = ex.Message;
                 }
             }
-        }
-
-        private async void GotoPageButton_Click(object sender, RoutedEventArgs e)
-        {
-            var page = await Data.Message.GotoPageYesOrNo();
-            if (page > 0)
-                Refresh(page);
         }
 
         //点击收藏

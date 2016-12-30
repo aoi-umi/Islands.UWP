@@ -10,7 +10,7 @@ namespace Islands.UWP.ViewModel
     {
         public DataTypes DataType { get; set; }
         public object Data { get; set; }
-        //public bool IsTextSelectionEnabled { get; set; }
+        public object Parameter { get; set; }
     }
 
     public enum DataTypes
@@ -20,5 +20,11 @@ namespace Islands.UWP.ViewModel
         MyReply,
         PageInfo,
         BottomInfo
+    }
+
+    public class ItemParameter
+    {
+        public bool IsTextSelectionEnabled { get; set; }
+        public bool IsPo { get; set; }
     }
 }

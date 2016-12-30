@@ -14,8 +14,7 @@
     </local:BaseContentView.Resources>
     <local:BaseContentView.BottomContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
-            <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}">
-            </Button>
+            <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}"/>
         </RelativePanel>
     </local:BaseContentView.BottomContent>
     <ScrollViewer Grid.Row="0" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto">

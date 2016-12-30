@@ -5,6 +5,10 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    
+    xmlns:viewModel="using:Islands.UWP.ViewModel"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
     <local:BaseContentView.Resources>
         <Style TargetType="TextBox">
@@ -25,9 +29,7 @@
     </local:BaseContentView.Resources>
     <local:BaseContentView.TopContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
-            <Button Name="Menu" Content="&#xE700;" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"
-                    Background="Transparent" Visibility="Collapsed"/>
-            <TextBlock Name="Title" Text="发送" RelativePanel.RightOf="Menu" FontSize="22"/>
+            <TextBlock Name="Title" Text="发送" FontSize="22"/>
         </RelativePanel>
     </local:BaseContentView.TopContent>
     <local:BaseContentView.BottomContent>
@@ -37,7 +39,13 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <RelativePanel Background="{StaticResource ThemeColor}">
-                <Button Name="BackButton" x:FieldModifier="public" Content="&#xE80F;" Style="{StaticResource NavButton}"/>
+                <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}">
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="Tapped">
+                            <viewModel:Actions ActionType="BackTapped"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </Button>
                 <Button Name="EmptyButton" Content="&#xE107;" RelativePanel.RightOf="BackButton" Style="{StaticResource NavButton}" Click="EmptyButton_Click"/>
                 <Button Name="ImageButton" Content="&#xEB9F;" RelativePanel.RightOf="EmptyButton" Style="{StaticResource NavButton}" Click="ImageButton_Click"/>
                 <Button Name="RefButton" Content=">>" FontFamily="Times New Roman" RelativePanel.RightOf="ImageButton" Style="{StaticResource NavButton}" Click="RefButton_Click"/>

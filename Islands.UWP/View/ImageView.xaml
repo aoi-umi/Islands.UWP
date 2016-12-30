@@ -8,6 +8,7 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:uaBeh="using:UmiAoi.UWP.Behaviors"
+    xmlns:viewModel="using:Islands.UWP.ViewModel"
     mc:Ignorable="d">
     <local:BaseContentView.Resources>
         <MenuFlyout x:Key="ImageMenuFlyout">
@@ -30,10 +31,14 @@
     </local:BaseContentView.TopContent>
     <local:BaseContentView.BottomContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
-            <Button Name="BackButton"
-                    x:FieldModifier="public"
-                    Content="&#xE80F;"
-                    Style="{StaticResource NavButton}"/>
+            <Button Name="BackButton" Content="&#xE80F;"
+                    Style="{StaticResource NavButton}">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="Tapped">
+                        <viewModel:Actions ActionType="BackTapped"/>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
             <Button Name="SaveButton" Content="&#xE105;"
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}"/>

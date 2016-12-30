@@ -5,6 +5,10 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    
+    xmlns:viewModel="using:Islands.UWP.ViewModel"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
     <UserControl.Resources>
         <CollectionViewSource x:Name="forumGroup" IsSourceGrouped="True"/>
@@ -123,8 +127,13 @@
                         </SemanticZoom.ZoomedOutView>
                     </SemanticZoom>
                     <RelativePanel Grid.Row="1" Background="{StaticResource ThemeColor}">
-                        <Button Name="BackButton" Content="&#xE80F;"
-                                x:FieldModifier="public" Style="{StaticResource NavButton}"/>
+                        <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}">
+                            <Interactivity:Interaction.Behaviors>
+                                <Core:EventTriggerBehavior EventName="Tapped">
+                                    <viewModel:Actions ActionType="BackTapped"/>
+                                </Core:EventTriggerBehavior>
+                            </Interactivity:Interaction.Behaviors>
+                        </Button>
                     </RelativePanel>
                 </Grid>
             </SplitView.Content>

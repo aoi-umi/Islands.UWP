@@ -15,7 +15,26 @@ namespace Islands.UWP
             NoImage = MainPage.Global.NoImage;
         }
 
-        public ThreadModel Thread { get; set; }
+        private ThreadModel _Thread { get; set; }
+        public ThreadModel Thread
+        {
+            get { return _Thread; }
+            set
+            {
+                if (_Thread != value)
+                {
+                    _Thread = value;
+                    var viewModel = DataContext as ItemViewModel;
+                    if (viewModel == null)
+                    {
+                        viewModel = new ItemViewModel() { GlobalConfig = MainPage.Global };
+                        viewModel.ItemReplyCount = _Thread.replyCount;
+                        DataContext = viewModel;
+                    }
+                    viewModel.BaseItem = _Thread;
+                }
+            }
+        }
 
         protected override void OnApplyTemplate()
         {
@@ -26,9 +45,7 @@ namespace Islands.UWP
         {
             if (DataContext == null)
             {
-                return;
-                var viewModel = new ItemViewModel() { GlobalConfig = MainPage.Global, BaseItem = Thread };
-                DataContext = viewModel;
+                return;               
             }
             base.OnLoaded();
             if (IsAdmin) txtUserid.Foreground = Config.AdminColor;
@@ -38,18 +55,12 @@ namespace Islands.UWP
         protected override async void OnRefClick(string RefText)
         {
             base.OnRefClick(RefText);
-            string id = RefText.ToLower().Replace(">>", "").Replace("no.", "");
-            if (string.IsNullOrEmpty(id)) return;
 
             //用api
             try
             {
-                string req = String.Format(GetRefAPI, Host, id);
-                string res = await Data.Http.GetData(req);
-                Model.ReplyModel rm = Data.Convert.RefStringToReplyModel(res, IslandCode);
-                rm.islandCode = IslandCode;
-                ReplyView reply = new ReplyView() { Reply = rm, Margin = new Thickness(0, 0, 5, 0) };
-                await Data.Message.ShowRef(RefText, reply);
+                var refItem = GetRefByApi(RefText);
+                await Data.Message.ShowRef(RefText, refItem);
             }
             catch (Exception ex)
             {

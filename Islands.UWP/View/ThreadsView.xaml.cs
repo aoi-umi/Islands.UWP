@@ -139,13 +139,6 @@ namespace Islands.UWP
                 DataLoaded();
             }
 
-        }
-
-        private async void GotoPageButton_Click(object sender, RoutedEventArgs e)
-        {
-            var page = await Data.Message.GotoPageYesOrNo();
-            if (page > 0)
-                Refresh(page);
-        }    
+        }       
     }   
 }
