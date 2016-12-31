@@ -20,16 +20,17 @@ namespace Islands.UWP
             image.ImageFailed += ImageView_ImageFailed;
         }
 
-        private string _imgageUrl { get; set; }
-        public string imageUrl
+        private string _ImgageUrl { get; set; }
+        public string ImageUrl
         {
             set
             {
                 IsLoading = true;
-                _imgageUrl = value;
+                if(value != Config.FailedImageUri)
+                    _ImgageUrl = value;
                 image.Width = Config.MaxImageWidth;
                 image.Height = double.NaN;
-                image.Source = string.IsNullOrEmpty(_imgageUrl) ? null : new BitmapImage(new Uri(value));
+                image.Source = string.IsNullOrEmpty(value) ? null : new BitmapImage(new Uri(value));
             }
         }
 
@@ -40,20 +41,20 @@ namespace Islands.UWP
 
         private void ImageView_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            imageUrl = Config.FailedImageUri;
+            ImageUrl = Config.FailedImageUri;
             IsLoading = false;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(_imgageUrl))
+            if (string.IsNullOrEmpty(_ImgageUrl))
             {
                 Data.Message.ShowMessage("链接为空");
             }
             else
             {
-                if (MainPage.Global.IsAskEachTime) Data.File.SaveFile(_imgageUrl);
-                else Data.File.SaveFileWithoutDialog(_imgageUrl);
+                if (MainPage.Global.IsAskEachTime) Data.File.SaveFile(_ImgageUrl);
+                else Data.File.SaveFileWithoutDialog(_ImgageUrl);
             }
         }
 
@@ -61,7 +62,7 @@ namespace Islands.UWP
         {
             image.Width = double.NaN;
             image.Height = double.NaN;
-            imageUrl = _imgageUrl;
+            ImageUrl = _ImgageUrl;
         }
 
         private void Image_Holding(object sender, HoldingRoutedEventArgs e)
@@ -77,7 +78,7 @@ namespace Islands.UWP
         private void MenuFlyoutCopyImage_Click(object sender, RoutedEventArgs e)
         {
             DataPackage dataPackage = new DataPackage();
-            dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromUri(new Uri(_imgageUrl)));
+            dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromUri(new Uri(_ImgageUrl)));
             Clipboard.SetContent(dataPackage);
         }
 

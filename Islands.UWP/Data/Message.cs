@@ -83,7 +83,7 @@ namespace Islands.UWP.Data
             sv.Content = content;
             var dialog = new ContentDialog()
             {
-                Title = title,
+                Title = ">>No." + title,
                 Content = sv,               
                 FullSizeDesired = true,
                 PrimaryButtonText = "关闭"

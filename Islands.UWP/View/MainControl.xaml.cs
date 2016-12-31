@@ -20,7 +20,7 @@ namespace Islands.UWP
             this.InitializeComponent();
             DataContext = MainPage.Global;
         }
-    
+
         public class Group<T>
         {
             public string GroupName { get; set; }
@@ -35,8 +35,8 @@ namespace Islands.UWP
         public string PostThreadAPI { get; set; }
         public string PostReplyAPI { get; set; }
         public int PageSize { get; set; }
-        public IslandsCode IslandCode;        
-        
+        public IslandsCode IslandCode;
+
         public delegate void SettingTappedEventHandler(object sender, TappedRoutedEventArgs e);
         public SettingTappedEventHandler SettingTapped;
 
@@ -46,7 +46,7 @@ namespace Islands.UWP
         private MarksView MarkControl;
         private SendView SendControl;
         private MyReplysView MyReplysControl;
-        private bool IsMain = true;        
+        private bool IsMain = true;
 
         public void Init()
         {
@@ -124,7 +124,7 @@ namespace Islands.UWP
             ListBoxItem tapped_item = sender as ListBoxItem;
             if (tapped_item != null && tapped_item.Tag != null)
             {
-                MenuNavigate(tapped_item.Tag.ToString());                
+                MenuNavigate(tapped_item.Tag.ToString());
             }
         }
 
@@ -151,7 +151,7 @@ namespace Islands.UWP
                     mainSplitView.Content = MyReplysControl;
                     break;
                 case "image":
-                    mainSplitView.IsPaneOpen = false;                    
+                    mainSplitView.IsPaneOpen = false;
                     mainSplitView.Content = ImageControl;
                     break;
                 case "forums":
@@ -175,7 +175,7 @@ namespace Islands.UWP
 
         public void ShowImage(string imgPath)
         {
-            ImageControl.imageUrl = imgPath;
+            ImageControl.ImageUrl = imgPath;
             mainNavigationList.SelectedIndex = 5;
             mainSplitView.Content = ImageControl;
         }
@@ -183,7 +183,6 @@ namespace Islands.UWP
         public async void ThreadOrReplyGotoPage()
         {
             var page = await Data.Message.GotoPageYesOrNo();
-            if (page <= 0) return;
             if (IsMain)
             {
                 ThreadControl.Refresh(page);
@@ -212,6 +211,19 @@ namespace Islands.UWP
             }
         }
 
+        public void OnSendTapped()
+        {
+            if (mainSplitView.Content != SendControl)
+            {
+                GotoSendView();
+            }
+        }
+
+        public void Mark()
+        {
+            ReplyControl.Mark();
+        }
+
         #region private
 
         private void Switch()
@@ -226,14 +238,6 @@ namespace Islands.UWP
             if (IsMain) mainSplitView.Content = ThreadControl;
             else mainSplitView.Content = ReplyControl;
             mainNavigationList.SelectedIndex = 1;
-        }
-
-        public void OnSendTapped()
-        {
-            if (mainSplitView.Content != SendControl)
-            {
-                GotoSendView();
-            }
         }
 
         private void GotoSendView()
@@ -273,13 +277,13 @@ namespace Islands.UWP
         private void ReplyControl_MarkSuccess(object sender, ThreadModel t)
         {
             MarkControl.AddMark(t);
-        }        
+        }
 
         private void MarkControl_MarkClick(object sender, ItemClickEventArgs e)
         {
             if (MarkControl.SelectionMode != ListViewSelectionMode.None) return;
             var model = e.ClickedItem as DataModel;
-            if (model != null && model.DataType == DataTypes.Thread)
+            if (model != null && model.DataType == DataTypes.Mark)
             {
                 var item = model.Data as BaseItemModel;
                 if (item != null)
@@ -294,7 +298,7 @@ namespace Islands.UWP
 
         private void MyReplysControl_MyReplyClick(object sender, ItemClickEventArgs e)
         {
-            if(MyReplysControl.SelectionMode != ListViewSelectionMode.None) return;
+            if (MyReplysControl.SelectionMode != ListViewSelectionMode.None) return;
             var model = e.ClickedItem as DataModel;
             if (model != null && model.DataType == DataTypes.MyReply)
             {
@@ -318,7 +322,7 @@ namespace Islands.UWP
                         Data.Message.ShowMessage("无法跳转到该串");
                     }
                 }
-            }            
+            }
         }
 
         private void SendControl_Response(bool Success, SendModel send)
@@ -327,9 +331,10 @@ namespace Islands.UWP
             {
                 Data.Message.ShowMessage("发送成功");
                 Data.Database.Insert(send);
-                MyReplysControl.AddMyReply(send);                
+                MyReplysControl.AddMyReply(send);
             }
-            else {
+            else
+            {
                 Data.Message.ShowMessage("发送失败\n可能原因:\n1.没有cookie\n2.网络原因\n3.内容长度超出范围\n4.图片格式不符或过大\n5.其他原因");
             }
         }
@@ -339,7 +344,7 @@ namespace Islands.UWP
             BackToHome();
         }
 
-       private void ForumsListInit(IslandsCode islandCode, out Model.ForumModel currForum)
+        private void ForumsListInit(IslandsCode islandCode, out Model.ForumModel currForum)
         {
             currForum = new Model.ForumModel();
             List<String> forums = null;
@@ -358,16 +363,18 @@ namespace Islands.UWP
             var groupName = "";
             Group<ForumModel> group = new Group<Model.ForumModel>();
             List<Group<Model.ForumModel>> groups = new List<Group<Model.ForumModel>>();
-            foreach (var forum in forums) {
+            foreach (var forum in forums)
+            {
                 var split = forum.Split(',');
                 if (split[2] == "group")
                 {
                     groupName = split[0];
-                    group = new Group<Model.ForumModel>() { GroupName = groupName,Models = new List<Model.ForumModel>() };
+                    group = new Group<Model.ForumModel>() { GroupName = groupName, Models = new List<Model.ForumModel>() };
                     groups.Add(group);
                     continue;
                 }
-                var f = new Model.ForumModel() {
+                var f = new Model.ForumModel()
+                {
                     forumName = split[0],
                     forumValue = split[1],
                     forumGroupId = split[2]

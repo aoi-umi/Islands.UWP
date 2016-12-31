@@ -44,18 +44,19 @@
             </ResourceDictionary.MergedDictionaries>
 
             <local:IsShowMenuButtonConverter x:Key="IsShowMenuButtonConverter"/>
+            <local:ItemToViewModelConverter x:Key="ItemToViewModelConverter"/>
+            <local:IsShowImageViewConverter x:Key="IsShowImageViewConverter"/>
 
             <SolidColorBrush x:Key="ThemeColor" Color="{ThemeResource SystemAccentColor}" Opacity="0.4"/>
-            <local:ItemToViewModelConverter x:Key="ItemToViewModelConverter"/>
             <viewModel:ItemDataTemplateSelector x:Key="ItemDataTemplateSelector"/>
             <DataTemplate x:Key="ThreadDataTemplate">
-                <local:ThreadView DataContext="{Binding Converter={StaticResource ItemToViewModelConverter}}"/>
+                <local:ThreadView ViewModel="{Binding Converter={StaticResource ItemToViewModelConverter}}"/>
             </DataTemplate>
             <DataTemplate x:Key="ReplyDataTemplate">
-                <local:ReplyView DataContext="{Binding Converter={StaticResource ItemToViewModelConverter}}"/>
+                <local:ReplyView ViewModel="{Binding Converter={StaticResource ItemToViewModelConverter}}"/>
             </DataTemplate>
             <DataTemplate x:Key="MyReplyDataTemplate">
-                <local:MyReplyView DataContext="{Binding Converter={StaticResource ItemToViewModelConverter}}"/>
+                <local:MyReplyView ViewModel="{Binding Converter={StaticResource ItemToViewModelConverter}}"/>
             </DataTemplate>
             <DataTemplate x:Key="PageInfoDataTemplate">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Data}"/>

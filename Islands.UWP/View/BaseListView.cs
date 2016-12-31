@@ -111,13 +111,37 @@ namespace Islands.UWP
             }
         }
 
-        public void Refresh()
+        public void Refresh(bool clear = true)
         {
-            OnRefresh();
+            _Refresh(1, clear);
         }
 
-        protected virtual void OnRefresh()
+        public void Refresh(int page, bool clear = true)
         {
+            _Refresh(page, clear);
+        }
+
+        private void _Refresh(int page, bool clear = true)
+        {
+            if (IsLoading || page <= 0) return;
+            if (clear) ItemList.Clear();
+            OnRefresh(page);
+        }
+
+        protected virtual void OnRefresh(int page)
+        {
+        }        
+
+        protected virtual void RefreshStart()
+        {
+            IsHitTestVisible = false;
+            IsLoading = true;
+        }
+
+        protected virtual void RefreshEnd()
+        {
+            IsHitTestVisible = true;
+            IsLoading = false;
         }
     }
 }

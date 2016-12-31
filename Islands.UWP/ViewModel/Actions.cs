@@ -1,4 +1,5 @@
-﻿using Microsoft.Xaml.Interactivity;
+﻿using Islands.UWP.Model;
+using Microsoft.Xaml.Interactivity;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -17,12 +18,12 @@ namespace Islands.UWP.ViewModel
 
         public object Execute(object sender, object parameter)
         {
-            var ele = sender as FrameworkElement;            
+            var ele = sender as FrameworkElement;
             switch (ActionType)
             {
                 case ActionTypes.ImageTapped:
-                    if(ele != null)
-                        ImageTapped(ele.DataContext);
+                    if (ele != null)
+                        ImageTapped(ele.DataContext as ItemViewModel);
                     break;
                 case ActionTypes.MenuTapped:
                     CurrentControl?.MenuToggle();
@@ -31,10 +32,8 @@ namespace Islands.UWP.ViewModel
                     CurrentControl?.BottomRefresh();
                     break;
                 case ActionTypes.RefreshTapped:
-                    if(ele != null)
-                    {
+                    if (ele != null)
                         RefreshTapped(ele.DataContext);
-                    }
                     break;
                 case ActionTypes.SendTapped:
                     CurrentControl?.OnSendTapped();
@@ -45,16 +44,18 @@ namespace Islands.UWP.ViewModel
                 case ActionTypes.BackTapped:
                     CurrentControl?.Back();
                     break;
+                case ActionTypes.MarkTapped:
+                    CurrentControl.Mark();
+                    break;
             }
             return true;
         }
-
-        private void ImageTapped(object dataContext)
+        
+        private void ImageTapped(ItemViewModel viewModel)
         {
-            var model = dataContext as ItemViewModel;
-            if (model != null)
-            {
-                CurrentControl?.ShowImage(model.ItemImage);
+            if (viewModel != null && !string.IsNullOrEmpty(viewModel.ItemImage))
+            {                
+                CurrentControl?.ShowImage(viewModel.ItemImage);
             }
         }
 
@@ -85,5 +86,6 @@ namespace Islands.UWP.ViewModel
         SendTapped,
         GotoPageTapped,
         BackTapped,
+        MarkTapped,
     }
 }

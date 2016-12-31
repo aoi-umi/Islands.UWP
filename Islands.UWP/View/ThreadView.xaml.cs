@@ -1,7 +1,8 @@
 ﻿using Islands.UWP.Model;
 using Islands.UWP.ViewModel;
 using System;
-using Windows.UI.Xaml;
+using UmiAoi.UWP;
+using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -24,34 +25,34 @@ namespace Islands.UWP
                 if (_Thread != value)
                 {
                     _Thread = value;
-                    var viewModel = DataContext as ItemViewModel;
-                    if (viewModel == null)
+                    if (ViewModel == null)
                     {
-                        viewModel = new ItemViewModel() { GlobalConfig = MainPage.Global };
-                        viewModel.ItemReplyCount = _Thread.replyCount;
-                        DataContext = viewModel;
+                        ViewModel = new ItemViewModel(_Thread) { GlobalConfig = MainPage.Global };
                     }
-                    viewModel.BaseItem = _Thread;
+                    else
+                        ViewModel.BaseItem = _Thread;
                 }
             }
         }
 
-        protected override void OnApplyTemplate()
+        protected override void OnViewModelChanged()
         {
-            base.OnApplyTemplate();
-        }
-
-        protected override void OnLoaded()
-        {
-            if (DataContext == null)
+            base.OnViewModelChanged();
+            if (ViewModel != null && ViewModel.UserColor != null)
+                uid.Foreground = ViewModel.UserColor;
+            else
             {
-                return;               
+                var bindingModel = new BindingModel()
+                {
+                    BindingElement = uid,
+                    Source = createDate,
+                    Path = "Foreground",
+                    Property = TextBlock.ForegroundProperty,
+                };
+                Helper.BindingHelper(bindingModel);
             }
-            base.OnLoaded();
-            if (IsAdmin) txtUserid.Foreground = Config.AdminColor;
-            else if (IsPo) txtUserid.Foreground = Config.PoColor;
         }
-
+        
         protected override async void OnRefClick(string RefText)
         {
             base.OnRefClick(RefText);

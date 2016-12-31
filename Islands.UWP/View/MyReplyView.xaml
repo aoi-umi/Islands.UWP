@@ -1,4 +1,4 @@
-﻿<local:BaseItemView x:Name="userControl"
+﻿<local:BaseItemView x:Name="itemView"
     x:Class="Islands.UWP.MyReplyView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,28 +7,26 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <local:BaseItemView.BottomContent>
-        <Line Fill="Gray" Stroke="Gray" Height="1" X2="{Binding ActualWidth, ElementName=userControl,Mode=OneWay}"/>
+        <Line Fill="Gray" Stroke="Gray" Height="1" X2="{Binding ActualWidth, ElementName=itemView,Mode=OneWay}"/>
     </local:BaseItemView.BottomContent>
-    <Grid>
-        <StackPanel Margin="2">
-            <StackPanel>
-                <TextBlock Text="{Binding ItemTitle}" Visibility="{Binding IsHadTitle}"/>
-                <TextBlock Text="{Binding ItemEmail}" Visibility="{Binding IsHadEmail}"/>
-                <TextBlock Text="{Binding ItemName}" Visibility="{Binding IsHadName}"/>
-                <TextBlock Name="txtCreateDate" Text="{Binding ItemCreateDate}" Margin="0,0,5,0"/>
-            </StackPanel>
-            <RelativePanel>
-                <TextBlock Name="id" Text="No."/>
-                <TextBlock Name="txtId" Text="{Binding ItemNo}" 
-                           Margin="0,0,5,0" RelativePanel.RightOf="id"/>
-                <TextBlock Name="userid" Text="ID:"
-                           RelativePanel.RightOf="txtId" Visibility="Collapsed" />
-                <TextBlock Name="txtUserid" Text=""
-                           RelativePanel.RightOf="userid" Visibility="Collapsed" />
-                <TextBlock Name="txtMsg" Text="{Binding ItemMsg}"
-                           RelativePanel.AlignRightWithPanel="True" />
-            </RelativePanel>
-            <TextBlock Name="txtContent" Text="{Binding ItemContent}" TextWrapping="Wrap"/>
+    <StackPanel Margin="2" DataContext="{Binding ViewModel, ElementName=itemView}">
+        <StackPanel>
+            <TextBlock Text="{Binding ItemTitle}" Visibility="{Binding IsHadTitle}"/>
+            <TextBlock Text="{Binding ItemEmail}" Visibility="{Binding IsHadEmail}"/>
+            <TextBlock Text="{Binding ItemName}" Visibility="{Binding IsHadName}"/>
+            <TextBlock Name="txtCreateDate" Text="{Binding ItemCreateDate}" Margin="0,0,5,0"/>
         </StackPanel>
-    </Grid>
+        <RelativePanel>
+            <TextBlock Name="txtNo" Text="No."/>
+            <TextBlock Name="no" Text="{Binding ItemNo}" 
+                       Margin="0,0,5,0" RelativePanel.RightOf="txtNo"/>
+            <TextBlock Name="txtUid" Text="ID:"
+                       RelativePanel.RightOf="no" Visibility="Collapsed" />
+            <TextBlock Name="uid" Text="{Binding ItemUid}"
+                       RelativePanel.RightOf="txtUid" Visibility="Collapsed" />
+            <TextBlock Name="msg" Text="{Binding ItemMsg}"
+                       RelativePanel.AlignRightWithPanel="True" />
+        </RelativePanel>
+        <TextBlock Name="content" Text="{Binding ItemContent}" TextWrapping="Wrap"/>
+    </StackPanel>
 </local:BaseItemView>

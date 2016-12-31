@@ -15,7 +15,7 @@ namespace Islands.UWP
         public MarksView()
         {
             this.InitializeComponent();
-            this.DataContext = MainPage.Global;
+            //this.DataContext = MainPage.Global;
         }
 
         protected override void OnApplyTemplate()
@@ -32,7 +32,6 @@ namespace Islands.UWP
             markList.Insert(0, tm);
             tm.islandCode = IslandCode;
             ItemList.Insert(0, new DataModel() { DataType = DataTypes.Thread, Data = tm });
-            //Items.Insert(0, new ThreadView() {Thread = tm, NoImage = true });
             markCount = markList.Count.ToString();
         }
 
@@ -57,10 +56,15 @@ namespace Islands.UWP
             }
         }
 
+        protected override void OnRefresh(int page)
+        {
+            base.OnRefresh(page);
+            InitMarkList();
+        }
+
         private async void InitMarkList()
         {
-            IsLoading = true;
-            ItemList.Clear();
+            RefreshStart();
             await Task.Run(() =>
             {
                 markList = Data.Database.GetMarkList(IslandCode);
@@ -68,13 +72,10 @@ namespace Islands.UWP
             foreach (var mark in markList)
             {
                 mark.islandCode = IslandCode;
-                //ThreadView t = new ThreadView() { Thread = mark };
-                //t.NoImage = true;
-                //Items.Add(t);
-                ItemList.Add(new DataModel() { DataType = DataTypes.Thread, Data = mark });
+                ItemList.Add(new DataModel() { DataType = DataTypes.Mark, Data = mark });
             }
             markCount = markList.Count.ToString();
-            IsLoading = false;
+            RefreshEnd();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -113,10 +114,5 @@ namespace Islands.UWP
             SelectionMode = ListViewSelectionMode.None;
         }
 
-        protected override void OnRefresh()
-        {
-            base.OnRefresh();
-            InitMarkList();
-        }
     }
 }

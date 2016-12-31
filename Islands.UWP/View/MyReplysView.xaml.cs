@@ -16,7 +16,7 @@ namespace Islands.UWP
         public MyReplysView()
         {
             this.InitializeComponent();
-            DataContext = this;
+            //DataContext = this;
         }
 
         protected override void OnApplyTemplate()
@@ -59,8 +59,7 @@ namespace Islands.UWP
 
         private async void InitMyReplyList()
         {
-            IsLoading = true;
-            ItemList.Clear();
+            RefreshStart();
             await Task.Run(() =>
             {
                 myReplyList = Data.Database.GetMyReplyList(IslandCode);
@@ -71,7 +70,7 @@ namespace Islands.UWP
                 ItemList.Add(new DataModel() { DataType = DataTypes.MyReply, Data = myreply });
             }
             myReplyCount = myReplyList.Count.ToString();
-            IsLoading = false;
+            RefreshEnd();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -112,9 +111,9 @@ namespace Islands.UWP
             SelectionMode = ListViewSelectionMode.None;
         }
 
-        protected override void OnRefresh()
+        protected override void OnRefresh(int page)
         {
-            base.OnRefresh();
+            base.OnRefresh(page);
             InitMyReplyList();
         }
     }

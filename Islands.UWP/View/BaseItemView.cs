@@ -1,6 +1,7 @@
 ﻿using Islands.UWP.Model;
 using Islands.UWP.ViewModel;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using UmiAoi.UWP;
 using Windows.UI.Xaml;
@@ -24,7 +25,7 @@ namespace Islands.UWP
         public BaseItemView() : base()
         {
             this.DefaultStyleKey = typeof(BaseItemView);
-            Loaded += BaseItemView_Loaded;
+            //Loaded += BaseItemView_Loaded;
         }
 
         #region DependencyProperty
@@ -45,18 +46,36 @@ namespace Islands.UWP
 
         public static readonly DependencyProperty BottomContentProperty =
             DependencyProperty.Register(nameof(BottomContent), typeof(FrameworkElement), typeof(BaseItemView), new PropertyMetadata(null));
-        #endregion
 
-        public string ItemNo { get; set; }
-        public string ItemThumb { get; set; }
-        public string ItemImage { get; set; }
-        public string Host { get; set; }
-        public string GetRefAPI { get; set; }
-        public bool IsAdmin { get; set; }
-        public bool IsPo { get; set; }
+        public ItemViewModel ViewModel
+        {
+            get { return (ItemViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
+        }
+        
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(nameof(ViewModel), typeof(ItemViewModel), typeof(BaseItemView), 
+                new PropertyMetadata(null, new PropertyChangedCallback(OnViewModelChanged)));
+
+        private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ele = d as BaseItemView;
+            if (e.NewValue != e.OldValue)
+            {
+                ele.hadInitImage = false;
+                ele.OnViewModelChanged();
+            }
+        }
+        #endregion
+        
+        public string ItemThumb { get { return ViewModel == null ? null : ViewModel.ItemThumb; } }
+        public string ItemImage { get { return ViewModel == null ? null : ViewModel.ItemImage; } }
+        public string Host { get { return ViewModel == null ? null : ViewModel.Host; } }
+        public string GetRefAPI { get { return ViewModel == null ? null : ViewModel.GetRefAPI; } }
+        public bool IsTextSelectionEnabled { get { return ViewModel == null ? false : ViewModel.IsTextSelectionEnabled; } }
         public bool NoImage { get; set; }
         public bool IsLocalImage { get; set; }
-        public bool IsTextSelectionEnabled { get; set; }
+        private DataTypes dataType { get { return ViewModel == null ? DataTypes.None : ViewModel.DataType; } }
 
         private Button showImageButton { get; set; }
         private ProgressRing progressRing { get; set; }
@@ -64,19 +83,8 @@ namespace Islands.UWP
         private Image image { get; set; }
         private Grid gifTextView { get; set; }
         protected IslandsCode IslandCode { get; set; }
-
-        protected void BaseInit(ItemViewModel itemViewModel)
-        {
-            if (itemViewModel == null) itemViewModel = new ItemViewModel();
-            Host = itemViewModel.Host;
-            GetRefAPI = itemViewModel.GetRefAPI;
-            ItemNo = itemViewModel.ItemNo;
-            ItemThumb = itemViewModel.ItemThumb;
-            ItemImage = itemViewModel.ItemImage;
-            IsAdmin = itemViewModel.IsAdmin;
-            //if (IsTextSelectionEnabled)
-                SetRefClick(itemViewModel.ItemContentView);
-        }
+        private bool hadApplyTemplate { get; set; }
+        private bool hadInitImage { get; set; }
 
         protected override void OnApplyTemplate()
         {
@@ -85,7 +93,9 @@ namespace Islands.UWP
             progressRing = GetTemplateChild(ProgressRingName) as ProgressRing;
             image = GetTemplateChild(ImageName) as Image;
             imageView = GetTemplateChild(ImageViewName) as Grid;
-            gifTextView = GetTemplateChild(GifTextViewName) as Grid;            
+            gifTextView = GetTemplateChild(GifTextViewName) as Grid;
+            hadApplyTemplate = true;
+            ImageInit();
         }
 
         private void RemoveEvent()
@@ -97,24 +107,24 @@ namespace Islands.UWP
             image.ImageFailed -= Image_ImageFailed;
         }
 
-        private void BaseItemView_Loaded(object sender, RoutedEventArgs e)
+        virtual protected void OnViewModelChanged()
         {
-            OnLoaded();
-            Loaded -= BaseItemView_Loaded;
+            ImageInit();
+            if (IsTextSelectionEnabled && ViewModel.ItemContentView != null)
+                SetRefClick(ViewModel.ItemContentView);
         }
 
-        virtual protected void OnLoaded()
+        private void ImageInit()
         {
-            var vm = DataContext as ItemViewModel;
-            BaseInit(vm);
-            if (!string.IsNullOrEmpty(ItemThumb))
+            if (hadApplyTemplate && !hadInitImage && !string.IsNullOrEmpty(ItemThumb))
             {
-                if (!NoImage) ShowImage();
+                if (!NoImage && dataType != DataTypes.Mark) ShowImage();
                 else showImageButton.Visibility = Visibility.Visible;
                 showImageButton.Click += ShowImageButton_Click;
                 image.PointerPressed += Image_PointerPressed;
                 image.ImageOpened += Image_ImageOpened;
                 image.ImageFailed += Image_ImageFailed;
+                hadInitImage = true;
             }
         }
 
@@ -174,12 +184,12 @@ namespace Islands.UWP
                         {
                             if (item is ThreadModel)
                             {
-                                ThreadView thread = new ThreadView() { Thread = item as ThreadModel, Margin = new Thickness(0, 0, 5, 0) };
+                                ThreadView thread = new ThreadView() { Thread = item as ThreadModel };
                                 return thread;
                             }
                             else if (item is ReplyModel)
                             {
-                                ReplyView reply = new ReplyView() { Reply = item as ReplyModel, Margin = new Thickness(0, 0, 5, 0) };                                
+                                ReplyView reply = new ReplyView() { Reply = item as ReplyModel };                                
                                 return reply;
                             }
                         }
@@ -230,6 +240,7 @@ namespace Islands.UWP
             progressRing.IsActive = false;
             progressRing.Visibility = Visibility.Collapsed;
             if (ItemImage.ToLower().EndsWith(".gif")) gifTextView.Visibility = Visibility.Visible;
+            else gifTextView.Visibility = Visibility.Collapsed;
         }
 
         private void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)

@@ -39,21 +39,6 @@ namespace Islands.UWP
         public delegate void MarkSuccessEventHandler(Object sender, ThreadModel t);
         public event MarkSuccessEventHandler MarkSuccess;
 
-        public void GetReplyListByID(string threadId)
-        {
-            currThread = threadId;
-            try
-            {
-                Title = threadId;
-                postReq.ID = threadId;
-                Refresh();
-            }
-            catch (Exception ex)
-            {
-                message = ex.Message;
-            }
-        }
-
         private string message
         {
             set
@@ -77,14 +62,23 @@ namespace Islands.UWP
         }
         private int replyCount { get; set; }
         private bool IsGetAllReply = false;
-        private string txtReplyCount { set { ListCount.Text = "(" +value + "," + allPage + "P)"; } }
+        private string txtReplyCount { set { ListCount.Text = "(" + value + "," + allPage + "P)"; } }
         private ThreadModel top = null;
         private ReplyModel lastReply = null;
 
-        private void ReplyStatusBox_Tapped(object sender, TappedRoutedEventArgs e)
+        public void GetReplyListByID(string threadId)
         {
-            postReq.Page = currPage;
-            GetReplyList(postReq, IslandCode);
+            currThread = threadId;
+            try
+            {
+                Title = threadId;
+                postReq.ID = threadId;
+                Refresh();
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+            }
         }
 
         public void BottomRefresh()
@@ -93,35 +87,50 @@ namespace Islands.UWP
             GetReplyList(postReq, IslandCode);
         }
 
-        private void DataLoading()
+        //收藏
+        public void Mark()
         {
-            IsLoading = true;
-            IsHitTestVisible = false;
+            try
+            {
+                if (top == null) throw new Exception("无法收藏");
+                if (top._id != 0) throw new Exception("已经收藏过");
+                if (top != null)
+                {
+                    var mark = Data.Database.GetMarkList(top.islandCode, top.id).FirstOrDefault();
+                    if (mark != null && mark._id != 0)
+                    {
+                        throw new Exception("已经收藏过");
+                    }
+                    Data.Database.Insert(top);
+                    OnMarkSuccess();
+                    Data.Message.ShowMessage("收藏成功");
+                }
+            }
+            catch (Exception ex)
+            {
+                Data.Message.ShowMessage(ex.Message);
+            }
+        }
+
+        protected override void RefreshStart()
+        {
+            base.RefreshStart();
             ItemList.Remove(BottomInfoItem);
             message = "点我加载";
         }
 
-        private void DataLoaded()
+        protected override void RefreshEnd()
         {
+            base.RefreshEnd();
             ItemList.Add(BottomInfoItem);
-            IsLoading = false;
-            IsHitTestVisible = true;
         }
 
-        protected override void OnRefresh()
+        protected override void OnRefresh(int page)
         {
-            base.OnRefresh();
-            Refresh(1);
-        }
-
-        public void Refresh(int page)
-        {
-            if (page <= 0) return;
             lastReply = null;
             IsGetAllReply = false;
             replyCount = 0;
             currPage = page;
-            ItemList.Clear();
             try
             {
                 postReq.Page = currPage;
@@ -136,10 +145,9 @@ namespace Islands.UWP
         private async void GetReplyList(PostRequest req, IslandsCode code)
         {
             if (IsLoading) return;
+            RefreshStart();
             txtReplyCount = "0";
-            DataLoading();
             string res = "";
-            currPage = req.Page;
             try
             {
                 if (string.IsNullOrEmpty(req.ID)) throw new Exception("串号为空");
@@ -215,11 +223,7 @@ namespace Islands.UWP
             {
                 message = ex.Message;
             }
-            finally
-            {
-                DataLoaded();
-            }
-
+            RefreshEnd();
         }
 
         //滑动刷新    
@@ -237,33 +241,6 @@ namespace Islands.UWP
                 {
                     message = ex.Message;
                 }
-            }
-        }
-
-        //点击收藏
-        private void MarkButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (top._id != 0)
-                {
-                    throw new Exception("已经收藏过");
-                }
-                if (top != null)
-                {
-                    var mark = Data.Database.GetMarkList(top.islandCode, top.id).FirstOrDefault();
-                    if (mark != null && mark._id != 0)
-                    {
-                        throw new Exception("已经收藏过");
-                    }
-                    Data.Database.Insert(top);
-                    OnMarkSuccess();
-                    Data.Message.ShowMessage("收藏成功");
-                }
-            }
-            catch (Exception ex)
-            {
-                Data.Message.ShowMessage(ex.Message);
             }
         }
 

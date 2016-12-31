@@ -57,34 +57,24 @@ namespace Islands.UWP
             GetThreadList(postReq, IslandCode);
         }
 
-        private void DataLoading()
-        {            
-            IsLoading = true;
-            IsHitTestVisible = false;
+        protected override void RefreshStart()
+        {
+            base.RefreshStart();
             ItemList.Remove(BottomInfoItem);
             message = "点我加载";
         }
-
-        private void DataLoaded()
+        protected override void RefreshEnd()
         {
+            base.RefreshEnd();
             ItemList.Add(BottomInfoItem);
-            IsLoading = false;
-            IsHitTestVisible = true;
         }
 
-        protected override void OnRefresh()
+        protected override void OnRefresh(int page)
         {
-            base.OnRefresh();
-            Refresh(1);
-        }
-
-        public void Refresh(int page)
-        {
-            if (page <= 0) return;
+            base.OnRefresh(page);
             currPage = page;     
             try
             {
-                ItemList.Clear();
                 postReq.Page = page;
                 GetThreadList(postReq, IslandCode);
             }
@@ -112,7 +102,7 @@ namespace Islands.UWP
         private async void GetThreadList(PostRequest req, IslandsCode code)
         {
             if (IsLoading) return;
-            DataLoading();
+            RefreshStart();
             string res = "";
             try
             {
@@ -134,11 +124,7 @@ namespace Islands.UWP
             {
                 message = ex.Message;
             }
-            finally
-            {
-                DataLoaded();
-            }
-
+            RefreshEnd();
         }       
     }   
 }

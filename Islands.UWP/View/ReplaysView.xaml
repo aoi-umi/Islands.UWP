@@ -15,7 +15,13 @@
     <local:BaseListView.TopContent>
         <RelativePanel>
             <TextBlock Name="ListCount" FontSize="24"/>
-            <Button Name="MarkButton" Content="&#xE734;" Style="{StaticResource NavButton}" RelativePanel.AlignRightWithPanel="True" Click="MarkButton_Click"/>
+            <Button Name="MarkButton" Content="&#xE734;" Style="{StaticResource NavButton}" RelativePanel.AlignRightWithPanel="True">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="Tapped">
+                        <viewModel:Actions ActionType="MarkTapped"/>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
         </RelativePanel>
     </local:BaseListView.TopContent>
     <local:BaseListView.BottomContent>

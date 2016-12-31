@@ -6,12 +6,15 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 
 namespace Islands.UWP.ViewModel
 {
     public class ItemViewModel
     {
         public MyGlobal GlobalConfig { get; set; }
+        public DataTypes DataType { get; set; }
+        private BaseItemModel _BaseItem { get; set; }
         public BaseItemModel BaseItem
         {
             get
@@ -25,7 +28,6 @@ namespace Islands.UWP.ViewModel
                 }
             }
         }
-        private BaseItemModel _BaseItem { get; set; }
         public Visibility IsHadTitle { get; private set; }
         public Visibility IsHadEmail { get; private set; }
         public Visibility IsHadName { get; private set; }
@@ -44,7 +46,8 @@ namespace Islands.UWP.ViewModel
         public string ItemImage { get; set; }
         public string ItemContent { get; set; }
         public bool IsPo { get; set; }
-        public bool IsAdmin { get; private set; }
+        public bool IsAdmin { get; set; }
+        private bool _IsTextSelectionEnabled { get; set; }
         public bool IsTextSelectionEnabled
         {
             get { return _IsTextSelectionEnabled; }
@@ -54,7 +57,15 @@ namespace Islands.UWP.ViewModel
                     ItemContentView.IsTextSelectionEnabled = value;
             }
         }
-        private bool _IsTextSelectionEnabled { get; set; }
+        public Brush UserColor
+        {
+            get
+            {
+                if (IsAdmin) return Config.AdminColor;
+                else if (IsPo) return Config.PoColor;
+                else return null;
+            }
+        }
         private IslandsCode IslandCode { get; set; }
         public ItemViewModel()
         {      
@@ -63,7 +74,6 @@ namespace Islands.UWP.ViewModel
         public ItemViewModel(BaseItemModel baseItem)
         {
             BaseItem = baseItem;
-            InitByBaseItem();
         }
 
         private void InitByBaseItem()
@@ -108,6 +118,7 @@ namespace Islands.UWP.ViewModel
             }
             return Visibility.Visible;
         }
+
         private RichTextBlock ContentConvert(string content)
         {
             RichTextBlock rtb = null;
@@ -164,6 +175,8 @@ namespace Islands.UWP.ViewModel
             ItemName = baseItemModel.name;
             ItemNo = baseItemModel.id;
             ItemContent = baseItemModel.content;
+            var t = baseItemModel as ThreadModel;
+            if (t != null) ItemReplyCount = t.replyCount;
             switch (baseItemModel.islandCode)
             {
                 case IslandsCode.A:

@@ -54,12 +54,12 @@ namespace Islands.UWP
             {
                 case DataTypes.Thread:
                 case DataTypes.Reply:
+                case DataTypes.Mark:
                     viewModel = new ItemViewModel()
                     {
                         GlobalConfig = MainPage.Global,
                         BaseItem = item as BaseItemModel,
                     };
-                    if (type == DataTypes.Thread) viewModel.ItemReplyCount = (item as ThreadModel).replyCount;
                     var para = dataModel.Parameter as ItemParameter;
                     if (para != null)
                     {
@@ -71,7 +71,26 @@ namespace Islands.UWP
                     viewModel = new ItemViewModel(item as SendModel);
                     break;
             }
+            if (viewModel != null) viewModel.DataType = type;
             return (ItemViewModel)viewModel;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
+        }
+    }
+
+    public class IsShowImageViewConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            string result = value as String;
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

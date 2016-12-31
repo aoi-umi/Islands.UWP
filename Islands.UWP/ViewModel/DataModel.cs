@@ -15,7 +15,9 @@ namespace Islands.UWP.ViewModel
 
     public enum DataTypes
     {
+        None,
         Thread,
+        Mark,
         Reply,
         MyReply,
         PageInfo,
