@@ -10,6 +10,12 @@
         <Style TargetType="TextBlock">
             <Setter Property="IsTextSelectionEnabled" Value="True"/>
         </Style>
+        <Style TargetType="local:ReplyView">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+        <Style TargetType="local:ThreadView">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
     </local:BaseItemView.Resources>
     <local:BaseItemView.BottomContent>
         <Line Fill="Gray" Stroke="Gray" Height="1" X2="{Binding ActualWidth, ElementName=itemView,Mode=OneWay}"/>
@@ -24,6 +30,22 @@
             <TextBlock Name="no" Text="{Binding ItemNo}" RelativePanel.AlignRightWithPanel="True" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
             <TextBlock Name="uid" Text="{Binding ItemUid}" RelativePanel.Below="createDate" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
         </RelativePanel>
-        <ContentControl Name="contentView" Content="{Binding ItemContentView}"/>
+        <ContentControl Name="contentView" Content="{Binding ItemContentView}" HorizontalContentAlignment="Stretch"/>
+        <ContentControl HorizontalContentAlignment="Stretch">
+            <!--<RichTextBlock HorizontalAlignment="Stretch">
+                <Paragraph>
+                    12312233333333333
+                    <LineBreak/>
+                    <InlineUIContainer>
+                        <StackPanel HorizontalAlignment="Stretch" Width="{Binding ActualWidth,ElementName=contentView}">
+                            <RelativePanel>
+                                <TextBlock Text="123"/>
+                                <TextBlock Text="456" RelativePanel.AlignRightWithPanel="True"/>
+                            </RelativePanel>
+                        </StackPanel>
+                    </InlineUIContainer>
+                </Paragraph>
+            </RichTextBlock>-->
+        </ContentControl>
     </StackPanel>
 </local:BaseItemView>

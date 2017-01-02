@@ -6,34 +6,42 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity">
     <Style TargetType="local:BaseItemView" >
-        <Setter Property="Padding" Value="5 0 0 20"/>
+        <Setter Property="Padding" Value="0 0 0 20"/>
+        <Setter Property="MinWidth" Value="400"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:BaseItemView">
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                        <StackPanel Margin="{TemplateBinding Padding}">
-                            <ContentControl Content="{TemplateBinding TopContent}"/>
-                            <ContentPresenter/>
-                            <RelativePanel DataContext="{TemplateBinding ViewModel}" Visibility="{Binding ItemThumb, Converter={StaticResource IsShowImageViewConverter}}">
-                                <Button x:Name="ShowImageButton" Background="Transparent" Foreground="{ThemeResource HyperlinkForegroundThemeBrush}" Visibility="Collapsed" Content="显示图片"/>
-                                <ProgressRing x:Name="ProgressRing" HorizontalAlignment="Left" IsActive="False" Width="50" Height="50" Visibility="Collapsed"/>
-                                <Grid x:Name="ImageView" HorizontalAlignment="Left" Visibility="Collapsed">
-                                    <Image x:Name="Image" Stretch="Uniform" MaxHeight="200" MaxWidth="200" CacheMode="BitmapCache">
-                                        <Interactivity:Interaction.Behaviors>
-                                            <Core:EventTriggerBehavior EventName="Tapped">
-                                                <viewModel:Actions ActionType="ImageTapped"/>
-                                            </Core:EventTriggerBehavior>
-                                        </Interactivity:Interaction.Behaviors>
-                                    </Image>
-                                    <Grid x:Name="GifTextView" Width="30" Height="20" Background="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Visibility="Collapsed" IsHitTestVisible="False">
-                                        <ContentPresenter Background="{StaticResource ThemeColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                            <TextBlock Text="gif" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </ContentPresenter>
+                        <Grid DataContext="{TemplateBinding ViewModel}">
+                            <Grid Visibility="{Binding IsRef, Converter={StaticResource IsShowRefBackgroundConverter}}">
+                                <Grid.Background>
+                                    <SolidColorBrush Color="BlueViolet" Opacity=".4"/>
+                                </Grid.Background>
+                            </Grid>
+                            <StackPanel Margin="{TemplateBinding Padding}">
+                                <ContentControl Content="{TemplateBinding TopContent}"/>
+                                <ContentPresenter/>
+                                <RelativePanel Visibility="{Binding ItemThumb, Converter={StaticResource IsShowImageViewConverter}}">
+                                    <Button x:Name="ShowImageButton" Background="Transparent" Foreground="{ThemeResource HyperlinkForegroundThemeBrush}" Visibility="Collapsed" Content="显示图片"/>
+                                    <ProgressRing x:Name="ProgressRing" HorizontalAlignment="Left" IsActive="False" Width="50" Height="50" Visibility="Collapsed"/>
+                                    <Grid x:Name="ImageView" HorizontalAlignment="Left" Visibility="Collapsed">
+                                        <Image x:Name="Image" Stretch="Uniform" MaxHeight="200" MaxWidth="200" CacheMode="BitmapCache">
+                                            <Interactivity:Interaction.Behaviors>
+                                                <Core:EventTriggerBehavior EventName="Tapped">
+                                                    <viewModel:Actions ActionType="ImageTapped"/>
+                                                </Core:EventTriggerBehavior>
+                                            </Interactivity:Interaction.Behaviors>
+                                        </Image>
+                                        <Grid x:Name="GifTextView" Width="30" Height="20" Background="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Visibility="Collapsed" IsHitTestVisible="False">
+                                            <ContentPresenter Background="{StaticResource ThemeColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                                <TextBlock Text="gif" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </ContentPresenter>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </RelativePanel>
-                            <ContentControl Content="{TemplateBinding BottomContent}"/>
-                        </StackPanel>
+                                </RelativePanel>
+                                <ContentControl Content="{TemplateBinding BottomContent}" Width="{TemplateBinding ActualWidth}"/>
+                            </StackPanel>
+                        </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

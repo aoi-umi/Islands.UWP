@@ -1,6 +1,8 @@
 ﻿using Islands.UWP.Model;
 using Islands.UWP.ViewModel;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -65,6 +67,8 @@ namespace Islands.UWP
                     {
                         viewModel.IsPo = para.IsPo;
                         viewModel.IsTextSelectionEnabled = para.IsTextSelectionEnabled;
+                        viewModel.IsRef = para.IsRef;
+                        viewModel.ParentList = para.ParentList as List<DataModel>;
                     }
                     break;
                 case DataTypes.MyReply:
@@ -87,6 +91,24 @@ namespace Islands.UWP
         {
             string result = value as String;
             if (!string.IsNullOrWhiteSpace(result))
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
+        }
+    }
+
+    public class IsShowRefBackgroundConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            bool? result = value as Nullable<bool>;
+            if (result == true)
             {
                 return Visibility.Visible;
             }

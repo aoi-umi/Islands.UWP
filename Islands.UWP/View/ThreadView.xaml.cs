@@ -35,6 +35,8 @@ namespace Islands.UWP
             }
         }
 
+        public bool IsTextSelectionEnabled { set { if (ViewModel != null) ViewModel.IsTextSelectionEnabled = value; } }
+
         protected override void OnViewModelChanged()
         {
             base.OnViewModelChanged();

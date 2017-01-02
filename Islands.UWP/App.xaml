@@ -35,7 +35,7 @@
                         <Setter Property="FontSize" Value="12"/>
                     </Style>
                     <Style TargetType="ListViewItem">
-                        <Setter Property="Margin" Value="0,0,14,0"/>
+                        <Setter Property="Margin" Value="5,0,14,0"/>
                         <Setter Property="Padding" Value="0"/>
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
@@ -46,6 +46,7 @@
             <local:IsShowMenuButtonConverter x:Key="IsShowMenuButtonConverter"/>
             <local:ItemToViewModelConverter x:Key="ItemToViewModelConverter"/>
             <local:IsShowImageViewConverter x:Key="IsShowImageViewConverter"/>
+            <local:IsShowRefBackgroundConverter x:Key="IsShowRefBackgroundConverter"/>
 
             <SolidColorBrush x:Key="ThemeColor" Color="{ThemeResource SystemAccentColor}" Opacity="0.4"/>
             <viewModel:ItemDataTemplateSelector x:Key="ItemDataTemplateSelector"/>
@@ -59,16 +60,19 @@
                 <local:MyReplyView ViewModel="{Binding Converter={StaticResource ItemToViewModelConverter}}"/>
             </DataTemplate>
             <DataTemplate x:Key="PageInfoDataTemplate">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Data}"/>
+                <Grid>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Data}"/>
+                </Grid>
             </DataTemplate>
             <DataTemplate x:Key="BottomInfoDataTemplate">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Data}">
+                <Grid Background="Transparent">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Data}"/>
                     <Interactivity:Interaction.Behaviors>
                         <Core:EventTriggerBehavior EventName="Tapped">
                             <viewModel:Actions ActionType="BottomInfoTapped"/>
                         </Core:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>
-                </TextBlock>
+                </Grid>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

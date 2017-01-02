@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
+using System.Collections.Generic;
 
 namespace Islands.UWP.ViewModel
 {
@@ -14,6 +15,7 @@ namespace Islands.UWP.ViewModel
     {
         public MyGlobal GlobalConfig { get; set; }
         public DataTypes DataType { get; set; }
+        public List<DataModel> ParentList { get; set; }
         private BaseItemModel _BaseItem { get; set; }
         public BaseItemModel BaseItem
         {
@@ -47,6 +49,7 @@ namespace Islands.UWP.ViewModel
         public string ItemContent { get; set; }
         public bool IsPo { get; set; }
         public bool IsAdmin { get; set; }
+        public bool IsRef { get; set; }
         private bool _IsTextSelectionEnabled { get; set; }
         public bool IsTextSelectionEnabled
         {
@@ -66,7 +69,9 @@ namespace Islands.UWP.ViewModel
                 else return null;
             }
         }
+        public List<string> RefIdList { get; set; }
         private IslandsCode IslandCode { get; set; }
+         
         public ItemViewModel()
         {      
         }
@@ -125,6 +130,7 @@ namespace Islands.UWP.ViewModel
             if (string.IsNullOrEmpty(content)) return rtb;
             try
             {
+                RefIdList = GetRefIdList(content);
                 string Host = string.Empty;
                 switch (IslandCode)
                 {
@@ -218,6 +224,25 @@ namespace Islands.UWP.ViewModel
                     break;
             }
             #endregion
+        }
+
+        private List<string> GetRefIdList(string content)
+        {
+            List<string> list = new List<string>();
+            if (string.IsNullOrWhiteSpace(content)) return list;
+            try
+            {
+                var match = Regex.Match(content, @"&gt;&gt;(no\.)?(\d+)", RegexOptions.IgnoreCase);
+                while (match.Success)
+                {
+                    list.Add(match.Groups[2].Value);
+                    match = match.NextMatch();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return list;
         }
     }
 }

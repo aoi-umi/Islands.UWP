@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Islands.UWP.Model;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -45,18 +46,18 @@ namespace Islands.UWP.Data
             }
         }
 
-        public static Model.ReplyModel RefStringToReplyModel(string res, IslandsCode islandCode)
+        public static ReplyModel RefStringToReplyModel(string res, IslandsCode islandCode)
         {
-            Model.ReplyModel rm = null;
+            ReplyModel rm = null;
             JObject jObj;
             if (!JsonTryDeserializeObject(res, out jObj)) throw new Exception(res.UnicodeDencode());
             switch (islandCode)
             {
                 case IslandsCode.A:
                 case IslandsCode.Beitai:
-                    rm = JsonDeserialize<Model.ReplyModel>(res); break;
+                    rm = JsonDeserialize<ReplyModel>(res); break;
                 case IslandsCode.Koukuko:
-                    Model.KReplyQueryResponse kResModel = JsonDeserialize<Model.KReplyQueryResponse>(res);
+                    KReplyQueryResponse kResModel = JsonDeserialize<KReplyQueryResponse>(res);
                     if (kResModel != null)
                     {
                         if (!kResModel.success) throw new Exception(kResModel.message);
@@ -67,7 +68,7 @@ namespace Islands.UWP.Data
             return rm;
         }
 
-        public static void ResStringToThreadAndReplyList(string res, IslandsCode islandCode, out Model.ThreadModel top, out List<Model.ReplyModel> replys)
+        public static void ResStringToThreadAndReplyList(string res, IslandsCode islandCode, out ThreadModel top, out List<ReplyModel> replys)
         {
             replys = null;
             top = null;
@@ -77,12 +78,12 @@ namespace Islands.UWP.Data
             {
                 case IslandsCode.A:
                 case IslandsCode.Beitai:
-                    top = JsonDeserialize<Model.ThreadModel>(res);
-                    Model.ABReplyQueryResponse abResModel = JsonDeserialize<Model.ABReplyQueryResponse>(res);
+                    top = JsonDeserialize<ThreadModel>(res);
+                    var abResModel = JsonDeserialize<ABReplyQueryResponse>(res);
                     if (abResModel != null) replys = abResModel.replys;
                     break;
                 case IslandsCode.Koukuko:
-                    Model.KReplyQueryResponse kResModel = JsonDeserialize<Model.KReplyQueryResponse>(res);
+                    var kResModel = JsonDeserialize<KReplyQueryResponse>(res);
                     if (kResModel != null)
                     {
                         if (!kResModel.success) throw new Exception(kResModel.message);
@@ -93,7 +94,7 @@ namespace Islands.UWP.Data
             }
         }
 
-        public static void ResStringToThreadList(string res, IslandsCode islandCode, out List<Model.ThreadResponseModel> threads)
+        public static void ResStringToThreadList(string res, IslandsCode islandCode, out List<ThreadResponseModel> threads)
         {
             threads = null;
             switch (islandCode)
@@ -104,11 +105,11 @@ namespace Islands.UWP.Data
                     if (!JsonTryDeserialize(res, out ja)) throw new Exception(res.UnicodeDencode());
                     if (ja != null)
                     {
-                        threads = ja.ToObject<List<Model.ThreadResponseModel>>();
+                        threads = ja.ToObject<List<ThreadResponseModel>>();
                     }
                     break;
                 case IslandsCode.Koukuko:
-                    Model.KThreadQueryResponse kRes = JsonDeserialize<Model.KThreadQueryResponse>(res);
+                    var kRes = JsonDeserialize<KThreadQueryResponse>(res);
                     if (kRes != null && kRes.data != null)
                     {
                         threads = kRes.data.threads;

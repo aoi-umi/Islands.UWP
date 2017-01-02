@@ -1,6 +1,7 @@
 ﻿using Islands.UWP.Model;
 using Islands.UWP.ViewModel;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UmiAoi.UWP;
@@ -25,7 +26,6 @@ namespace Islands.UWP
         public BaseItemView() : base()
         {
             this.DefaultStyleKey = typeof(BaseItemView);
-            //Loaded += BaseItemView_Loaded;
         }
 
         #region DependencyProperty
@@ -66,8 +66,17 @@ namespace Islands.UWP
                 ele.OnViewModelChanged();
             }
         }
-        #endregion
+
+        public Visibility RefBackroundVisibility
+        {
+            get { return (Visibility)GetValue(RefBackroundVisibilityProperty); }
+            set { SetValue(RefBackroundVisibilityProperty, value); }
+        }
         
+        public static readonly DependencyProperty RefBackroundVisibilityProperty =
+            DependencyProperty.Register(nameof(RefBackroundVisibility), typeof(Visibility), typeof(BaseItemView), new PropertyMetadata(Visibility.Collapsed));    
+        #endregion
+
         public string ItemThumb { get { return ViewModel == null ? null : ViewModel.ItemThumb; } }
         public string ItemImage { get { return ViewModel == null ? null : ViewModel.ItemImage; } }
         public string Host { get { return ViewModel == null ? null : ViewModel.Host; } }
@@ -110,7 +119,7 @@ namespace Islands.UWP
         virtual protected void OnViewModelChanged()
         {
             ImageInit();
-            if (IsTextSelectionEnabled && ViewModel.ItemContentView != null)
+            if (ViewModel != null)
                 SetRefClick(ViewModel.ItemContentView);
         }
 
@@ -141,10 +150,47 @@ namespace Islands.UWP
                         Hyperlink h = inline as Hyperlink;
                         if (h != null && h.UnderlineStyle == UnderlineStyle.None)
                         {
+                            InsertRefContent(p, h.Inlines[0] as Run, ViewModel.ParentList);
                             h.Click += Ref_Click;
                         }
                     }
                 }
+            }
+        }
+
+        private void InsertRefContent(Paragraph p, Run run, List<DataModel> list)
+        {
+            try
+            {
+                if (list == null || run == null) return;
+                var id = run.Text.ToLower().Replace(">>", "").Replace("no.", "");
+                var match = list.Find(x =>
+                {
+                    var basemodel = x.Data as BaseItemModel;
+                    if (basemodel != null && basemodel.id == id) return true;
+                    return false;
+                });
+                if (match != null)
+                {
+                    var i = new InlineUIContainer();
+                    var content = new ContentControl();
+                    content.DataContext = match;
+                    i.Child = content;
+                    if (match.DataType == DataTypes.Thread)
+                    {
+                        match.Parameter = new ItemParameter() { IsRef = true, IsTextSelectionEnabled = true, IsPo = true };
+                        content.ContentTemplate = ItemDataTemplateSelector.GetTemplate(DataTypes.Thread);
+                    }
+                    else if (match.DataType == DataTypes.Reply)
+                    {
+                        match.Parameter = new ItemParameter() { IsRef = true, IsTextSelectionEnabled = true };
+                        content.ContentTemplate = ItemDataTemplateSelector.GetTemplate(DataTypes.Reply);
+                    }
+                    p.Inlines.Add(i);
+                }
+            }
+            catch (Exception ex)
+            {
             }
         }
 
@@ -169,7 +215,7 @@ namespace Islands.UWP
                 OnRefClick(refText);
         }
 
-        protected object GetRefByList(string RefText)
+        protected object GetRefByList(string RefText, bool returnOriginModel=false)
         {
             var list = Helper.GetParent(this, typeof(ReplysView)) as ReplysView;
             if (list != null)
@@ -182,14 +228,19 @@ namespace Islands.UWP
                         var item = model.Data as BaseItemModel;
                         if (item != null && item.id == RefText)
                         {
+                            if (returnOriginModel) return item;
                             if (item is ThreadModel)
                             {
-                                ThreadView thread = new ThreadView() { Thread = item as ThreadModel };
+                                ThreadView thread = new ThreadView()
+                                {
+                                    Thread = item as ThreadModel,
+                                    IsTextSelectionEnabled = true
+                                };
                                 return thread;
                             }
                             else if (item is ReplyModel)
                             {
-                                ReplyView reply = new ReplyView() { Reply = item as ReplyModel };                                
+                                ReplyView reply = new ReplyView() { Reply = item as ReplyModel };                              
                                 return reply;
                             }
                         }
@@ -205,7 +256,7 @@ namespace Islands.UWP
             string res = await Data.Http.GetData(req);
             ReplyModel rm = Data.Convert.RefStringToReplyModel(res, IslandCode);
             rm.islandCode = IslandCode;
-            ReplyView reply = new ReplyView() { Reply = rm, Margin = new Thickness(0, 0, 5, 0) };
+            ReplyView reply = new ReplyView() { Reply = rm };
             return reply;
         }
 

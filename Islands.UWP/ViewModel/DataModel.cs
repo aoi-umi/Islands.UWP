@@ -28,5 +28,7 @@ namespace Islands.UWP.ViewModel
     {
         public bool IsTextSelectionEnabled { get; set; }
         public bool IsPo { get; set; }
+        public bool IsRef { get; set; }
+        public object ParentList { get; set; }
     }
 }

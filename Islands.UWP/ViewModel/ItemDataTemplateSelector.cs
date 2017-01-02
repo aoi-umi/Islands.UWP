@@ -12,22 +12,29 @@ namespace Islands.UWP.ViewModel
             var model = item as DataModel;
             if (model != null)
             {
-                ResourceDictionary resources = Application.Current.Resources;
-                switch (model.DataType)
-                {
-                    case DataTypes.Thread:
-                        return resources["ThreadDataTemplate"] as DataTemplate;
-                    case DataTypes.Reply:
-                        return resources["ReplyDataTemplate"] as DataTemplate;
-                    case DataTypes.MyReply:
-                        return resources["MyReplyDataTemplate"] as DataTemplate;
-                    case DataTypes.PageInfo:
-                        return resources["PageInfoDataTemplate"] as DataTemplate;
-                    case DataTypes.BottomInfo:
-                        return resources["BottomInfoDataTemplate"] as DataTemplate;
-                }
+                var t = GetTemplate(model.DataType);
+                if (t != null) return t;                
             }
             return base.SelectTemplateCore(item);
+        }
+
+        public static DataTemplate GetTemplate(DataTypes dataType)
+        {
+            ResourceDictionary resources = Application.Current.Resources;
+            switch (dataType)
+            {
+                case DataTypes.Thread:
+                    return resources["ThreadDataTemplate"] as DataTemplate;
+                case DataTypes.Reply:
+                    return resources["ReplyDataTemplate"] as DataTemplate;
+                case DataTypes.MyReply:
+                    return resources["MyReplyDataTemplate"] as DataTemplate;
+                case DataTypes.PageInfo:
+                    return resources["PageInfoDataTemplate"] as DataTemplate;
+                case DataTypes.BottomInfo:
+                    return resources["BottomInfoDataTemplate"] as DataTemplate;
+            }
+            return null;
         }
     }
 }

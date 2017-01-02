@@ -107,10 +107,9 @@ namespace Islands.UWP
             try
             {
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
-                List<ThreadResponseModel> Threads = null;
+                List<ThreadResponseModel> Threads;
                 Data.Convert.ResStringToThreadList(res, code, out Threads);                
-                if (Threads == null || Threads.Count == 0)
-                    throw new Exception("什么也没有");
+                if (Threads == null || Threads.Count == 0) throw new Exception("什么也没有");
                 ItemList.Add(new DataModel() { DataType = DataTypes.PageInfo, Data = "Page " + req.Page });
                 foreach (var thread in Threads)
                 {

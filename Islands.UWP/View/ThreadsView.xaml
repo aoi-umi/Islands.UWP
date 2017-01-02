@@ -11,8 +11,7 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d" MinHeight="400" MinWidth="200" ItemTemplateSelector="{StaticResource ItemDataTemplateSelector}">
     <local:BaseListView.BottomContent>
-        <RelativePanel Grid.Row="2"
-                       Background="{ThemeResource ThemeColor}">
+        <RelativePanel Grid.Row="2" Background="{ThemeResource ThemeColor}">
             <Button Name="SwitchButton"
                     Content="&#xE13C;" Style="{StaticResource NavButton}">
                 <Interactivity:Interaction.Behaviors>
@@ -21,8 +20,7 @@
                     </Core:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Button>
-            <Button Name="GotoPageButton" Content="&#xE0AB;"
-                    Style="{StaticResource NavButton}"
+            <Button Name="GotoPageButton" Content="&#xE0AB;" Style="{StaticResource NavButton}"
                     RelativePanel.RightOf="SwitchButton">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="Tapped">
@@ -30,9 +28,8 @@
                     </Core:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Button>
-            <Button Name="SendButton" Content="&#xE724;"
-                    RelativePanel.AlignRightWithPanel="True"
-                    Style="{StaticResource NavButton}">
+            <Button Name="SendButton" Content="&#xE724;" Style="{StaticResource NavButton}"
+                    RelativePanel.AlignRightWithPanel="True">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="Tapped">
                         <viewModel:Actions ActionType="SendTapped"/>

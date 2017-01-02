@@ -60,9 +60,10 @@ namespace Islands.UWP
                 return replyCount / pageSize + (replyCount % pageSize > 0 ? 1 : 0);
             }
         }
-        private int replyCount { get; set; }
+        private int _replyCount { get; set; }
+        private int replyCount { get { return _replyCount; } set { _replyCount = value; txtReplyCount = value; } }
         private bool IsGetAllReply = false;
-        private string txtReplyCount { set { ListCount.Text = "(" + value + "," + allPage + "P)"; } }
+        private int txtReplyCount { set { ListCount.Text = "(" + value + "," + allPage + "P)"; } }
         private ThreadModel top = null;
         private ReplyModel lastReply = null;
 
@@ -146,20 +147,21 @@ namespace Islands.UWP
         {
             if (IsLoading) return;
             RefreshStart();
-            txtReplyCount = "0";
+            replyCount = 0;
             string res = "";
             try
             {
                 if (string.IsNullOrEmpty(req.ID)) throw new Exception("串号为空");
                 res = await Data.Http.GetData(String.Format(req.API, req.Host, req.ID, req.Page));
-                List<ReplyModel> Replys = null;
+                List<ReplyModel> Replys;
                 top = null;
                 Data.Convert.ResStringToThreadAndReplyList(res, code, out top, out Replys);
                 top.islandCode = code;
 
-                int _replyCount;
-                int.TryParse(top.replyCount, out _replyCount); 
-                if (ItemList.Count == 0 && top != null)
+                #region top
+                int count;
+                int.TryParse(top.replyCount, out count);
+                if (ItemList.Count == 0)
                 {
                     top.islandCode = code;
                     var model = new DataModel()
@@ -170,21 +172,29 @@ namespace Islands.UWP
                     };
                     ItemList.Add(model);
                 }
-                replyCount = _replyCount;
-                txtReplyCount = _replyCount.ToString();
+                replyCount = count;
+                #endregion
+
+                #region check is had reply
                 if (Replys == null || Replys.Count == 0)
                 {
                     IsGetAllReply = true;
                     throw new Exception("已经没有了");
                 }
+                #endregion
 
+                #region page info
                 if ((ItemList.Count - 1) % (pageSize + 1) == 0)
+                {
                     ItemList.Add(new DataModel()
                     {
                         DataType = DataTypes.PageInfo,
                         Data = "Page " + req.Page,
                     });
+                }
+                #endregion
 
+                #region add item to list
                 Replys = Replys.OrderBy(x => int.Parse(x.id)).ToList();
                 foreach (var reply in Replys)
                 {
@@ -199,25 +209,33 @@ namespace Islands.UWP
                         lastReply = reply;
                     }
                     reply.islandCode = code;
-                    
+
                     var dataModel = new DataModel()
                     {
                         DataType = DataTypes.Reply,
                         Data = reply,
-                        Parameter = new ItemParameter() { IsTextSelectionEnabled = true }
+                        Parameter = new ItemParameter()
+                        {
+                            IsTextSelectionEnabled = true,
+                            ParentList = ItemList.ToList()
+                        }
                     };
                     if ((code == IslandsCode.Koukuko && reply.uid == top.uid) || (code != IslandsCode.Koukuko && reply.userid == top.userid))
                         (dataModel.Parameter as ItemParameter).IsPo = true;
                     ItemList.Add(dataModel);
                 }
+                #endregion
+
+                #region check is got all
                 if (Replys.Count < pageSize || (currPage - 1) * pageSize + Replys.Count == replyCount)
                 {
                     IsGetAllReply = true;
                     if (Replys.Count == pageSize) ++currPage;
                     throw new Exception("已经没有了");
                 }
-                ++currPage;
+                #endregion
 
+                ++currPage;
             }
             catch (Exception ex)
             {
