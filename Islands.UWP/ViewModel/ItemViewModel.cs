@@ -69,7 +69,6 @@ namespace Islands.UWP.ViewModel
                 else return null;
             }
         }
-        public List<string> RefIdList { get; set; }
         private IslandsCode IslandCode { get; set; }
          
         public ItemViewModel()
@@ -130,7 +129,6 @@ namespace Islands.UWP.ViewModel
             if (string.IsNullOrEmpty(content)) return rtb;
             try
             {
-                RefIdList = GetRefIdList(content);
                 string Host = string.Empty;
                 switch (IslandCode)
                 {
@@ -224,25 +222,6 @@ namespace Islands.UWP.ViewModel
                     break;
             }
             #endregion
-        }
-
-        private List<string> GetRefIdList(string content)
-        {
-            List<string> list = new List<string>();
-            if (string.IsNullOrWhiteSpace(content)) return list;
-            try
-            {
-                var match = Regex.Match(content, @"&gt;&gt;(no\.)?(\d+)", RegexOptions.IgnoreCase);
-                while (match.Success)
-                {
-                    list.Add(match.Groups[2].Value);
-                    match = match.NextMatch();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            return list;
-        }
+        }        
     }
 }

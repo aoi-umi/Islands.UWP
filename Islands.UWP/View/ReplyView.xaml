@@ -10,15 +10,9 @@
         <Style TargetType="TextBlock">
             <Setter Property="IsTextSelectionEnabled" Value="True"/>
         </Style>
-        <Style TargetType="local:ReplyView">
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        </Style>
-        <Style TargetType="local:ThreadView">
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        </Style>
     </local:BaseItemView.Resources>
     <local:BaseItemView.BottomContent>
-        <Line Fill="Gray" Stroke="Gray" Height="1" X2="{Binding ActualWidth, ElementName=itemView,Mode=OneWay}"/>
+        <Grid Height="2" Background="Gray"/>
     </local:BaseItemView.BottomContent>
     <StackPanel Name="threadSp" Margin="2" DataContext="{Binding ViewModel, ElementName=itemView}">
         <RelativePanel>

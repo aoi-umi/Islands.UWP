@@ -145,53 +145,54 @@ namespace Islands.UWP
                 Paragraph p = block as Paragraph;
                 if (p != null)
                 {
+                    var insertList = new List<InsertRefModel>();
                     foreach (var inline in p.Inlines)
                     {
                         Hyperlink h = inline as Hyperlink;
                         if (h != null && h.UnderlineStyle == UnderlineStyle.None)
                         {
-                            InsertRefContent(p, h.Inlines[0] as Run, ViewModel.ParentList);
+                            var model = new InsertRefModel()
+                            {
+                                InsertAfterInline = h,
+                                InsertInline = GetInsertInlines(h, ViewModel.ParentList)
+                            };
+                            if (model.InsertInline != null)
+                                insertList.Add(model);
                             h.Click += Ref_Click;
                         }
                     }
+                    insertList.ForEach(x =>
+                    {
+                        var index = p.Inlines.IndexOf(x.InsertAfterInline);
+                        p.Inlines.Insert(index + 1, new LineBreak());
+                        p.Inlines.Insert(index + 2, x.InsertInline);
+                        p.Inlines.Insert(index + 3, new LineBreak());
+                    });
                 }
             }
         }
 
-        private void InsertRefContent(Paragraph p, Run run, List<DataModel> list)
+        private Inline GetInsertInlines(Hyperlink h, List<DataModel> list)
         {
+            Inline inline = null;
             try
             {
-                if (list == null || run == null) return;
+                var run = h.Inlines[0] as Run;
+                if (list == null || run == null) return inline;
                 var id = run.Text.ToLower().Replace(">>", "").Replace("no.", "");
-                var match = list.Find(x =>
+                var content = GetRefByList(id) as FrameworkElement;
+                if(content != null)
                 {
-                    var basemodel = x.Data as BaseItemModel;
-                    if (basemodel != null && basemodel.id == id) return true;
-                    return false;
-                });
-                if (match != null)
-                {
+                    content.Margin = new Thickness(20, 0, 0, 0);
                     var i = new InlineUIContainer();
-                    var content = new ContentControl();
-                    content.DataContext = match;
                     i.Child = content;
-                    if (match.DataType == DataTypes.Thread)
-                    {
-                        match.Parameter = new ItemParameter() { IsRef = true, IsTextSelectionEnabled = true, IsPo = true };
-                        content.ContentTemplate = ItemDataTemplateSelector.GetTemplate(DataTypes.Thread);
-                    }
-                    else if (match.DataType == DataTypes.Reply)
-                    {
-                        match.Parameter = new ItemParameter() { IsRef = true, IsTextSelectionEnabled = true };
-                        content.ContentTemplate = ItemDataTemplateSelector.GetTemplate(DataTypes.Reply);
-                    }
-                    p.Inlines.Add(i);
+                    inline = i;
                 }
             }
             catch (Exception ex)
             {
             }
+            return inline;
         }
 
         virtual protected void OnRefClick(string RefText)
@@ -215,37 +216,43 @@ namespace Islands.UWP
                 OnRefClick(refText);
         }
 
-        protected object GetRefByList(string RefText, bool returnOriginModel=false)
+        protected object GetRefByList(string RefText, bool returnOriginModel = false, bool showRefBackground = true)
         {
-            var list = Helper.GetParent(this, typeof(ReplysView)) as ReplysView;
-            if (list != null)
+            var id = RefText;
+            var list = ViewModel.ParentList;
+            if (list == null) return null;
+            var match = list.Find(x =>
             {
-                foreach (var lvi in list.Items)
+                var basemodel = x.Data as BaseItemModel;
+                if (basemodel != null && basemodel.id == id) return true;
+                return false;
+            });
+            if (match != null)
+            {
+
+                if (returnOriginModel) return match.Data;
+                var content = new ContentControl();
+                content.DataContext = match;
+                if (match.DataType == DataTypes.Thread)
                 {
-                    var model = lvi as DataModel;
-                    if (model != null)
+                    match.Parameter = new ItemParameter()
                     {
-                        var item = model.Data as BaseItemModel;
-                        if (item != null && item.id == RefText)
-                        {
-                            if (returnOriginModel) return item;
-                            if (item is ThreadModel)
-                            {
-                                ThreadView thread = new ThreadView()
-                                {
-                                    Thread = item as ThreadModel,
-                                    IsTextSelectionEnabled = true
-                                };
-                                return thread;
-                            }
-                            else if (item is ReplyModel)
-                            {
-                                ReplyView reply = new ReplyView() { Reply = item as ReplyModel };                              
-                                return reply;
-                            }
-                        }
-                    }
+                        IsRef = showRefBackground,
+                        IsTextSelectionEnabled = true,                        
+                        IsPo = true
+                    };
+                    content.ContentTemplate = ItemDataTemplateSelector.GetTemplate(DataTypes.Thread);
                 }
+                else if (match.DataType == DataTypes.Reply)
+                {
+                    match.Parameter = new ItemParameter()
+                    {
+                        IsRef = showRefBackground,
+                        IsTextSelectionEnabled = true
+                    };
+                    content.ContentTemplate = ItemDataTemplateSelector.GetTemplate(DataTypes.Reply);
+                }
+                return content;
             }
             return null;
         }
@@ -309,5 +316,11 @@ namespace Islands.UWP
             base.OnDisconnectVisualChildren();
             RemoveEvent();
         }
+    }
+
+    public class InsertRefModel
+    {
+        public Inline InsertAfterInline { get; set; }
+        public Inline InsertInline { get; set; }
     }
 }

@@ -7,7 +7,7 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity">
     <Style TargetType="local:BaseItemView" >
         <Setter Property="Padding" Value="0 0 0 20"/>
-        <Setter Property="MinWidth" Value="400"/>
+        <Setter Property="MinWidth" Value="300"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:BaseItemView">
@@ -15,7 +15,7 @@
                         <Grid DataContext="{TemplateBinding ViewModel}">
                             <Grid Visibility="{Binding IsRef, Converter={StaticResource IsShowRefBackgroundConverter}}">
                                 <Grid.Background>
-                                    <SolidColorBrush Color="BlueViolet" Opacity=".4"/>
+                                    <SolidColorBrush Color="Gray" Opacity=".8"/>
                                 </Grid.Background>
                             </Grid>
                             <StackPanel Margin="{TemplateBinding Padding}">
@@ -39,7 +39,7 @@
                                         </Grid>
                                     </Grid>
                                 </RelativePanel>
-                                <ContentControl Content="{TemplateBinding BottomContent}" Width="{TemplateBinding ActualWidth}"/>
+                                <ContentControl Content="{TemplateBinding BottomContent}" HorizontalContentAlignment="Stretch"/>
                             </StackPanel>
                         </Grid>
                     </Border>
