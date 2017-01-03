@@ -91,7 +91,7 @@ namespace Islands.UWP
         private Grid imageView { get; set; }
         private Image image { get; set; }
         private Grid gifTextView { get; set; }
-        protected IslandsCode IslandCode { get; set; }
+        //protected IslandsCode IslandCode { get; set; }
         private bool hadApplyTemplate { get; set; }
         private bool hadInitImage { get; set; }
 
@@ -129,6 +129,7 @@ namespace Islands.UWP
             {
                 if (!NoImage && dataType != DataTypes.Mark) ShowImage();
                 else showImageButton.Visibility = Visibility.Visible;
+                gifTextView.Visibility = Visibility.Collapsed;
                 showImageButton.Click += ShowImageButton_Click;
                 image.PointerPressed += Image_PointerPressed;
                 image.ImageOpened += Image_ImageOpened;
@@ -183,7 +184,7 @@ namespace Islands.UWP
                 var content = GetRefByList(id) as FrameworkElement;
                 if(content != null)
                 {
-                    content.Margin = new Thickness(20, 0, 0, 0);
+                    content.Margin = new Thickness(20, 0, 5, 0);
                     var i = new InlineUIContainer();
                     i.Child = content;
                     inline = i;
@@ -212,8 +213,11 @@ namespace Islands.UWP
                 }
             }
             refText = refText.ToLower().Replace(">>", "").Replace("no.", "");
-            if(!string.IsNullOrEmpty(refText))
+            if (!string.IsNullOrEmpty(refText))
+            {
                 OnRefClick(refText);
+                
+            }
         }
 
         protected object GetRefByList(string RefText, bool returnOriginModel = false, bool showRefBackground = true)
@@ -231,15 +235,15 @@ namespace Islands.UWP
             {
 
                 if (returnOriginModel) return match.Data;
-                var content = new ContentControl();
+                var content = new ScrollViewer() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
                 content.DataContext = match;
                 if (match.DataType == DataTypes.Thread)
                 {
                     match.Parameter = new ItemParameter()
                     {
                         IsRef = showRefBackground,
-                        IsTextSelectionEnabled = true,                        
-                        IsPo = true
+                        IsTextSelectionEnabled = true,
+                        IsPo = true,
                     };
                     content.ContentTemplate = ItemDataTemplateSelector.GetTemplate(DataTypes.Thread);
                 }
@@ -248,7 +252,8 @@ namespace Islands.UWP
                     match.Parameter = new ItemParameter()
                     {
                         IsRef = showRefBackground,
-                        IsTextSelectionEnabled = true
+                        IsTextSelectionEnabled = true,
+                        ParentList = list,
                     };
                     content.ContentTemplate = ItemDataTemplateSelector.GetTemplate(DataTypes.Reply);
                 }
@@ -259,10 +264,10 @@ namespace Islands.UWP
 
         protected async Task<object> GetRefByApi(string RefText)
         {
+            if (ViewModel == null || ViewModel.BaseItem == null) throw new Exception("获取失败");
             string req = String.Format(GetRefAPI, Host, RefText);
             string res = await Data.Http.GetData(req);
-            ReplyModel rm = Data.Convert.RefStringToReplyModel(res, IslandCode);
-            rm.islandCode = IslandCode;
+            ReplyModel rm = Data.Convert.RefStringToReplyModel(res, ViewModel.BaseItem.islandCode);
             ReplyView reply = new ReplyView() { Reply = rm };
             return reply;
         }
@@ -296,7 +301,6 @@ namespace Islands.UWP
             var bitmap = image.Source as BitmapImage;
             if (bitmap != null && (bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight)) image.Stretch = Stretch.None;
             progressRing.IsActive = false;
-            progressRing.Visibility = Visibility.Collapsed;
             if (ItemImage.ToLower().EndsWith(".gif")) gifTextView.Visibility = Visibility.Visible;
             else gifTextView.Visibility = Visibility.Collapsed;
         }

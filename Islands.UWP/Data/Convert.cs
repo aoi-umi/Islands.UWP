@@ -65,6 +65,7 @@ namespace Islands.UWP.Data
                     }
                     break;
             }
+            if (rm != null) rm.islandCode = islandCode;
             return rm;
         }
 

@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <local:BaseItemView.BottomContent>
-        <Line Fill="Gray" Stroke="Gray" Height="1" X2="{Binding ActualWidth, ElementName=itemView,Mode=OneWay}"/>
+        <Grid Height="1" Background="Gray"/>
     </local:BaseItemView.BottomContent>
     <StackPanel Margin="2" DataContext="{Binding ViewModel, ElementName=itemView}">
         <StackPanel>

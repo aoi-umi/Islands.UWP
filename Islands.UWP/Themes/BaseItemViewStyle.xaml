@@ -13,9 +13,9 @@
                 <ControlTemplate TargetType="local:BaseItemView">
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid DataContext="{TemplateBinding ViewModel}">
-                            <Grid Visibility="{Binding IsRef, Converter={StaticResource IsShowRefBackgroundConverter}}">
+                            <Grid Visibility="{Binding IsRef, Converter={StaticResource IsShowRefBackgroundConverter}}" BorderThickness="2" BorderBrush="{ThemeResource ThemeColor}">
                                 <Grid.Background>
-                                    <SolidColorBrush Color="Gray" Opacity=".8"/>
+                                    <SolidColorBrush Color="Gray" Opacity=".3"/>
                                 </Grid.Background>
                             </Grid>
                             <StackPanel Margin="{TemplateBinding Padding}">

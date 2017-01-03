@@ -12,7 +12,7 @@
         </Style>
     </local:BaseItemView.Resources>
     <local:BaseItemView.BottomContent>
-        <Grid Height="2" Background="Gray"/>
+        <Grid Height="1" Background="Gray"/>
     </local:BaseItemView.BottomContent>
     <StackPanel Name="threadSp" Margin="2" DataContext="{Binding ViewModel, ElementName=itemView}">
         <RelativePanel>

@@ -35,24 +35,29 @@ namespace Islands.UWP
             }
         }
 
-        public bool IsTextSelectionEnabled { set { if (ViewModel != null) ViewModel.IsTextSelectionEnabled = value; } }
+        //public bool IsTextSelectionEnabled { set { if (ViewModel != null) ViewModel.IsTextSelectionEnabled = value; } }
 
         protected override void OnViewModelChanged()
         {
             base.OnViewModelChanged();
-            if (ViewModel != null && ViewModel.UserColor != null)
-                uid.Foreground = ViewModel.UserColor;
-            else
+            if (ViewModel != null)
             {
-                var bindingModel = new BindingModel()
-                {
-                    BindingElement = uid,
-                    Source = createDate,
-                    Path = "Foreground",
-                    Property = TextBlock.ForegroundProperty,
-                };
-                Helper.BindingHelper(bindingModel);
+                if (ViewModel.IsAdmin) ViewModel.ItemUid += " (管理)";
+                else if (ViewModel.IsPo) ViewModel.ItemUid += " (PO)";
             }
+            //if (ViewModel != null && ViewModel.UserColor != null)
+            //    uid.Foreground = ViewModel.UserColor;
+            //else
+            //{
+            //    var bindingModel = new BindingModel()
+            //    {
+            //        BindingElement = uid,
+            //        Source = createDate,
+            //        Path = "Foreground",
+            //        Property = TextBlock.ForegroundProperty,
+            //    };
+            //    Helper.BindingHelper(bindingModel);
+            //}
         }
         
         protected override async void OnRefClick(string RefText)
@@ -62,7 +67,7 @@ namespace Islands.UWP
             //用api
             try
             {
-                var refItem = GetRefByApi(RefText);
+                var refItem = await GetRefByApi(RefText);
                 await Data.Message.ShowRef(RefText, refItem);
             }
             catch (Exception ex)

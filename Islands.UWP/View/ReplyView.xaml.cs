@@ -38,19 +38,24 @@ namespace Islands.UWP
         protected override void OnViewModelChanged()
         {
             base.OnViewModelChanged();
-            if (ViewModel != null && ViewModel.UserColor != null)
-                uid.Foreground = ViewModel.UserColor;
-            else
+            if (ViewModel != null)
             {
-                var bindingModel = new BindingModel()
-                {
-                    BindingElement = uid,
-                    Source = createDate,
-                    Path = "Foreground",
-                    Property = TextBlock.ForegroundProperty,
-                };
-                Helper.BindingHelper(bindingModel);
-            }            
+                if (ViewModel.IsAdmin) ViewModel.ItemUid += " (管理)";
+                else if (ViewModel.IsPo) ViewModel.ItemUid += " (PO)";
+            }
+            //    if (ViewModel != null && ViewModel.UserColor != null)
+            //        uid.Foreground = ViewModel.UserColor;
+            //    else
+            //    {
+            //        var bindingModel = new BindingModel()
+            //        {
+            //            BindingElement = uid,
+            //            Source = createDate,
+            //            Path = "Foreground",
+            //            Property = TextBlock.ForegroundProperty,
+            //        };
+            //        Helper.BindingHelper(bindingModel);
+            //    }            
         }   
 
         protected override async void OnRefClick(string RefText)

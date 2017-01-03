@@ -79,17 +79,24 @@ namespace Islands.UWP.Data
 
         public static async Task<int> ShowRef(string title, object content)
         {
-            ScrollViewer sv = new ScrollViewer() { MaxHeight = 500, VerticalScrollBarVisibility = ScrollBarVisibility.Auto};
-            sv.Content = content;
-            var dialog = new ContentDialog()
+            try
             {
-                Title = ">>No." + title,
-                Content = sv,               
-                FullSizeDesired = true,
-                PrimaryButtonText = "关闭"
-            };
-            ContentDialogResult result = await dialog.ShowAsync();
-            return 0;
+                ScrollViewer sv = new ScrollViewer() { MaxHeight = 500, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+                sv.Content = content;
+                var dialog = new ContentDialog()
+                {
+                    Title = ">>No." + title,
+                    Content = sv,
+                    FullSizeDesired = true,
+                    PrimaryButtonText = "关闭"
+                };
+                ContentDialogResult result = await dialog.ShowAsync();
+                return 0;
+            }
+            catch
+            {
+                return -1;
+            }
         }
 
         public static string GetRandomErrorMessage()
