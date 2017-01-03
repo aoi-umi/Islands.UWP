@@ -43,10 +43,10 @@
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
-            <local:IsShowMenuButtonConverter x:Key="IsShowMenuButtonConverter"/>
+            <local:ShowConverter x:Key="ShowConverter"/>
+            <local:ShowImageViewConverter x:Key="ShowImageViewConverter"/>
+            <local:HideMenuConverter x:Key="HideMenuConverter"/>
             <local:ItemToViewModelConverter x:Key="ItemToViewModelConverter"/>
-            <local:IsShowImageViewConverter x:Key="IsShowImageViewConverter"/>
-            <local:IsShowRefBackgroundConverter x:Key="IsShowRefBackgroundConverter"/>
 
             <SolidColorBrush x:Key="ThemeColor" Color="{ThemeResource SystemAccentColor}" Opacity="0.4"/>
             <viewModel:ItemDataTemplateSelector x:Key="ItemDataTemplateSelector"/>

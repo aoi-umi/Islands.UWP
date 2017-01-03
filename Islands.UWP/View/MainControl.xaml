@@ -12,10 +12,9 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <CollectionViewSource x:Name="forumGroup" IsSourceGrouped="True"/>
-        <local:IsHideMenuConverter x:Key="IsHideMenuConverter"/>
     </UserControl.Resources>
     <Grid>
-        <SplitView Name="mainSplitView" CompactPaneLength="{Binding IsHideMenu,Converter={StaticResource IsHideMenuConverter}}" OpenPaneLength="100" DisplayMode="CompactOverlay">
+        <SplitView Name="mainSplitView" CompactPaneLength="{Binding IsHideMenu,Converter={StaticResource HideMenuConverter}}" OpenPaneLength="100" DisplayMode="CompactOverlay">
             <SplitView.Pane>
                 <ListBox Name="mainNavigationList"
                          SelectionMode="Single">
@@ -85,6 +84,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
+                    
                     <SemanticZoom Grid.Row="0">
                         <SemanticZoom.ZoomedInView>
                             <ListView Name="forumZoomInView" IsItemClickEnabled="True" 
@@ -105,7 +105,7 @@
                                 </ListView.GroupStyle>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding forumName}" />
+                                        <TextBlock Text="{Binding forumName}" VerticalAlignment="Center" Margin="5 0 0 0"/>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
@@ -126,6 +126,7 @@
                             </ListView>
                         </SemanticZoom.ZoomedOutView>
                     </SemanticZoom>
+                    
                     <RelativePanel Grid.Row="1" Background="{StaticResource ThemeColor}">
                         <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}">
                             <Interactivity:Interaction.Behaviors>

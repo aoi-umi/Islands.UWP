@@ -13,7 +13,7 @@
                 <ControlTemplate TargetType="local:BaseItemView">
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid DataContext="{TemplateBinding ViewModel}">
-                            <Grid Visibility="{Binding IsRef, Converter={StaticResource IsShowRefBackgroundConverter}}" BorderThickness="2" BorderBrush="{ThemeResource ThemeColor}">
+                            <Grid x:Name="RefBg" BorderThickness="2" BorderBrush="{ThemeResource ThemeColor}" Visibility="{Binding IsRef, Converter={StaticResource ShowConverter}}">
                                 <Grid.Background>
                                     <SolidColorBrush Color="Gray" Opacity=".3"/>
                                 </Grid.Background>
@@ -21,10 +21,10 @@
                             <StackPanel Margin="{TemplateBinding Padding}">
                                 <ContentControl Content="{TemplateBinding TopContent}"/>
                                 <ContentPresenter/>
-                                <RelativePanel Visibility="{Binding ItemThumb, Converter={StaticResource IsShowImageViewConverter}}">
+                                <RelativePanel Visibility="{Binding ItemThumb, Converter={StaticResource ShowImageViewConverter}}">
                                     <Button x:Name="ShowImageButton" Background="Transparent" Foreground="{ThemeResource HyperlinkForegroundThemeBrush}" Visibility="Collapsed" Content="显示图片"/>
                                     <ProgressRing x:Name="ProgressRing" HorizontalAlignment="Left" IsActive="False" Width="50" Height="50" Visibility="Collapsed"/>
-                                    <Grid x:Name="ImageView" HorizontalAlignment="Left" Visibility="Collapsed">
+                                    <Grid x:Name="ImageView" Margin="{Binding BorderThickness, ElementName=RefBg}" HorizontalAlignment="Left" Visibility="Collapsed">
                                         <Image x:Name="Image" Stretch="Uniform" MaxHeight="200" MaxWidth="200" CacheMode="BitmapCache">
                                             <Interactivity:Interaction.Behaviors>
                                                 <Core:EventTriggerBehavior EventName="Tapped">
