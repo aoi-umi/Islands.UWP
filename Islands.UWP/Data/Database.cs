@@ -161,6 +161,7 @@ namespace Islands.UWP.Data
             }
         }
 
+        //System.IO.IsolatedStorage.IsolatedStorageFile.GetUserStoreForApplication();
         private readonly static string DbPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, Config.dbName);
         private readonly static string RoamingDbPath = Path.Combine(ApplicationData.Current.RoamingFolder.Path, Config.dbName);
 

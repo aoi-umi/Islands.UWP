@@ -1,6 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Islands.UWP.Data;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.IO;
+using Windows.Storage;
 using Windows.UI.Text;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -146,12 +149,13 @@ namespace Islands.UWP
                 };
 
                 string originalContent = string.Empty;
+                string textToString = "[文字转图]";
                 if (send.sendImage == Config.TextToImageUri)
                 {
                     string filename = DateTime.Now.ToString("yyyyMMdd_HHmmssfff") + ".jpg";
                     string fullFilename = await Data.File.SaveTextToImage(Config.TextToImageUri + filename, bitmap);
                     originalContent = send.sendContent;
-                    send.sendContent = "[文字转图]";
+                    send.sendContent = textToString;
                     send.sendImage = fullFilename;
                 }
 
@@ -165,7 +169,8 @@ namespace Islands.UWP
                 IsHitTestVisible = false;
                 IsLoading = true;
                 OnSendClick(this, e);
-                var res = await Data.Http.PostData(send);
+
+                var res = await Http.PostData(send);
                 bool IsSuccess = false;
                 string ThreadId = "";
                 switch (islandCode)
@@ -187,6 +192,13 @@ namespace Islands.UWP
                 }
                 if (IsSuccess)
                 {
+                    if (send.sendContent != textToString && !string.IsNullOrEmpty(send.sendImage))
+                    {
+                        var imageName = Path.GetFileName(send.sendImage);
+                        var sf = ApplicationData.Current.LocalFolder;
+                        var copyResult = await sf.TryCopyImage(send.sendImage, Config.SendImageFolder, imageName);
+                        if (copyResult) send.sendImage = Path.Combine(sf.Path, Config.SendImageFolder, imageName);
+                    }
                     if (!string.IsNullOrEmpty(originalContent)) send.sendContent += "\r\n" + originalContent;
                     EmptyButton_Click(null, null);
                 }
@@ -195,7 +207,7 @@ namespace Islands.UWP
             }
             catch (Exception ex)
             {
-                Data.Message.ShowMessage(ex.Message);
+                Message.ShowMessage(ex.Message);
             }
             this.IsHitTestVisible = true;
             IsLoading = false;

@@ -69,12 +69,11 @@ namespace Islands.UWP.Data
                     //if (send.islandCode == IslandsCode.Beitai)
                     //    imageContent.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("form-data;name=\"upfile\";filename=\"" + filename + "\"");
                     //else
-                        imageContent.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("form-data;name=\"image\";filename=\"" + filename + "\"");
+                    imageContent.Headers.ContentDisposition = ContentDispositionHeaderValue.Parse("form-data;name=\"image\";filename=\"" + filename + "\"");
                     imageContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/*");
                     multiContent.Add(imageContent);
                 }
                 postContent = multiContent;
-
                 string responseBody = "";
                 //Set cookie
                 var baseAddress = new Uri(send.Host);

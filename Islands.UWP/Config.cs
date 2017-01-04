@@ -36,6 +36,7 @@ namespace Islands.UWP
         public static string FailedImageUri = "ms-appx:/Assets/luwei.jpg";
         public static string TextToImageUri = "TextToImage";
         public static string SavedImageFolder = "Islands";
+        public static string SendImageFolder = SavedImageFolder + @"\SendImage";
         public static double MaxImageWidth = 200;
         public static double MaxImageHeight = 200;
         public static string PoString = " (POPOPO)";

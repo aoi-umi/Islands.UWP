@@ -180,5 +180,37 @@ namespace Islands.UWP.Data
             }
             return file.Path;
         }
+
+        public static async Task<bool> TryCopyImage(this StorageFolder sf, string sourceFileName, string folderName, string destFileName)
+        {
+            bool result = true;
+            try
+            {
+                if (sourceFileName == Path.Combine(sf.Path, folderName, destFileName)) return false;
+                await sf.CreateFoldersAsync(folderName);
+                await Task.Run(() =>
+                {
+                    System.IO.File.Copy(sourceFileName, Path.Combine(sf.Path, folderName, destFileName), true);
+                });
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+            return result;
+        }
+
+        public static async Task CreateFoldersAsync(this StorageFolder sf, string folderName)
+        {
+            if (string.IsNullOrWhiteSpace(folderName)) return;
+            var s = folderName.Split(new string[] { @"\","/" }, StringSplitOptions.RemoveEmptyEntries);
+            if (s == null || s.Length < 1) return;
+            StorageFolder folder = sf;
+            foreach (var x in s)
+            {
+                if (folder == null) return;
+                folder = await folder.CreateFolderAsync(x, CreationCollisionOption.OpenIfExists);
+            }
+        }
     }
 }
