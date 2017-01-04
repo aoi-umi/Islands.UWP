@@ -17,9 +17,6 @@
                             <Core:EventTriggerBehavior EventName="RightTapped">
                                 <viewModel:Actions ActionType="ItemRightTapped"/>
                             </Core:EventTriggerBehavior>
-                            <Core:EventTriggerBehavior EventName="Holding">
-                                <viewModel:Actions ActionType="ItemHolding"/>
-                            </Core:EventTriggerBehavior>
                         </Interactivity:Interaction.Behaviors>
                         <Border.Resources>
                             <MenuFlyout x:Key="ItemMenuFlyout">

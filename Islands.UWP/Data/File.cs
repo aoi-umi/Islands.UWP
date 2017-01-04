@@ -95,7 +95,7 @@ namespace Islands.UWP.Data
                     image.Source = bitmap;
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 image.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
             }
@@ -103,9 +103,7 @@ namespace Islands.UWP.Data
 
         public static async Task<Stream> ReadFileStreamAsync(string path)
         {
-            var file = await StorageFile.GetFileFromPathAsync(path);
-            StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", file);
-            var stream = await file.OpenReadAsync();
+            var stream = await ReadFileRandomAccessStreamWithContentTypeAsync(path);
             return stream.AsStream();
         }
 

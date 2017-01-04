@@ -75,7 +75,7 @@
                 <RelativePanel Name="textToImgPanel" Background="White">
                     <TextBlock Name="textToImgTextBlock" Text="" Foreground="Black"/>
                 </RelativePanel>
-                <Image Name="SendImage" Stretch="None"/>
+                <Image Name="SendImage" Stretch="Uniform" MaxWidth="150"/>
             </RelativePanel>
             <TextBlock Name="SendImageStr"/>
         </StackPanel>

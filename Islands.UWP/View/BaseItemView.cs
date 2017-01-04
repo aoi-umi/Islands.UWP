@@ -309,7 +309,7 @@ namespace Islands.UWP
                 progressRing.Visibility = imageView.Visibility = Visibility.Visible;
                 showImageButton.Visibility = Visibility.Collapsed;
                 //if(IsLocalImage) Data.File.SetLocalImage(image, ItemImage);
-                //else
+                //else 
                 image.Source = new BitmapImage(new Uri(ItemThumb));
             }
         }

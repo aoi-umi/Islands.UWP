@@ -53,9 +53,6 @@ namespace Islands.UWP.ViewModel
                 case ActionTypes.ItemRightTapped:
                     ItemRightTapped(sender as FrameworkElement, parameter as RightTappedRoutedEventArgs);
                     break;
-                case ActionTypes.ItemHolding:
-                    ItemHolding(sender as FrameworkElement, parameter as HoldingRoutedEventArgs);
-                    break;
                 case ActionTypes.FlyoutMenuClicked:
                     if (ele != null)
                         FlyoutMenuClicked(ele.DataContext as ItemViewModel);
@@ -79,12 +76,6 @@ namespace Islands.UWP.ViewModel
         }
 
         private void ItemRightTapped(FrameworkElement ele, RightTappedRoutedEventArgs e)
-        {
-            if (ele == null || !ele.Resources.ContainsKey("ItemMenuFlyout")) return;
-            var flyout = ele.Resources["ItemMenuFlyout"] as MenuFlyout;
-            flyout.ShowAt(ele, e.GetPosition(ele));
-        }
-        private void ItemHolding(FrameworkElement ele, HoldingRoutedEventArgs e)
         {
             if (ele == null || !ele.Resources.ContainsKey("ItemMenuFlyout")) return;
             var flyout = ele.Resources["ItemMenuFlyout"] as MenuFlyout;

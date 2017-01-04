@@ -70,13 +70,6 @@ namespace Islands.UWP
             ImageUrl = ImageUrl;
         }
 
-        private void Image_Holding(object sender, HoldingRoutedEventArgs e)
-        {
-            var flyout = this.Resources["ImageMenuFlyout"] as MenuFlyout;
-            flyout.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
-            //FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-        }
-
         private void Image_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var flyout = this.Resources["ImageMenuFlyout"] as MenuFlyout;
