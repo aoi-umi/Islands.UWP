@@ -5,20 +5,23 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" RightTapped="Item_RightTapped" Holding="Item_Holding">
     <local:BaseItemView.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="IsTextSelectionEnabled" Value="True"/>
         </Style>
+        <MenuFlyout x:Key="ItemMenuFlyout">
+            <MenuFlyoutItem Text="引用"/>
+        </MenuFlyout>
     </local:BaseItemView.Resources>
     <local:BaseItemView.BottomContent>
         <Grid Height="1" Background="Gray"/>
     </local:BaseItemView.BottomContent>
     <StackPanel Name="threadSp" Margin="2" DataContext="{Binding ViewModel, ElementName=itemView}">
         <RelativePanel>
-            <TextBlock Name="title" Text="{Binding ItemTitle}" Visibility="{Binding IsHadTitle}" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
-            <TextBlock Name="email" Text="{Binding ItemEmail}" Visibility="{Binding IsHadEmail}" RelativePanel.Below="title" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
-            <TextBlock Name="name" Text="{Binding ItemName}" Visibility="{Binding IsHadName}" RelativePanel.Below="email" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
+            <TextBlock Name="title" Text="{Binding ItemTitle}" Visibility="{Binding ItemTitle, Converter={StaticResource HideIsNullOrWhiteSpaceConverter}}" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
+            <TextBlock Name="email" Text="{Binding ItemEmail}" Visibility="{Binding ItemEmail, Converter={StaticResource HideIsNullOrWhiteSpaceConverter}}" RelativePanel.Below="title" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
+            <TextBlock Name="name" Text="{Binding ItemName}" Visibility="{Binding ItemName, Converter={StaticResource HideIsNullOrWhiteSpaceConverter}}" RelativePanel.Below="email" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
             <TextBlock Name="createDate" Text="{Binding ItemCreateDate}" RelativePanel.Below="name" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
             <TextBlock Name="txtNo" Text="No." RelativePanel.LeftOf="no" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
             <TextBlock Name="no" Text="{Binding ItemNo}" RelativePanel.AlignRightWithPanel="True" FontSize="{Binding GlobalConfig.TitleFontSize}"/>

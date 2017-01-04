@@ -30,9 +30,9 @@ namespace Islands.UWP.ViewModel
                 }
             }
         }
-        public Visibility IsHadTitle { get; private set; }
-        public Visibility IsHadEmail { get; private set; }
-        public Visibility IsHadName { get; private set; }
+        //public Visibility IsHadTitle { get; private set; } = Visibility.Collapsed;
+        //public Visibility IsHadEmail { get; private set; } = Visibility.Collapsed;
+        //public Visibility IsHadName { get; private set; } = Visibility.Collapsed;
         public RichTextBlock ItemContentView { get; private set; }
         public string Host { get; set; }
         public string GetRefAPI { get; set; }
@@ -84,7 +84,7 @@ namespace Islands.UWP.ViewModel
         {
             if (BaseItem == null) BaseItem = new BaseItemModel();
             Init(BaseItem);
-            InitVisibility();
+            ResetString();
             if (ItemContentView == null)
             {
                 ItemContentView = ContentConvert(ItemContent);
@@ -102,14 +102,18 @@ namespace Islands.UWP.ViewModel
             ItemMsg = (myReply.isMain ? "新串：" : "回复：") + myReply.sendId;
             ItemThumb = ItemImage = myReply.sendImage;
             ItemContent = myReply.sendContent;
-            InitVisibility();
+            ResetString();
         }
 
-        private void InitVisibility()
+        private void ResetString()
         {
-            IsHadTitle = GetVisibility(ItemTitle, new string[] { "标题:", "无标题" });
-            IsHadEmail = GetVisibility(ItemEmail, new string[] { "email:" });
-            IsHadName = GetVisibility(ItemName, new string[] { "名字:", "无名氏" });
+            if (CheckString(ItemTitle, new string[] { "标题:", "无标题" })) ItemTitle = null;
+            if (CheckString(ItemEmail, new string[] { "email:" })) ItemEmail = null;
+            if (CheckString(ItemName, new string[] { "名字:", "无名氏" })) ItemName = null;
+
+            //IsHadTitle = GetVisibility(ItemTitle, new string[] { "标题:", "无标题" });
+            //IsHadEmail = GetVisibility(ItemEmail, new string[] { "email:" });
+            //IsHadName = GetVisibility(ItemName, new string[] { "名字:", "无名氏" });
         }
 
         private Visibility GetVisibility(string str, string[] list)
@@ -179,6 +183,7 @@ namespace Islands.UWP.ViewModel
             ItemName = baseItemModel.name;
             ItemNo = baseItemModel.id;
             ItemContent = baseItemModel.content;
+            
             var t = baseItemModel as ThreadModel;
             if (t != null) ItemReplyCount = t.replyCount;
             switch (baseItemModel.islandCode)
@@ -222,6 +227,16 @@ namespace Islands.UWP.ViewModel
                     break;
             }
             #endregion
-        }        
+        }
+        private bool CheckString(string str, string[] list)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return true;
+            foreach (var s in list)
+            {
+                if (s == str) return true;
+            }
+            return false;
+        }
     }
 }

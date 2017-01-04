@@ -1,7 +1,10 @@
-﻿using Islands.UWP.Model;
+﻿using Islands.UWP.Data;
+using Islands.UWP.Model;
 using Microsoft.Xaml.Interactivity;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace Islands.UWP.ViewModel
 {
@@ -36,7 +39,7 @@ namespace Islands.UWP.ViewModel
                         RefreshTapped(ele.DataContext);
                     break;
                 case ActionTypes.SendTapped:
-                    CurrentControl?.OnSendTapped();
+                    CurrentControl?.SendTapped();
                     break;
                 case ActionTypes.GotoPageTapped:
                     CurrentControl?.ThreadOrReplyGotoPage();
@@ -46,6 +49,16 @@ namespace Islands.UWP.ViewModel
                     break;
                 case ActionTypes.MarkTapped:
                     CurrentControl.Mark();
+                    break;
+                case ActionTypes.ItemRightTapped:
+                    ItemRightTapped(sender as FrameworkElement, parameter as RightTappedRoutedEventArgs);
+                    break;
+                case ActionTypes.ItemHolding:
+                    ItemHolding(sender as FrameworkElement, parameter as HoldingRoutedEventArgs);
+                    break;
+                case ActionTypes.FlyoutMenuClicked:
+                    if (ele != null)
+                        FlyoutMenuClicked(ele.DataContext as ItemViewModel);
                     break;
             }
             return true;
@@ -63,6 +76,37 @@ namespace Islands.UWP.ViewModel
         {
             var model = dataContext as BaseListView;
             model?.Refresh();
+        }
+
+        private void ItemRightTapped(FrameworkElement ele, RightTappedRoutedEventArgs e)
+        {
+            if (ele == null || !ele.Resources.ContainsKey("ItemMenuFlyout")) return;
+            var flyout = ele.Resources["ItemMenuFlyout"] as MenuFlyout;
+            flyout.ShowAt(ele, e.GetPosition(ele));
+        }
+        private void ItemHolding(FrameworkElement ele, HoldingRoutedEventArgs e)
+        {
+            if (ele == null || !ele.Resources.ContainsKey("ItemMenuFlyout")) return;
+            var flyout = ele.Resources["ItemMenuFlyout"] as MenuFlyout;
+            flyout.ShowAt(ele, e.GetPosition(ele));
+        }
+
+        private void FlyoutMenuClicked(ItemViewModel viewModel)
+        {
+            try
+            {
+                if (viewModel == null || string.IsNullOrWhiteSpace(viewModel.ItemNo)) throw new Exception("引用失败");
+                if (CurrentControl != null)
+                {
+                    var str = ">>No." + viewModel.ItemNo + Environment.NewLine;
+                    CurrentControl.InsertSendText(str);
+                    CurrentControl.SendTapped();
+                }
+            }
+            catch (Exception ex)
+            {
+                Message.ShowMessage(ex.Message);
+            }
         }
 
         private MainControl CurrentControl
@@ -87,5 +131,8 @@ namespace Islands.UWP.ViewModel
         GotoPageTapped,
         BackTapped,
         MarkTapped,
+        ItemRightTapped,
+        ItemHolding,
+        FlyoutMenuClicked,
     }
 }

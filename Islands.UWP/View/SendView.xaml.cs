@@ -206,16 +206,22 @@ namespace Islands.UWP
             if (KaomojiBox.SelectedIndex != 0)
             {
                 var Kaomoji = KaomojiBox.SelectedItem.ToString();
-                var start = SendContent.Document.Selection.StartPosition;
-                SendContent.Document.Selection.SetText(TextSetOptions.None, Kaomoji);                
-                SendContent.Document.Selection.StartPosition = start + Kaomoji.Length;
+                InsertText(Kaomoji);
                 KaomojiBox.SelectedIndex = 0;
             }
         }
 
-        private void RefButton_Click(object sender, RoutedEventArgs e)
+        //private void RefButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    SendContent.Document.Selection.SetText(TextSetOptions.None, ">>No.");
+        //}
+
+        public void InsertText(string str)
         {
-            SendContent.Document.Selection.SetText(TextSetOptions.None, ">>No.");
+            var start = SendContent.Document.Selection.StartPosition;
+            SendContent.Document.Selection.SetText(TextSetOptions.None, str);
+            SendContent.Document.Selection.StartPosition = start + str.Length;
+            KaomojiBox.SelectedIndex = 0;
         }
 
         private void SendView_Hiding(InputPane sender, InputPaneVisibilityEventArgs args)

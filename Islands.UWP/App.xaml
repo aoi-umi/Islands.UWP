@@ -42,13 +42,17 @@
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-
-            <local:ShowConverter x:Key="ShowConverter"/>
-            <local:ShowImageViewConverter x:Key="ShowImageViewConverter"/>
-            <local:HideMenuConverter x:Key="HideMenuConverter"/>
-            <local:ItemToViewModelConverter x:Key="ItemToViewModelConverter"/>
+            
+            <!--Converter-->
+            <viewModel:ShowConverter x:Key="ShowConverter"/>
+            <viewModel:ShowImageViewConverter x:Key="ShowImageViewConverter"/>
+            <viewModel:HideMenuConverter x:Key="HideMenuConverter"/>
+            <viewModel:ItemToViewModelConverter x:Key="ItemToViewModelConverter"/>
+            <viewModel:HideIsNullOrWhiteSpaceConverter x:Key="HideIsNullOrWhiteSpaceConverter"/>
 
             <SolidColorBrush x:Key="ThemeColor" Color="{ThemeResource SystemAccentColor}" Opacity="0.4"/>
+            
+            <!--ItemTemplate-->
             <viewModel:ItemDataTemplateSelector x:Key="ItemDataTemplateSelector"/>
             <DataTemplate x:Key="ThreadDataTemplate">
                 <local:ThreadView ViewModel="{Binding Converter={StaticResource ItemToViewModelConverter}}"/>

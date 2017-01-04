@@ -81,7 +81,8 @@ namespace Islands.UWP
         public string ItemImage { get { return ViewModel == null ? null : ViewModel.ItemImage; } }
         public string Host { get { return ViewModel == null ? null : ViewModel.Host; } }
         public string GetRefAPI { get { return ViewModel == null ? null : ViewModel.GetRefAPI; } }
-        public bool IsTextSelectionEnabled { get { return ViewModel == null ? false : ViewModel.IsTextSelectionEnabled; } }
+        //public bool IsTextSelectionEnabled { get { return ViewModel == null ? false : ViewModel.IsTextSelectionEnabled; } }
+        public bool IsRef { get { return ViewModel == null ? false : ViewModel.IsRef; } }
         public bool NoImage { get; set; }
         public bool IsLocalImage { get; set; }
         private DataTypes dataType { get { return ViewModel == null ? DataTypes.None : ViewModel.DataType; } }
@@ -91,6 +92,7 @@ namespace Islands.UWP
         private Grid imageView { get; set; }
         private Image image { get; set; }
         private Grid gifTextView { get; set; }
+        //private MenuFlyout itemMenuFlyout { get; set; }
         //protected IslandsCode IslandCode { get; set; }
         private bool hadApplyTemplate { get; set; }
         private bool hadInitImage { get; set; }
@@ -103,9 +105,25 @@ namespace Islands.UWP
             image = GetTemplateChild(ImageName) as Image;
             imageView = GetTemplateChild(ImageViewName) as Grid;
             gifTextView = GetTemplateChild(GifTextViewName) as Grid;
+            //RightTapped += BaseItemView_RightTapped;
+            //itemMenuFlyout = new MenuFlyout();
+            //itemMenuFlyout.Items.Add(new MenuFlyoutItem() { Text = "引用" });
+
+            //foreach(var menuItem in itemMenuFlyout.Items)
+            //{
+            //    ((MenuFlyoutItem)menuItem).Click += (sender, e) =>
+            //    {
+            //    };
+            //}
             hadApplyTemplate = true;
             ImageInit();
         }
+
+        //private void BaseItemView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        //{
+        //    var ele = sender as UIElement;
+        //    itemMenuFlyout.ShowAt(ele, e.GetPosition(ele));
+        //}
 
         private void RemoveEvent()
         {
@@ -127,7 +145,7 @@ namespace Islands.UWP
         {
             if (hadApplyTemplate && !hadInitImage && !string.IsNullOrEmpty(ItemThumb))
             {
-                if (!NoImage && dataType != DataTypes.Mark) ShowImage();
+                if (!NoImage && !IsRef && dataType != DataTypes.Mark) ShowImage();
                 else showImageButton.Visibility = Visibility.Visible;
                 gifTextView.Visibility = Visibility.Collapsed;
                 showImageButton.Click += ShowImageButton_Click;
@@ -184,7 +202,7 @@ namespace Islands.UWP
                 var content = GetRefByList(id) as FrameworkElement;
                 if(content != null)
                 {
-                    content.Margin = new Thickness(20, 0, 5, 0);
+                    content.Margin = new Thickness(15, 0, 5, 0);
                     var i = new InlineUIContainer();
                     i.Child = content;
                     inline = i;

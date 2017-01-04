@@ -45,7 +45,7 @@
         </RelativePanel>
     </local:BaseContentView.BottomContent>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Image Name="image" FlyoutBase.AttachedFlyout="{StaticResource ImageMenuFlyout}" Holding="Image_Holding" RightTapped="Image_RightTapped">
+        <Image Name="image" Holding="Image_Holding" RightTapped="Image_RightTapped">
             <Interactivity:Interaction.Behaviors>
                 <uaBeh:GestureBehavior/>
             </Interactivity:Interaction.Behaviors>

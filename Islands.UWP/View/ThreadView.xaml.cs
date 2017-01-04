@@ -42,8 +42,8 @@ namespace Islands.UWP
             base.OnViewModelChanged();
             if (ViewModel != null)
             {
-                if (ViewModel.IsAdmin) ViewModel.ItemUid += " (管理)";
-                else if (ViewModel.IsPo) ViewModel.ItemUid += " (PO)";
+                if (ViewModel.IsAdmin) ViewModel.ItemUid += Config.AdminString;
+                else if (ViewModel.IsPo) ViewModel.ItemUid += Config.PoString;
             }
             //if (ViewModel != null && ViewModel.UserColor != null)
             //    uid.Foreground = ViewModel.UserColor;

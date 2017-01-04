@@ -2,6 +2,7 @@
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
@@ -20,17 +21,21 @@ namespace Islands.UWP
             image.ImageFailed += ImageView_ImageFailed;
         }
 
-        private string _ImgageUrl { get; set; }
+        private string _ImageUrl { get; set; }
         public string ImageUrl
         {
             set
             {
                 IsLoading = true;
                 if(value != Config.FailedImageUri)
-                    _ImgageUrl = value;
+                    _ImageUrl = value;
                 image.Width = Config.MaxImageWidth;
                 image.Height = double.NaN;
                 image.Source = string.IsNullOrEmpty(value) ? null : new BitmapImage(new Uri(value));
+            }
+            private get
+            {
+                return _ImageUrl;
             }
         }
 
@@ -47,14 +52,14 @@ namespace Islands.UWP
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(_ImgageUrl))
+            if (string.IsNullOrEmpty(ImageUrl))
             {
                 Data.Message.ShowMessage("链接为空");
             }
             else
             {
-                if (MainPage.Global.IsAskEachTime) Data.File.SaveFile(_ImgageUrl);
-                else Data.File.SaveFileWithoutDialog(_ImgageUrl);
+                if (MainPage.Global.IsAskEachTime) Data.File.SaveFile(ImageUrl);
+                else Data.File.SaveFileWithoutDialog(ImageUrl);
             }
         }
 
@@ -62,23 +67,27 @@ namespace Islands.UWP
         {
             image.Width = double.NaN;
             image.Height = double.NaN;
-            ImageUrl = _ImgageUrl;
+            ImageUrl = ImageUrl;
         }
 
         private void Image_Holding(object sender, HoldingRoutedEventArgs e)
         {
-            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+            var flyout = this.Resources["ImageMenuFlyout"] as MenuFlyout;
+            flyout.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
+            //FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
         private void Image_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+            var flyout = this.Resources["ImageMenuFlyout"] as MenuFlyout;
+            flyout.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
+            //FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
         private void MenuFlyoutCopyImage_Click(object sender, RoutedEventArgs e)
         {
             DataPackage dataPackage = new DataPackage();
-            dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromUri(new Uri(_ImgageUrl)));
+            dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromUri(new Uri(ImageUrl)));
             Clipboard.SetContent(dataPackage);
         }
 

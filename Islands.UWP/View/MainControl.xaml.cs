@@ -104,12 +104,12 @@ namespace Islands.UWP
 
             ReplyControl.MarkSuccess += ReplyControl_MarkSuccess;
 
-            MarkControl.ItemClick += MarkControl_MarkClick;
+            MarkControl.ItemClick += MarkControl_ItemClick;
 
             SendControl.Response += SendControl_Response;
             SendControl.SendClick += SendControl_SendClick;
 
-            MyReplysControl.ItemClick += MyReplysControl_MyReplyClick;
+            MyReplysControl.ItemClick += MyReplysControl_ItemClick;
 
             mainSplitView.Content = ThreadControl;
         }
@@ -165,7 +165,6 @@ namespace Islands.UWP
                 case "setting":
                     mainSplitView.IsPaneOpen = false;
                     SettingTapped?.Invoke(null, null);
-                    //mainSplitView.Content = SettingControl;
                     break;
                 default:
                     mainSplitView.IsPaneOpen = false;
@@ -211,12 +210,17 @@ namespace Islands.UWP
             }
         }
 
-        public void OnSendTapped()
+        public void SendTapped()
         {
             if (mainSplitView.Content != SendControl)
             {
                 GotoSendView();
             }
+        }
+
+        public void InsertSendText(string str)
+        {
+            SendControl.InsertText(str);
         }
 
         public void Mark()
@@ -279,7 +283,7 @@ namespace Islands.UWP
             MarkControl.AddMark(t);
         }
 
-        private void MarkControl_MarkClick(object sender, ItemClickEventArgs e)
+        private void MarkControl_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (MarkControl.SelectionMode != ListViewSelectionMode.None) return;
             var model = e.ClickedItem as DataModel;
@@ -296,7 +300,7 @@ namespace Islands.UWP
             }
         }
 
-        private void MyReplysControl_MyReplyClick(object sender, ItemClickEventArgs e)
+        private void MyReplysControl_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (MyReplysControl.SelectionMode != ListViewSelectionMode.None) return;
             var model = e.ClickedItem as DataModel;

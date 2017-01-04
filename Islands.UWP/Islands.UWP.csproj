@@ -106,7 +106,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converter.cs" />
+    <Compile Include="ViewModel\Converter.cs" />
     <Compile Include="Data\Database.cs" />
     <Compile Include="Data\Extension.cs" />
     <Compile Include="Data\File.cs" />

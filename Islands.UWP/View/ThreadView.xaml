@@ -8,13 +8,13 @@
     mc:Ignorable="d">
     <StackPanel Margin="2" DataContext="{Binding ViewModel, ElementName=itemView}">
         <RelativePanel Background="{ThemeResource ThemeColor}">
-            <TextBlock Name="title" Text="{Binding ItemTitle}" Visibility="{Binding IsHadTitle}"
+            <TextBlock Name="title" Text="{Binding ItemTitle}" Visibility="{Binding ItemTitle, Converter={StaticResource HideIsNullOrWhiteSpaceConverter}}"
                        IsTextSelectionEnabled="{Binding IsTextSelectionEnabled}"
                        FontSize="{Binding GlobalConfig.TitleFontSize}"/>
-            <TextBlock Name="email" Text="{Binding ItemEmail}" Visibility="{Binding IsHadEmail}"
+            <TextBlock Name="email" Text="{Binding ItemEmail}" Visibility="{Binding ItemEmail, Converter={StaticResource HideIsNullOrWhiteSpaceConverter}}"
                        IsTextSelectionEnabled="{Binding IsTextSelectionEnabled}"
                        RelativePanel.Below="title" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
-            <TextBlock Name="name" Text="{Binding ItemName}" Visibility="{Binding  IsHadName}"
+            <TextBlock Name="name" Text="{Binding ItemName}" Visibility="{Binding  ItemName, Converter={StaticResource HideIsNullOrWhiteSpaceConverter}}"
                        IsTextSelectionEnabled="{Binding IsTextSelectionEnabled}"
                        RelativePanel.Below="email" FontSize="{Binding GlobalConfig.TitleFontSize}"/>
             <TextBlock Name="createDate" Text="{Binding ItemCreateDate}" IsTextSelectionEnabled="{Binding IsTextSelectionEnabled}"

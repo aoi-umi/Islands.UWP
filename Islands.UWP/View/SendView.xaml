@@ -39,16 +39,18 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <RelativePanel Background="{StaticResource ThemeColor}">
-                <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}">
-                    <Interactivity:Interaction.Behaviors>
-                        <Core:EventTriggerBehavior EventName="Tapped">
-                            <viewModel:Actions ActionType="BackTapped"/>
-                        </Core:EventTriggerBehavior>
-                    </Interactivity:Interaction.Behaviors>
-                </Button>
-                <Button Name="EmptyButton" Content="&#xE107;" RelativePanel.RightOf="BackButton" Style="{StaticResource NavButton}" Click="EmptyButton_Click"/>
-                <Button Name="ImageButton" Content="&#xEB9F;" RelativePanel.RightOf="EmptyButton" Style="{StaticResource NavButton}" Click="ImageButton_Click"/>
-                <Button Name="RefButton" Content=">>" FontFamily="Times New Roman" RelativePanel.RightOf="ImageButton" Style="{StaticResource NavButton}" Click="RefButton_Click"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}">
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Tapped">
+                                <viewModel:Actions ActionType="BackTapped"/>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                    </Button>
+                    <Button Name="EmptyButton" Content="&#xE107;" Style="{StaticResource NavButton}" Click="EmptyButton_Click"/>
+                    <Button Name="ImageButton" Content="&#xEB9F;"  Style="{StaticResource NavButton}" Click="ImageButton_Click"/>
+                    <!--<Button Name="RefButton" Content=">>" FontFamily="Times New Roman" RelativePanel.RightOf="ImageButton" Style="{StaticResource NavButton}" Click="RefButton_Click"/>-->
+                </StackPanel>
                 <Button Name="SendButton" Content="&#xE724;" RelativePanel.AlignRightWithPanel="True" Style="{StaticResource NavButton}" Click="SendButton_Click"/>
             </RelativePanel>
             <Rectangle Name="Rect" Grid.Row="1"/>

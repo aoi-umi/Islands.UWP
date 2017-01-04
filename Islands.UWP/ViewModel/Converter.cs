@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace Islands.UWP
+namespace Islands.UWP.ViewModel
 {
     public class ShowConverter : IValueConverter
     {
@@ -35,6 +35,24 @@ namespace Islands.UWP
                 return (double)0;
             }
             return (double)35;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
+        }
+    }
+
+    public class HideIsNullOrWhiteSpaceConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            string result = value as String;
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

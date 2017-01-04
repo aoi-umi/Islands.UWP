@@ -38,6 +38,8 @@ namespace Islands.UWP
         public static string SavedImageFolder = "Islands";
         public static double MaxImageWidth = 200;
         public static double MaxImageHeight = 200;
+        public static string PoString = " (POPOPO)";
+        public static string AdminString = " (猴猴猴)";
         #region 颜文字
         public static List<string> Kaomoji = new List<string>() {
             "颜文字",
