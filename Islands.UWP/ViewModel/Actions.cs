@@ -3,6 +3,7 @@ using Islands.UWP.Model;
 using Microsoft.Xaml.Interactivity;
 using System;
 using UmiAoi.UWP;
+using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -90,7 +91,8 @@ namespace Islands.UWP.ViewModel
 
         private void ItemHolding(FrameworkElement ele, HoldingRoutedEventArgs e)
         {
-            if (ele == null || !ele.Resources.ContainsKey("ItemMenuFlyout")) return;
+            if (ele == null || !ele.Resources.ContainsKey("ItemMenuFlyout") ||
+                e.HoldingState != HoldingState.Started) return;
             var flyout = ele.Resources["ItemMenuFlyout"] as MenuFlyout;
             flyout.ShowAt(ele, e.GetPosition(ele));
         }

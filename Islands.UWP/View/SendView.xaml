@@ -69,7 +69,7 @@
         <TextBox Name="SendName" PlaceholderText="名字"/>
         <ComboBox Name="KaomojiBox" HorizontalAlignment="Stretch" SelectionChanged="KaomojiBox_SelectionChanged"/>
         <RichEditBox Name="SendContent" PlaceholderText="内容" AcceptsReturn="True" MinHeight="200"/>
-        <StackPanel>
+        <StackPanel Margin="5">
             <Button Name="TextToImage" Content="文字转图片" Click="TextToImage_Click"/>
             <RelativePanel>
                 <RelativePanel Name="textToImgPanel" Background="White">
@@ -80,4 +80,5 @@
             <TextBlock Name="SendImageStr"/>
         </StackPanel>
     </ListView>
+
 </local:BaseContentView>

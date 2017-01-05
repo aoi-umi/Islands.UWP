@@ -4,7 +4,6 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -78,7 +77,7 @@ namespace Islands.UWP
             IsLoading = false;
             if (CurrentControl != null && CurrentControl.CurrentContent != this)
             {
-                Helper.ShowToastNotification($"{CurrentControl.IslandCode}:图片加载完毕");
+                Helper.ShowToastNotification("图片加载完毕");
             }
         }
 

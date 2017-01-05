@@ -341,7 +341,8 @@ namespace Islands.UWP
             else
             {
                 progressRing.Visibility = Visibility.Collapsed;
-                if (ItemImage.ToLower().EndsWith(".gif")) gifTextView.Visibility = Visibility.Visible;
+                if (!string.IsNullOrWhiteSpace(ItemImage) && 
+                    ItemImage.ToLower().EndsWith(".gif")) gifTextView.Visibility = Visibility.Visible;
                 else gifTextView.Visibility = Visibility.Collapsed;
             }
         }
