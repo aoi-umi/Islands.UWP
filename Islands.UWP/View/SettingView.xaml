@@ -17,10 +17,11 @@
             <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}"/>
         </RelativePanel>
     </local:BaseContentView.BottomContent>
-    <ScrollViewer Grid.Row="0" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto">
+    <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto">
         <StackPanel Margin="5">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
@@ -48,22 +49,21 @@
                         <TextBlock Name="ImagePathBox" TextWrapping="Wrap" Visibility="Collapsed"/>
                     </RelativePanel>
                 </StackPanel>
-            </Grid>
-            <StackPanel>
-                <RelativePanel Margin="5">
-                    <TextBlock Text="数据同步" FontSize="16" RelativePanel.AlignVerticalCenterWithPanel="True"/>
-                    <Button Name="DataRoamingButton" RelativePanel.AlignRightWithPanel="True" Content="&#xE174;" Style="{StaticResource NavButton}">
-                    </Button>
-                </RelativePanel>
-                <StackPanel Margin="5">
-                    <RelativePanel>
-                        <TextBlock Text="设置背景" FontSize="16"  RelativePanel.AlignVerticalCenterWithPanel="True"/>
+                <StackPanel Margin="5" Grid.Row="2">
+                    <TextBlock Text="数据同步" FontSize="16"/>
+                    <Button Name="DataRoamingButton" Content="&#xE174;" Style="{StaticResource NavButton}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="1">
+                    <TextBlock Text="设置背景" FontSize="16"  RelativePanel.AlignVerticalCenterWithPanel="True"/>
+                    <StackPanel Orientation="Horizontal">
                         <Button Name="SetImagePathButton" Content="&#xE25A;" RelativePanel.LeftOf="CancelButton" 
                                 Click="SetImagePathButton_Click" Style="{StaticResource NavButton}"/>
                         <Button Name="CancelButton" Content="&#xE10A;" RelativePanel.AlignRightWithPanel="True"
                                 Click="CancelButton_Click" Style="{StaticResource NavButton}"/>
-                    </RelativePanel>
+                    </StackPanel>
                 </StackPanel>
+            </Grid>
+            <StackPanel>
                 <StackPanel Margin="5">
                     <TextBlock Text="遮罩透明度" FontSize="16"/>
                     <Slider Name="MaskOpacitySlider" Value="0" Minimum="0" Maximum="90" ValueChanged="MaskOpacitySlider_ValueChanged"/>
