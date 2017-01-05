@@ -19,6 +19,7 @@ namespace Islands.UWP
         {
             this.InitializeComponent();
             DataContext = MainPage.Global;
+            CurrentContent = CurrentContent;
         }
 
         public class Group<T>
@@ -39,6 +40,12 @@ namespace Islands.UWP
 
         public delegate void SettingTappedEventHandler(object sender, TappedRoutedEventArgs e);
         public SettingTappedEventHandler SettingTapped;
+
+        public UIElement CurrentContent
+        {
+            get { return mainSplitView.Content; }
+            set { mainSplitView.Content = value; }
+        }
 
         private ImageView ImageControl;
         private ThreadsView ThreadControl;
@@ -111,7 +118,8 @@ namespace Islands.UWP
 
             MyReplysControl.ItemClick += MyReplysControl_ItemClick;
 
-            mainSplitView.Content = ThreadControl;
+            //CurrentContent = ThreadControl;
+            CurrentContent = ThreadControl;
         }
 
         public void MenuToggle()
@@ -138,25 +146,25 @@ namespace Islands.UWP
                 case "home":
                     mainSplitView.IsPaneOpen = false;
                     if (IsMain)
-                        mainSplitView.Content = ThreadControl;
+                        CurrentContent = ThreadControl;
                     else
-                        mainSplitView.Content = ReplyControl;
+                        CurrentContent = ReplyControl;
                     break;
                 case "mark":
                     mainSplitView.IsPaneOpen = false;
-                    mainSplitView.Content = MarkControl;
+                    CurrentContent = MarkControl;
                     break;
                 case "myreply":
                     mainSplitView.IsPaneOpen = false;
-                    mainSplitView.Content = MyReplysControl;
+                    CurrentContent = MyReplysControl;
                     break;
                 case "image":
                     mainSplitView.IsPaneOpen = false;
-                    mainSplitView.Content = ImageControl;
+                    CurrentContent = ImageControl;
                     break;
                 case "forums":
                     mainSplitView.IsPaneOpen = false;
-                    mainSplitView.Content = ForumListView;
+                    CurrentContent = ForumListView;
                     break;
                 case "gotothread":
                     mainSplitView.IsPaneOpen = false;
@@ -176,7 +184,7 @@ namespace Islands.UWP
         {
             ImageControl.ImageUrl = imgPath;
             mainNavigationList.SelectedIndex = 5;
-            mainSplitView.Content = ImageControl;
+            CurrentContent = ImageControl;
         }
 
         public async void ThreadOrReplyGotoPage()
@@ -200,7 +208,7 @@ namespace Islands.UWP
 
         public void Back()
         {
-            if (mainSplitView.Content == ThreadControl || mainSplitView.Content == ReplyControl)
+            if (CurrentContent == ThreadControl || CurrentContent == ReplyControl)
             {
                 Switch();
             }
@@ -212,7 +220,7 @@ namespace Islands.UWP
 
         public void SendTapped()
         {
-            if (mainSplitView.Content != SendControl)
+            if (CurrentContent != SendControl)
             {
                 GotoSendView();
             }
@@ -232,15 +240,15 @@ namespace Islands.UWP
 
         private void Switch()
         {
-            if (IsMain) mainSplitView.Content = ReplyControl;
-            else mainSplitView.Content = ThreadControl;
+            if (IsMain) CurrentContent = ReplyControl;
+            else CurrentContent = ThreadControl;
             IsMain = !IsMain;
         }
 
         private void BackToHome()
         {
-            if (IsMain) mainSplitView.Content = ThreadControl;
-            else mainSplitView.Content = ReplyControl;
+            if (IsMain) CurrentContent = ThreadControl;
+            else CurrentContent = ReplyControl;
             mainNavigationList.SelectedIndex = 1;
         }
 
@@ -260,7 +268,7 @@ namespace Islands.UWP
                 SendControl.postModel.Id = ReplyControl.currThread;
             }
             SendControl.postModel.IsMain = IsMain;
-            mainSplitView.Content = SendControl;
+            CurrentContent = SendControl;
         }
 
         private void ThreadControl_ThreadClick(object sender, ItemClickEventArgs e)
@@ -272,7 +280,7 @@ namespace Islands.UWP
                 if (item != null)
                 {
                     IsMain = false;
-                    mainSplitView.Content = ReplyControl;
+                    CurrentContent = ReplyControl;
                     ReplyControl.GetReplyListByID(item.id);
                 }
             }
@@ -293,7 +301,7 @@ namespace Islands.UWP
                 if (item != null)
                 {
                     IsMain = false;
-                    mainSplitView.Content = ReplyControl;
+                    CurrentContent = ReplyControl;
                     mainNavigationList.SelectedIndex = 1;
                     ReplyControl.GetReplyListByID(item.id);
                 }
@@ -398,7 +406,7 @@ namespace Islands.UWP
             var f = e.ClickedItem as Model.ForumModel;
             if (f != null)
             {
-                mainSplitView.Content = ThreadControl;
+                CurrentContent = ThreadControl;
                 mainNavigationList.SelectedIndex = 1;
                 ThreadControl.RefreshById(f);
             }

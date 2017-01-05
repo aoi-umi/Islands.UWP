@@ -20,6 +20,16 @@ namespace Islands.UWP
             AddEvent();
         }
 
+        private MainControl CurrentControl
+        {
+            get
+            {
+                Frame rootFrame = Window.Current.Content as Frame;
+                var mp = rootFrame.Content as MainPage;
+                return mp.CurrentControl;
+            }
+        }
+
         private void AddEvent()
         {
             switch (Helper.CurrDeviceFamily)
@@ -66,6 +76,10 @@ namespace Islands.UWP
         private void ImageView_ImageOpened(object sender, RoutedEventArgs e)
         {
             IsLoading = false;
+            if (CurrentControl != null && CurrentControl.CurrentContent != this)
+            {
+                Helper.ShowToastNotification($"{CurrentControl.IslandCode}:图片加载完毕");
+            }
         }
 
         private void ImageView_ImageFailed(object sender, ExceptionRoutedEventArgs e)
