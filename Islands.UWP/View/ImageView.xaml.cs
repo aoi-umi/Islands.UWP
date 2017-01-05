@@ -1,4 +1,5 @@
 ﻿using System;
+using UmiAoi.UWP;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
@@ -16,9 +17,32 @@ namespace Islands.UWP
         public ImageView()
         {
             InitializeComponent();
+            AddEvent();
+        }
+
+        private void AddEvent()
+        {
+            switch (Helper.CurrDeviceFamily)
+            {
+                case DeviceFamily.Desktop:
+                    image.RightTapped += Image_RightTapped;
+                    break;
+                case DeviceFamily.Mobile:
+                    image.Holding += Image_Holding;
+                    break;
+            }
             SaveButton.Click += SaveButton_Click;
             image.ImageOpened += ImageView_ImageOpened;
             image.ImageFailed += ImageView_ImageFailed;
+        }
+
+        private void RemoveEvent()
+        {
+            image.RightTapped -= Image_RightTapped;
+            image.Holding -= Image_Holding;
+            SaveButton.Click -= SaveButton_Click;
+            image.ImageOpened -= ImageView_ImageOpened;
+            image.ImageFailed -= ImageView_ImageFailed;
         }
 
         private string _ImageUrl { get; set; }
@@ -74,7 +98,12 @@ namespace Islands.UWP
         {
             var flyout = this.Resources["ImageMenuFlyout"] as MenuFlyout;
             flyout.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
-            //FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+        }
+
+        private void Image_Holding(object sender, HoldingRoutedEventArgs e)
+        {
+            var flyout = this.Resources["ImageMenuFlyout"] as MenuFlyout;
+            flyout.ShowAt(sender as UIElement, e.GetPosition(sender as UIElement));
         }
 
         private void MenuFlyoutCopyImage_Click(object sender, RoutedEventArgs e)
@@ -86,9 +115,7 @@ namespace Islands.UWP
 
         ~ImageView()
         {
-            SaveButton.Click -= SaveButton_Click;
-            image.ImageOpened -= ImageView_ImageOpened;
-            image.ImageFailed -= ImageView_ImageFailed;
+            RemoveEvent();
         }
     }
 }

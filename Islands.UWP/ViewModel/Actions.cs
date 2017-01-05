@@ -2,6 +2,7 @@
 using Islands.UWP.Model;
 using Microsoft.Xaml.Interactivity;
 using System;
+using UmiAoi.UWP;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -51,7 +52,12 @@ namespace Islands.UWP.ViewModel
                     CurrentControl.Mark();
                     break;
                 case ActionTypes.ItemRightTapped:
-                    ItemRightTapped(sender as FrameworkElement, parameter as RightTappedRoutedEventArgs);
+                    if(Helper.CurrDeviceFamily == DeviceFamily.Desktop)
+                        ItemRightTapped(sender as FrameworkElement, parameter as RightTappedRoutedEventArgs);
+                    break;
+                case ActionTypes.ItemHolding:
+                    if (Helper.CurrDeviceFamily != DeviceFamily.Desktop)
+                        ItemHolding(sender as FrameworkElement, parameter as HoldingRoutedEventArgs);
                     break;
                 case ActionTypes.FlyoutMenuClicked:
                     if (ele != null)
@@ -76,6 +82,13 @@ namespace Islands.UWP.ViewModel
         }
 
         private void ItemRightTapped(FrameworkElement ele, RightTappedRoutedEventArgs e)
+        {
+            if (ele == null || !ele.Resources.ContainsKey("ItemMenuFlyout")) return;
+            var flyout = ele.Resources["ItemMenuFlyout"] as MenuFlyout;
+            flyout.ShowAt(ele, e.GetPosition(ele));
+        }
+
+        private void ItemHolding(FrameworkElement ele, HoldingRoutedEventArgs e)
         {
             if (ele == null || !ele.Resources.ContainsKey("ItemMenuFlyout")) return;
             var flyout = ele.Resources["ItemMenuFlyout"] as MenuFlyout;

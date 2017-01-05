@@ -305,8 +305,8 @@ namespace Islands.UWP
             if (!string.IsNullOrEmpty(ItemThumb))
             {
                 NoImage = false;
-                progressRing.IsActive = true;
-                progressRing.Visibility = imageView.Visibility = Visibility.Visible;
+                LoadingToggle(true);
+                imageView.Visibility = Visibility.Visible;
                 showImageButton.Visibility = Visibility.Collapsed;
                 //if(IsLocalImage) Data.File.SetLocalImage(image, ItemImage);
                 //else 
@@ -318,9 +318,7 @@ namespace Islands.UWP
         {
             var bitmap = image.Source as BitmapImage;
             if (bitmap != null && (bitmap.PixelWidth < Config.MaxImageWidth && bitmap.PixelHeight < Config.MaxImageHeight)) image.Stretch = Stretch.None;
-            progressRing.IsActive = false;
-            if (ItemImage.ToLower().EndsWith(".gif")) gifTextView.Visibility = Visibility.Visible;
-            else gifTextView.Visibility = Visibility.Collapsed;
+            LoadingToggle(false);            
         }
 
         private void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
@@ -329,8 +327,23 @@ namespace Islands.UWP
             {
                 image.Source = new BitmapImage(new Uri(Config.FailedImageUri, UriKind.RelativeOrAbsolute));
             }
-            progressRing.IsActive = false;
-            progressRing.Visibility = Visibility.Collapsed;
+            LoadingToggle(false);
+        }
+
+        private void LoadingToggle(bool loading)
+        {
+            progressRing.IsActive = loading;
+            if (loading)
+            {
+                progressRing.Visibility = Visibility.Visible;
+                gifTextView.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                progressRing.Visibility = Visibility.Collapsed;
+                if (ItemImage.ToLower().EndsWith(".gif")) gifTextView.Visibility = Visibility.Visible;
+                else gifTextView.Visibility = Visibility.Collapsed;
+            }
         }
 
         protected override void OnDisconnectVisualChildren()

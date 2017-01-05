@@ -23,7 +23,7 @@ namespace Islands.UWP.Data
         {
             InputScope inputScope = new InputScope();
             inputScope.Names.Add(new InputScopeName() { NameValue = InputScopeNameValue.Number });
-            TextBox inputBox = new TextBox() { InputScope = inputScope, VerticalContentAlignment = VerticalAlignment.Center }; 
+            TextBox inputBox = new TextBox() { InputScope = inputScope, Height = 32, Padding = new Thickness(5) };
              var dialog = new ContentDialog()
             {
                 Title = "输入页数",
@@ -52,7 +52,7 @@ namespace Islands.UWP.Data
         {
             InputScope inputScope = new InputScope();
             inputScope.Names.Add(new InputScopeName() { NameValue = InputScopeNameValue.Number });
-            TextBox inputBox = new TextBox() { InputScope = inputScope, VerticalContentAlignment = VerticalAlignment.Center };
+            TextBox inputBox = new TextBox() { InputScope = inputScope, Height = 32, Padding = new Thickness(5) };
             var dialog = new ContentDialog()
             {
                 Title = "输入串号",

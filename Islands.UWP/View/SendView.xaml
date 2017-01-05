@@ -16,14 +16,14 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="Margin" Value="5,0,0,0"/>
-            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Padding" Value="5"/>
         </Style>
         <Style TargetType="RichEditBox">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="Margin" Value="5,0,0,0"/>
-            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Padding" Value="5"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
     </local:BaseContentView.Resources>

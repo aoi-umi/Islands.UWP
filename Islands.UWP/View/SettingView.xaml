@@ -5,7 +5,7 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Width="500">
     <local:BaseContentView.Resources>
         <Style TargetType="ToggleSwitch">
             <Setter Property="OffContent" Value="关"/>
@@ -18,32 +18,43 @@
         </RelativePanel>
     </local:BaseContentView.BottomContent>
     <ScrollViewer Grid.Row="0" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto">
-        <StackPanel>
-            <StackPanel Margin="5">
+        <StackPanel Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
                 <StackPanel Margin="5">
                     <TextBlock Text="夜间模式" FontSize="16"/>
                     <ToggleSwitch Name="NightModeSwitch" Toggled="NightModeSwitch_Toggled"/>
                 </StackPanel>
-                <StackPanel Margin="5">
+                <StackPanel Margin="5" Grid.Row="1">
                     <TextBlock Text="隐藏菜单" FontSize="16"/>
                     <ToggleSwitch Name="IsHideMenuSwitch" />
                 </StackPanel>
-                <StackPanel Margin="5">
+                <StackPanel Margin="5" Grid.Column="1">
                     <TextBlock Text="无图模式" FontSize="16"/>
                     <ToggleSwitch Name="NoImageSwitch" />
                 </StackPanel>
-                <RelativePanel Margin="5">
-                    <TextBlock Text="数据同步" FontSize="16" RelativePanel.AlignVerticalCenterWithPanel="True"/>
-                    <Button Name="DataRoamingButton" RelativePanel.AlignRightWithPanel="True" Content="&#xE174;" Style="{StaticResource NavButton}">
-                    </Button>
-                </RelativePanel>
-                <StackPanel Margin="5">
+
+                <StackPanel Margin="5" Grid.Row="1" Grid.Column="1">
                     <TextBlock Text="图片保存" FontSize="16"/>
                     <RelativePanel>
                         <CheckBox Name="IsAskEachTimeBox" Content="每次询问" IsChecked="True"/>
                         <TextBlock Name="ImagePathBox" TextWrapping="Wrap" Visibility="Collapsed"/>
                     </RelativePanel>
                 </StackPanel>
+            </Grid>
+            <StackPanel>
+                <RelativePanel Margin="5">
+                    <TextBlock Text="数据同步" FontSize="16" RelativePanel.AlignVerticalCenterWithPanel="True"/>
+                    <Button Name="DataRoamingButton" RelativePanel.AlignRightWithPanel="True" Content="&#xE174;" Style="{StaticResource NavButton}">
+                    </Button>
+                </RelativePanel>
                 <StackPanel Margin="5">
                     <RelativePanel>
                         <TextBlock Text="设置背景" FontSize="16"  RelativePanel.AlignVerticalCenterWithPanel="True"/>

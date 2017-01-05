@@ -59,7 +59,7 @@ namespace Islands.UWP.Data
             StorageFile file = await Picker.PickSingleFileAsync();
             if (file != null && !string.IsNullOrEmpty(toFileName))
             {
-                toFileName += file.Name.GetExt();
+                //toFileName += file.Name.GetExt();
                 StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(Config.SavedImageFolder, CreationCollisionOption.OpenIfExists);
                 StorageFile outfile = await folder.CreateFileAsync(toFileName, CreationCollisionOption.ReplaceExisting);
                 if (outfile != null)
@@ -158,9 +158,8 @@ namespace Islands.UWP.Data
         }
 
         public static async Task<string> SaveTextToImage(string filename, RenderTargetBitmap bitmap)
-        {
-
-            StorageFolder folder = ApplicationData.Current.LocalFolder;
+        {            
+            var folder = await ApplicationData.Current.LocalFolder.CreateFoldersAsync(Config.SendImageFolder);
             StorageFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             var buffer = await bitmap.GetPixelsAsync();
             using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
@@ -198,17 +197,18 @@ namespace Islands.UWP.Data
             return result;
         }
 
-        public static async Task CreateFoldersAsync(this StorageFolder sf, string folderName)
+        public static async Task<StorageFolder> CreateFoldersAsync(this StorageFolder sf, string folderName)
         {
-            if (string.IsNullOrWhiteSpace(folderName)) return;
+            if (string.IsNullOrWhiteSpace(folderName)) return sf;
             var s = folderName.Split(new string[] { @"\","/" }, StringSplitOptions.RemoveEmptyEntries);
-            if (s == null || s.Length < 1) return;
+            if (s == null || s.Length < 1) return sf;
             StorageFolder folder = sf;
             foreach (var x in s)
             {
-                if (folder == null) return;
+                if (folder == null) return folder;
                 folder = await folder.CreateFolderAsync(x, CreationCollisionOption.OpenIfExists);
             }
+            return folder;
         }
     }
 }
