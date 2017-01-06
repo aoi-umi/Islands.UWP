@@ -138,44 +138,36 @@ namespace Islands.UWP
 
         public void MenuNavigate(string type)
         {
+            if(type != "menu")
+                mainSplitView.IsPaneOpen = false;
             switch (type)
             {
                 case "menu":
                     mainSplitView.IsPaneOpen = !mainSplitView.IsPaneOpen;
                     break;
                 case "home":
-                    mainSplitView.IsPaneOpen = false;
                     if (IsMain)
                         CurrentContent = ThreadControl;
                     else
                         CurrentContent = ReplyControl;
                     break;
                 case "mark":
-                    mainSplitView.IsPaneOpen = false;
                     CurrentContent = MarkControl;
                     break;
                 case "myreply":
-                    mainSplitView.IsPaneOpen = false;
                     CurrentContent = MyReplysControl;
                     break;
                 case "image":
-                    mainSplitView.IsPaneOpen = false;
                     CurrentContent = ImageControl;
                     break;
                 case "forums":
-                    mainSplitView.IsPaneOpen = false;
                     CurrentContent = ForumListView;
                     break;
                 case "gotothread":
-                    mainSplitView.IsPaneOpen = false;
                     GotoThread();
                     break;
                 case "setting":
-                    mainSplitView.IsPaneOpen = false;
                     SettingTapped?.Invoke(null, null);
-                    break;
-                default:
-                    mainSplitView.IsPaneOpen = false;
                     break;
             }
         }
@@ -356,9 +348,9 @@ namespace Islands.UWP
             BackToHome();
         }
 
-        private void ForumsListInit(IslandsCode islandCode, out Model.ForumModel currForum)
+        private void ForumsListInit(IslandsCode islandCode, out ForumModel currForum)
         {
-            currForum = new Model.ForumModel();
+            currForum = new ForumModel();
             List<String> forums = null;
             switch (islandCode)
             {
@@ -373,19 +365,19 @@ namespace Islands.UWP
                     break;
             }
             var groupName = "";
-            Group<ForumModel> group = new Group<Model.ForumModel>();
-            List<Group<Model.ForumModel>> groups = new List<Group<Model.ForumModel>>();
+            Group<ForumModel> group = new Group<ForumModel>();
+            List<Group<ForumModel>> groups = new List<Group<ForumModel>>();
             foreach (var forum in forums)
             {
                 var split = forum.Split(',');
                 if (split[2] == "group")
                 {
                     groupName = split[0];
-                    group = new Group<Model.ForumModel>() { GroupName = groupName, Models = new List<Model.ForumModel>() };
+                    group = new Group<ForumModel>() { GroupName = groupName, Models = new List<ForumModel>() };
                     groups.Add(group);
                     continue;
                 }
-                var f = new Model.ForumModel()
+                var f = new ForumModel()
                 {
                     forumName = split[0],
                     forumValue = split[1],
@@ -403,7 +395,7 @@ namespace Islands.UWP
 
         private void ForumList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var f = e.ClickedItem as Model.ForumModel;
+            var f = e.ClickedItem as ForumModel;
             if (f != null)
             {
                 CurrentContent = ThreadControl;

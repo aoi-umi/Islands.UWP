@@ -84,7 +84,6 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    
                     <SemanticZoom Grid.Row="0">
                         <SemanticZoom.ZoomedInView>
                             <ListView Name="forumZoomInView" IsItemClickEnabled="True" 

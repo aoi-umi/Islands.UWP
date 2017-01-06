@@ -5,11 +5,16 @@
     xmlns:local="using:Islands.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    
+    xmlns:toolkitCtr="using:WinRTXamlToolkit.Controls"
     mc:Ignorable="d">
     <local:BaseContentView.Resources>
         <Style TargetType="ToggleSwitch">
             <Setter Property="OffContent" Value="关"/>
             <Setter Property="OnContent" Value="开"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
         </Style>
     </local:BaseContentView.Resources>
     <local:BaseContentView.BottomContent>
@@ -19,57 +24,45 @@
     </local:BaseContentView.BottomContent>
     <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto">
         <StackPanel Margin="5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+            <toolkitCtr:UniformGrid Columns="2">
                 <StackPanel Margin="5">
-                    <TextBlock Text="夜间模式" FontSize="16"/>
+                    <TextBlock Text="夜间模式"/>
                     <ToggleSwitch Name="NightModeSwitch" Toggled="NightModeSwitch_Toggled"/>
                 </StackPanel>
-                <StackPanel Margin="5" Grid.Row="1">
-                    <TextBlock Text="隐藏菜单" FontSize="16"/>
+                <StackPanel Margin="5">
+                    <TextBlock Text="隐藏菜单"/>
                     <ToggleSwitch Name="IsHideMenuSwitch" />
                 </StackPanel>
-                <StackPanel Margin="5" Grid.Column="1">
-                    <TextBlock Text="无图模式" FontSize="16"/>
+                <StackPanel Margin="5">
+                    <TextBlock Text="无图模式"/>
                     <ToggleSwitch Name="NoImageSwitch" />
                 </StackPanel>
-
-                <StackPanel Margin="5" Grid.Row="1" Grid.Column="1">
-                    <TextBlock Text="图片保存" FontSize="16"/>
+                <StackPanel Margin="5">
+                    <TextBlock Text="图片保存"/>
                     <RelativePanel>
                         <CheckBox Name="IsAskEachTimeBox" Content="每次询问" IsChecked="True"/>
                         <TextBlock Name="ImagePathBox" TextWrapping="Wrap" Visibility="Collapsed"/>
                     </RelativePanel>
                 </StackPanel>
-                <StackPanel Margin="5" Grid.Row="2">
-                    <TextBlock Text="数据同步" FontSize="16"/>
-                    <Button Name="DataRoamingButton" Content="&#xE174;" Style="{StaticResource NavButton}"/>
+                <StackPanel Margin="5">
+                    <TextBlock Text="数据同步"/>
+                    <Button Name="DataRoamingButton" Content="&#xE117;" Style="{StaticResource NavButton}"/>
                 </StackPanel>
-                <StackPanel Grid.Row="2" Grid.Column="1">
-                    <TextBlock Text="设置背景" FontSize="16"  RelativePanel.AlignVerticalCenterWithPanel="True"/>
+                <StackPanel>
+                    <TextBlock Text="设置背景" />
                     <StackPanel Orientation="Horizontal">
-                        <Button Name="SetImagePathButton" Content="&#xE25A;" RelativePanel.LeftOf="CancelButton" 
-                                Click="SetImagePathButton_Click" Style="{StaticResource NavButton}"/>
-                        <Button Name="CancelButton" Content="&#xE10A;" RelativePanel.AlignRightWithPanel="True"
-                                Click="CancelButton_Click" Style="{StaticResource NavButton}"/>
+                        <Button Name="SetImagePathButton" Content="&#xE25A;" Click="SetImagePathButton_Click" Style="{StaticResource NavButton}"/>
+                        <Button Name="CancelButton" Content="&#xE10A;" Click="CancelButton_Click" Style="{StaticResource NavButton}"/>
                     </StackPanel>
                 </StackPanel>
-            </Grid>
+            </toolkitCtr:UniformGrid>
             <StackPanel>
                 <StackPanel Margin="5">
-                    <TextBlock Text="遮罩透明度" FontSize="16"/>
+                    <TextBlock Text="遮罩透明度"/>
                     <Slider Name="MaskOpacitySlider" Value="0" Minimum="0" Maximum="90" ValueChanged="MaskOpacitySlider_ValueChanged"/>
                 </StackPanel>
                 <StackPanel Margin="5">
-                    <TextBlock Text="字体大小" FontSize="16"/>
+                    <TextBlock Text="字体大小"/>
                     <Slider Name="TitleFontSizeSlider" Value="10" Minimum="1" Maximum="100"/>
                     <Slider Name="ContentFontSizeSlider" Value="16" Minimum="1" Maximum="100"/>
                     <TextBlock Text="标题" FontSize="{Binding ElementName=TitleFontSizeSlider,Path=Value,Mode=OneWay}"/>
