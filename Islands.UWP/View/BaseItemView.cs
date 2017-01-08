@@ -83,7 +83,7 @@ namespace Islands.UWP
         public string GetRefAPI { get { return ViewModel == null ? null : ViewModel.GetRefAPI; } }
         //public bool IsTextSelectionEnabled { get { return ViewModel == null ? false : ViewModel.IsTextSelectionEnabled; } }
         public bool IsRef { get { return ViewModel == null ? false : ViewModel.IsRef; } }
-        public bool NoImage { get; set; }
+        public bool NoImage { get { return MainPage.Global.NoImage; } }
         public bool IsLocalImage { get; set; }
         private DataTypes dataType { get { return ViewModel == null ? DataTypes.None : ViewModel.DataType; } }
 
@@ -145,8 +145,13 @@ namespace Islands.UWP
         {
             if (hadApplyTemplate && !hadInitImage && !string.IsNullOrEmpty(ItemThumb))
             {
-                if (!NoImage && !IsRef && dataType != DataTypes.Mark) ShowImage();
-                else showImageButton.Visibility = Visibility.Visible;
+                if (dataType == DataTypes.MyReply || 
+                    (!NoImage && !IsRef && dataType != DataTypes.Mark)) ShowImage();
+                else
+                {
+                    imageView.Visibility = Visibility.Collapsed;
+                    showImageButton.Visibility = Visibility.Visible;
+                }
                 gifTextView.Visibility = Visibility.Collapsed;
                 showImageButton.Click += ShowImageButton_Click;
                 image.PointerPressed += Image_PointerPressed;
@@ -304,7 +309,7 @@ namespace Islands.UWP
         {
             if (!string.IsNullOrEmpty(ItemThumb))
             {
-                NoImage = false;
+                //NoImage = false;
                 LoadingToggle(true);
                 imageView.Visibility = Visibility.Visible;
                 showImageButton.Visibility = Visibility.Collapsed;

@@ -13,7 +13,7 @@ namespace Islands.UWP
         public ThreadView() : base()
         {
             InitializeComponent();
-            NoImage = MainPage.Global.NoImage;
+            //NoImage = MainPage.Global.NoImage;
         }
 
         private ThreadModel _Thread { get; set; }

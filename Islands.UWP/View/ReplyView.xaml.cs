@@ -14,7 +14,7 @@ namespace Islands.UWP
         public ReplyView()
         {
             InitializeComponent();
-            NoImage = MainPage.Global.NoImage;
+            //NoImage = MainPage.Global.NoImage;
         }
 
         private ReplyModel _Reply { get; set; }

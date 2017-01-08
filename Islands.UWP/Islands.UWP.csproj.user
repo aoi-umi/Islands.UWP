@@ -14,7 +14,7 @@
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
     <AppxShowAllApps>True</AppxShowAllApps>
-    <AppxPackageIsForStore>False</AppxPackageIsForStore>
+    <AppxPackageIsForStore>True</AppxPackageIsForStore>
     <AppxBuildConfigurationSelection>x86|arm</AppxBuildConfigurationSelection>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">

@@ -59,12 +59,16 @@ namespace Islands.UWP
         {
             set
             {
-                IsLoading = true;
+                if (!string.IsNullOrEmpty(value))
+                {
+                    IsLoading = true;
+                    image.Source = new BitmapImage(new Uri(value));
+                }
+                else image.Source = null;
                 if(value != Config.FailedImageUri)
                     _ImageUrl = value;
                 image.Width = Config.MaxImageWidth;
                 image.Height = double.NaN;
-                image.Source = string.IsNullOrEmpty(value) ? null : new BitmapImage(new Uri(value));
             }
             private get
             {
