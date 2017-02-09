@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Islands.UWP.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -352,6 +353,15 @@ namespace Islands.UWP
                 else await Data.Database.UpdateAsync(model);
             }
             #endregion
+        }
+
+        private async void SaveSettingAsync(List<SettingModel> list)
+        {
+            foreach (var model in list)
+            {
+                if (model._id == 0) await Data.Database.InsertAsync(model);
+                else await Data.Database.UpdateAsync(model);
+            }
         }
 
         private void MaskOpacitySlider_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)

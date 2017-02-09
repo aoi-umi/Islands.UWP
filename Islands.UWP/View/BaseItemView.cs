@@ -92,8 +92,6 @@ namespace Islands.UWP
         private Grid imageView { get; set; }
         private Image image { get; set; }
         private Grid gifTextView { get; set; }
-        //private MenuFlyout itemMenuFlyout { get; set; }
-        //protected IslandsCode IslandCode { get; set; }
         private bool hadApplyTemplate { get; set; }
         private bool hadInitImage { get; set; }
 
@@ -118,12 +116,6 @@ namespace Islands.UWP
             hadApplyTemplate = true;
             ImageInit();
         }
-
-        //private void BaseItemView_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        //{
-        //    var ele = sender as UIElement;
-        //    itemMenuFlyout.ShowAt(ele, e.GetPosition(ele));
-        //}
 
         private void RemoveEvent()
         {
@@ -256,7 +248,6 @@ namespace Islands.UWP
             });
             if (match != null)
             {
-
                 if (returnOriginModel) return match.Data;
                 var content = new ScrollViewer() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
                 content.DataContext = match;
@@ -276,7 +267,7 @@ namespace Islands.UWP
                     {
                         IsRef = showRefBackground,
                         IsTextSelectionEnabled = true,
-                        ParentList = list,
+                        //ParentList = list,
                     };
                     content.ContentTemplate = ItemDataTemplateSelector.GetTemplate(DataTypes.Reply);
                 }
