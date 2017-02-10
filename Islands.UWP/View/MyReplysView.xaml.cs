@@ -64,6 +64,7 @@ namespace Islands.UWP
             {
                 myReplyList = Data.Database.GetMyReplyList(IslandCode);
             });
+            ItemList.Clear();
             foreach (var myreply in myReplyList)
             {
                 myreply.islandCode = IslandCode;

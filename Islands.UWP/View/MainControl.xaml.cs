@@ -29,15 +29,15 @@ namespace Islands.UWP
         }
 
         public IslandConfigModel IslandConfig { get; set; }
-        public string Host { get; set; }
-        public string PictureHost { get; set; }
-        public string GetThreadAPI { get; set; }
-        public string GetReplyAPI { get; set; }
-        public string GetRefAPI { get; set; }
-        public string PostThreadAPI { get; set; }
-        public string PostReplyAPI { get; set; }
-        public int PageSize { get; set; }
-        public IslandsCode IslandCode;
+        //public string Host { get; set; }
+        //public string PictureHost { get; set; }
+        //public string GetThreadAPI { get; set; }
+        //public string GetReplyAPI { get; set; }
+        //public string GetRefAPI { get; set; }
+        //public string PostThreadAPI { get; set; }
+        //public string PostReplyAPI { get; set; }
+        //public int PageSize { get; set; }
+        //public IslandsCode IslandCode;
 
         public delegate void SettingTappedEventHandler(object sender, TappedRoutedEventArgs e);
         public SettingTappedEventHandler SettingTapped;
@@ -59,17 +59,17 @@ namespace Islands.UWP
         public void Init()
         {
             ForumModel currForum;
-            ForumsListInit(IslandCode, out currForum);
+            ForumsListInit(IslandConfig.IslandCode, out currForum);
 
             ThreadControl = new ThreadsView()
             {
                 postReq = new PostRequest()
                 {
-                    Host = Host,
-                    API = GetThreadAPI,
+                    Host = IslandConfig.Host,
+                    API = IslandConfig.GetThreadAPI,
                     ID = currForum.forumValue
                 },
-                IslandCode = IslandCode,
+                IslandCode = IslandConfig.IslandCode,
                 currForum = currForum,
                 Title = currForum.forumName,
             };
@@ -78,16 +78,16 @@ namespace Islands.UWP
             {
                 postReq = new PostRequest
                 {
-                    Host = Host,
-                    API = GetReplyAPI
+                    Host = IslandConfig.Host,
+                    API = IslandConfig.GetReplyAPI
                 },
-                IslandCode = IslandCode,
-                pageSize = PageSize,
+                IslandCode = IslandConfig.IslandCode,
+                pageSize = IslandConfig.PageSize,
             };
 
             MarkControl = new MarksView()
             {
-                IslandCode = IslandCode,
+                IslandCode = IslandConfig.IslandCode,
             };
 
             ImageControl = new ImageView();
@@ -96,16 +96,16 @@ namespace Islands.UWP
             {
                 postModel = new SendView.PostModel
                 {
-                    islandCode = IslandCode,
-                    Host = Host,
+                    islandCode = IslandConfig.IslandCode,
+                    Host = IslandConfig.Host,
                     Cookie = new CookieModel()
                 },
-                islandCode = IslandCode
+                islandCode = IslandConfig.IslandCode
             };
 
             MyReplysControl = new MyReplysView()
             {
-                IslandCode = IslandCode,
+                IslandCode = IslandConfig.IslandCode,
             };
 
             AddEvent();
@@ -254,14 +254,14 @@ namespace Islands.UWP
             if (IsMain)
             {
                 SendControl.title = ThreadControl.currForum.forumName;
-                SendControl.postModel.Api = PostThreadAPI;
+                SendControl.postModel.Api = IslandConfig.PostThreadAPI;
                 SendControl.postModel.Id = ThreadControl.currForum.forumValue;
-                if (IslandCode == IslandsCode.Koukuko) SendControl.postModel.Id += "#" + ThreadControl.currForum.forumGroupId;
+                if (IslandConfig.IslandCode == IslandsCode.Koukuko) SendControl.postModel.Id += "#" + ThreadControl.currForum.forumGroupId;
             }
             else
             {
                 SendControl.title = ReplyControl.currThread;
-                SendControl.postModel.Api = PostReplyAPI;
+                SendControl.postModel.Api = IslandConfig.PostReplyAPI;
                 SendControl.postModel.Id = ReplyControl.currThread;
             }
             SendControl.postModel.IsMain = IsMain;

@@ -33,16 +33,16 @@ namespace Islands.UWP
             foreach(var configIsland in Config.Island)
             {
                 var mainControl = new MainControl() {
-                    //IslandConfig = configIsland.Value,//todo 改成这个
-                    Host = configIsland.Value.Host,
-                    PictureHost = configIsland.Value.PictureHost,
-                    GetThreadAPI = configIsland.Value.GetThreadAPI,
-                    GetReplyAPI = configIsland.Value.GetReplyAPI,
-                    GetRefAPI = configIsland.Value.GetRefAPI,
-                    PostThreadAPI = configIsland.Value.PostThreadAPI,
-                    PostReplyAPI = configIsland.Value.PostReplyAPI,
-                    PageSize = configIsland.Value.PageSize,
-                    IslandCode = configIsland.Value.IslandCode,
+                    IslandConfig = configIsland.Value,
+                    //Host = configIsland.Value.Host,
+                    //PictureHost = configIsland.Value.PictureHost,
+                    //GetThreadAPI = configIsland.Value.GetThreadAPI,
+                    //GetReplyAPI = configIsland.Value.GetReplyAPI,
+                    //GetRefAPI = configIsland.Value.GetRefAPI,
+                    //PostThreadAPI = configIsland.Value.PostThreadAPI,
+                    //PostReplyAPI = configIsland.Value.PostReplyAPI,
+                    //PageSize = configIsland.Value.PageSize,
+                    //IslandCode = configIsland.Value.IslandCode,
                 };
                 mainControl.Init();
                 switch (configIsland.Value.IslandCode)

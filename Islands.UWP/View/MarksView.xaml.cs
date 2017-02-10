@@ -69,6 +69,7 @@ namespace Islands.UWP
             {
                 markList = Data.Database.GetMarkList(IslandCode);
             });
+            ItemList.Clear();
             foreach (var mark in markList)
             {
                 mark.islandCode = IslandCode;

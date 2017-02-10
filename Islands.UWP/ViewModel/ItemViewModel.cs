@@ -30,9 +30,6 @@ namespace Islands.UWP.ViewModel
                 }
             }
         }
-        //public Visibility IsHadTitle { get; private set; } = Visibility.Collapsed;
-        //public Visibility IsHadEmail { get; private set; } = Visibility.Collapsed;
-        //public Visibility IsHadName { get; private set; } = Visibility.Collapsed;
         public RichTextBlock ItemContentView { get; private set; }
         public string Host { get; set; }
         public string GetRefAPI { get; set; }
@@ -110,10 +107,6 @@ namespace Islands.UWP.ViewModel
             if (CheckString(ItemTitle, new string[] { "标题:", "无标题" })) ItemTitle = null;
             if (CheckString(ItemEmail, new string[] { "email:" })) ItemEmail = null;
             if (CheckString(ItemName, new string[] { "名字:", "无名氏" })) ItemName = null;
-
-            //IsHadTitle = GetVisibility(ItemTitle, new string[] { "标题:", "无标题" });
-            //IsHadEmail = GetVisibility(ItemEmail, new string[] { "email:" });
-            //IsHadName = GetVisibility(ItemName, new string[] { "名字:", "无名氏" });
         }
 
         private Visibility GetVisibility(string str, string[] list)
@@ -133,14 +126,14 @@ namespace Islands.UWP.ViewModel
             if (string.IsNullOrEmpty(content)) return rtb;
             try
             {
-                string Host = string.Empty;
-                switch (IslandCode)
-                {
-                    case IslandsCode.A: Host = Config.A.Host; break;
-                    case IslandsCode.Beitai: Host = Config.B.Host; break;
-                    case IslandsCode.Koukuko: Host = Config.K.Host; break;
-                    default: rtb = new RichTextBlock(); break;
-                }
+                string Host = Config.Island[IslandCode.ToString()].Host;
+                //switch (IslandCode)
+                //{
+                //    case IslandsCode.A: Host = Config.A.Host; break;
+                //    case IslandsCode.Beitai: Host = Config.B.Host; break;
+                //    case IslandsCode.Koukuko: Host = Config.K.Host; break;
+                //    default: rtb = new RichTextBlock(); break;
+                //}
                 //补全host
                 string s = content.FixHost(Host);
                 //链接处理
@@ -186,31 +179,34 @@ namespace Islands.UWP.ViewModel
             
             var t = baseItemModel as ThreadModel;
             if (t != null) ItemReplyCount = t.replyCount;
+            var islandConfig = Config.Island[baseItemModel.islandCode.ToString()];
+            GetRefAPI = islandConfig.GetRefAPI;
+            Host = islandConfig.Host;
             switch (baseItemModel.islandCode)
             {
                 case IslandsCode.A:
                     if (baseItemModel.admin == "1") IsAdmin = true;
                     if (!string.IsNullOrEmpty(baseItemModel.img))
                     {
-                        ItemThumb = (Config.A.PictureHost + "thumb/" + baseItemModel.img + baseItemModel.ext);
-                        ItemImage = (Config.A.PictureHost + "image/" + baseItemModel.img + baseItemModel.ext);
+                        ItemThumb = (islandConfig.PictureHost + "thumb/" + baseItemModel.img + baseItemModel.ext);
+                        ItemImage = (islandConfig.PictureHost + "image/" + baseItemModel.img + baseItemModel.ext);
                     }
                     ItemCreateDate = baseItemModel.now;
                     ItemUid = baseItemModel.userid;
-                    GetRefAPI = Config.A.GetRefAPI;
-                    Host = Config.A.Host;
+                    //GetRefAPI = Config.A.GetRefAPI;
+                    //Host = Config.A.Host;
                     break;
                 case IslandsCode.Beitai:
                     if (baseItemModel.admin == "1") IsAdmin = true;
                     if (!string.IsNullOrEmpty(baseItemModel.img))
                     {
-                        ItemThumb = (Config.B.PictureHost + "thumb/" + baseItemModel.img + baseItemModel.ext);
-                        ItemImage = (Config.B.PictureHost + "image/" + baseItemModel.img + baseItemModel.ext);
+                        ItemThumb = (islandConfig.PictureHost + "thumb/" + baseItemModel.img + baseItemModel.ext);
+                        ItemImage = (islandConfig.PictureHost + "image/" + baseItemModel.img + baseItemModel.ext);
                     }
                     ItemCreateDate = baseItemModel.now;
                     ItemUid = baseItemModel.userid;
-                    GetRefAPI = Config.B.GetRefAPI;
-                    Host = Config.B.Host;
+                    //GetRefAPI = Config.B.GetRefAPI;
+                    //Host = Config.B.Host;
                     break;
                 case IslandsCode.Koukuko:
                     if (baseItemModel.uid.IndexOf("<font color=\"red\">") >= 0)
@@ -218,12 +214,12 @@ namespace Islands.UWP.ViewModel
                         IsAdmin = true;
                         baseItemModel.uid = Regex.Replace(baseItemModel.uid, "</?[^>]*/?>", "");
                     }
-                    if (!string.IsNullOrEmpty(baseItemModel.thumb)) ItemThumb = (Config.K.PictureHost + baseItemModel.thumb);
-                    if (!string.IsNullOrEmpty(baseItemModel.image)) ItemImage = (Config.K.PictureHost + baseItemModel.image);
+                    if (!string.IsNullOrEmpty(baseItemModel.thumb)) ItemThumb = (islandConfig.PictureHost + baseItemModel.thumb);
+                    if (!string.IsNullOrEmpty(baseItemModel.image)) ItemImage = (islandConfig.PictureHost + baseItemModel.image);
                     ItemCreateDate = new DateTime(1970, 1, 1).ToLocalTime().AddMilliseconds(Convert.ToDouble(baseItemModel.createdAt)).ToString("yyyy-MM-dd HH:mm:ss");
                     ItemUid = baseItemModel.uid;
-                    GetRefAPI = Config.K.GetRefAPI;
-                    Host = Config.K.Host;
+                    //GetRefAPI = Config.K.GetRefAPI;
+                    //Host = Config.K.Host;
                     break;
             }
             #endregion
