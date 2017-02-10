@@ -28,6 +28,7 @@ namespace Islands.UWP
             public List<T> Models { get; set; }
         }
 
+        public IslandConfigModel IslandConfig { get; set; }
         public string Host { get; set; }
         public string PictureHost { get; set; }
         public string GetThreadAPI { get; set; }
@@ -107,6 +108,13 @@ namespace Islands.UWP
                 IslandCode = IslandCode,
             };
 
+            AddEvent();
+            
+            CurrentContent = ThreadControl;
+        }
+
+        private void AddEvent()
+        {
             ThreadControl.ItemClick += ThreadControl_ThreadClick;
 
             ReplyControl.MarkSuccess += ReplyControl_MarkSuccess;
@@ -117,9 +125,6 @@ namespace Islands.UWP
             SendControl.SendClick += SendControl_SendClick;
 
             MyReplysControl.ItemClick += MyReplysControl_ItemClick;
-
-            //CurrentContent = ThreadControl;
-            CurrentContent = ThreadControl;
         }
 
         public void MenuToggle()
@@ -351,19 +356,19 @@ namespace Islands.UWP
         private void ForumsListInit(IslandsCode islandCode, out ForumModel currForum)
         {
             currForum = new ForumModel();
-            List<String> forums = null;
-            switch (islandCode)
-            {
-                case IslandsCode.A:
-                    forums = Config.A.Forums;
-                    break;
-                case IslandsCode.Koukuko:
-                    forums = Config.K.Forums;
-                    break;
-                case IslandsCode.Beitai:
-                    forums = Config.B.Forums;
-                    break;
-            }
+            List<String> forums = Config.Island[islandCode.ToString()].Forums;
+            //switch (islandCode)
+            //{
+            //    case IslandsCode.A:
+            //        forums = Config.A.Forums;
+            //        break;
+            //    case IslandsCode.Koukuko:
+            //        forums = Config.K.Forums;
+            //        break;
+            //    case IslandsCode.Beitai:
+            //        forums = Config.B.Forums;
+            //        break;
+            //}
             var groupName = "";
             Group<ForumModel> group = new Group<ForumModel>();
             List<Group<ForumModel>> groups = new List<Group<ForumModel>>();

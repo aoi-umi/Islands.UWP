@@ -29,56 +29,90 @@ namespace Islands.UWP
             Loaded += MainPage_Loaded;
             DataContext = Global;
             #region init pivot content
-            MainControl mainControlA = new MainControl()
+            
+            foreach(var configIsland in Config.Island)
             {
-                Host = Config.A.Host,
-                PictureHost = Config.A.PictureHost,
-                GetThreadAPI = Config.A.GetThreadAPI,
-                GetReplyAPI = Config.A.GetReplyAPI,
-                GetRefAPI = Config.A.GetRefAPI,
-                PostThreadAPI = Config.A.PostThreadAPI,
-                PostReplyAPI = Config.A.PostReplyAPI,
-                PageSize = Config.A.PageSize,
-                IslandCode = IslandsCode.A
-            };
-            mainControlA.Init();
-            pivotItemA.Content = mainControlA;
+                var mainControl = new MainControl() {
+                    //IslandConfig = configIsland.Value,//todo 改成这个
+                    Host = configIsland.Value.Host,
+                    PictureHost = configIsland.Value.PictureHost,
+                    GetThreadAPI = configIsland.Value.GetThreadAPI,
+                    GetReplyAPI = configIsland.Value.GetReplyAPI,
+                    GetRefAPI = configIsland.Value.GetRefAPI,
+                    PostThreadAPI = configIsland.Value.PostThreadAPI,
+                    PostReplyAPI = configIsland.Value.PostReplyAPI,
+                    PageSize = configIsland.Value.PageSize,
+                    IslandCode = configIsland.Value.IslandCode,
+                };
+                mainControl.Init();
+                switch (configIsland.Value.IslandCode)
+                {
+                    case IslandsCode.A:
+                        pivotItemA.Content = mainControl;
+                        break;
+                    case IslandsCode.Koukuko:
+                        pivotItemK.Content = mainControl;
+                        break;
+                    case IslandsCode.Beitai:
+                        pivotItemB.Content = mainControl;
+                        break;
+                }
+                mainControl.SettingTapped += SettingTapped;
+            }
 
-            MainControl mainControlK = new MainControl()
-            {
-                Host = Config.K.Host,
-                PictureHost = Config.K.PictureHost,
-                GetThreadAPI = Config.K.GetThreadAPI,
-                GetReplyAPI = Config.K.GetReplyAPI,
-                GetRefAPI = Config.K.GetRefAPI,
-                PostThreadAPI = Config.K.PostThreadAPI,
-                PostReplyAPI = Config.K.PostReplyAPI,
-                PageSize = Config.K.PageSize,
-                IslandCode = IslandsCode.Koukuko
-            };
-            mainControlK.Init();
-            pivotItemK.Content = mainControlK;
+            #region 旧方法
+            //MainControl mainControlA = new MainControl()
+            //{
+            //    Host = Config.A.Host,
+            //    PictureHost = Config.A.PictureHost,
+            //    GetThreadAPI = Config.A.GetThreadAPI,
+            //    GetReplyAPI = Config.A.GetReplyAPI,
+            //    GetRefAPI = Config.A.GetRefAPI,
+            //    PostThreadAPI = Config.A.PostThreadAPI,
+            //    PostReplyAPI = Config.A.PostReplyAPI,
+            //    PageSize = Config.A.PageSize,
+            //    IslandCode = IslandsCode.A
+            //};
+            //mainControlA.Init();
+            //pivotItemA.Content = mainControlA;
 
-            MainControl mainControlB = new MainControl()
-            {
-                Host = Config.B.Host,
-                PictureHost = Config.B.PictureHost,
-                GetThreadAPI = Config.B.GetThreadAPI,
-                GetReplyAPI = Config.B.GetReplyAPI,
-                GetRefAPI = Config.B.GetRefAPI,
-                PostThreadAPI = Config.B.PostThreadAPI,
-                PostReplyAPI = Config.B.PostReplyAPI,
-                PageSize = Config.B.PageSize,
-                IslandCode = IslandsCode.Beitai
-            };
-            mainControlB.Init();
-            pivotItemB.Content = mainControlB;
+            //MainControl mainControlK = new MainControl()
+            //{
+            //    Host = Config.K.Host,
+            //    PictureHost = Config.K.PictureHost,
+            //    GetThreadAPI = Config.K.GetThreadAPI,
+            //    GetReplyAPI = Config.K.GetReplyAPI,
+            //    GetRefAPI = Config.K.GetRefAPI,
+            //    PostThreadAPI = Config.K.PostThreadAPI,
+            //    PostReplyAPI = Config.K.PostReplyAPI,
+            //    PageSize = Config.K.PageSize,
+            //    IslandCode = IslandsCode.Koukuko
+            //};
+            //mainControlK.Init();
+            //pivotItemK.Content = mainControlK;
+
+            //MainControl mainControlB = new MainControl()
+            //{
+            //    Host = Config.B.Host,
+            //    PictureHost = Config.B.PictureHost,
+            //    GetThreadAPI = Config.B.GetThreadAPI,
+            //    GetReplyAPI = Config.B.GetReplyAPI,
+            //    GetRefAPI = Config.B.GetRefAPI,
+            //    PostThreadAPI = Config.B.PostThreadAPI,
+            //    PostReplyAPI = Config.B.PostReplyAPI,
+            //    PageSize = Config.B.PageSize,
+            //    IslandCode = IslandsCode.Beitai
+            //};
+            //mainControlB.Init();
+            //pivotItemB.Content = mainControlB;
+
+            //mainControlA.SettingTapped += SettingTapped;
+            //mainControlK.SettingTapped += SettingTapped;
+            //mainControlB.SettingTapped += SettingTapped;
+            #endregion
             #endregion
 
-            mainControlA.SettingTapped += SettingTapped;
-            mainControlK.SettingTapped += SettingTapped;
-            mainControlB.SettingTapped += SettingTapped;
-            
+
             SettingControl.BackButtonClicked += BackButton_Clicked;
             SettingControl.NightModelToggled += SettingControl_NightModelToggled;
             SettingControl.BackgroundImagePathChanged += SettingControl_BackgroundImagePathChanged;
@@ -92,8 +126,7 @@ namespace Islands.UWP
             get
             {
                 var ele = mainPivot.SelectedItem as PivotItem;
-                return ele == null ? null : ele.Content as MainControl;
-                
+                return ele == null ? null : ele.Content as MainControl;                
             }
         }
 
@@ -134,7 +167,7 @@ namespace Islands.UWP
             else RequestedTheme = ElementTheme.Light;
         }
 
-        private void SettingControl_BackgroundImagePathChanged(object sender, RoutedEventArgs e)
+        private void SettingControl_BackgroundImagePathChanged(object sender, string path)
         {
             SetBackgroundImage(MainPage.Global.BackgroundImagePath);
         }
