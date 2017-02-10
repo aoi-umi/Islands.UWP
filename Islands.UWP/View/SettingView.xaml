@@ -7,6 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     
     xmlns:toolkitCtr="using:WinRTXamlToolkit.Controls"
+    
+    xmlns:viewModel="using:Islands.UWP.ViewModel"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
     <local:BaseContentView.Resources>
         <Style TargetType="ToggleSwitch">
@@ -19,7 +23,13 @@
     </local:BaseContentView.Resources>
     <local:BaseContentView.BottomContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
-            <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}"/>
+            <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="Tapped">
+                        <viewModel:Actions ActionType="BackTapped"/>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
         </RelativePanel>
     </local:BaseContentView.BottomContent>
     <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto">

@@ -113,7 +113,7 @@ namespace Islands.UWP
             #endregion
 
 
-            SettingControl.BackButtonClicked += BackButton_Clicked;
+            //SettingControl.BackButtonClicked += BackButton_Clicked;
             SettingControl.NightModelToggled += SettingControl_NightModelToggled;
             SettingControl.BackgroundImagePathChanged += SettingControl_BackgroundImagePathChanged;
 
@@ -155,11 +155,11 @@ namespace Islands.UWP
             SettingControl.Visibility = Visibility.Visible;
         }
 
-        private void BackButton_Clicked(object sender, RoutedEventArgs e)
-        {
-            MovableMenu.Visibility = mainPivot.Visibility = Visibility.Visible;
-            SettingControl.Visibility = Visibility.Collapsed;
-        }
+        //private void BackButton_Clicked(object sender, RoutedEventArgs e)
+        //{
+        //    MovableMenu.Visibility = mainPivot.Visibility = Visibility.Visible;
+        //    SettingControl.Visibility = Visibility.Collapsed;
+        //}
 
         private void SettingControl_NightModelToggled(object sender, RoutedEventArgs e)
         {
@@ -183,6 +183,19 @@ namespace Islands.UWP
                     var content = selectItem.Content as MainControl;
                     content.MenuNavigate(btn.Content.ToString());
                 }
+            }
+        }
+
+        public void Back()
+        {
+            if (SettingControl.Visibility == Visibility.Visible)
+            {
+                MovableMenu.Visibility = mainPivot.Visibility = Visibility.Visible;
+                SettingControl.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                CurrentControl?.Back();
             }
         }
     }

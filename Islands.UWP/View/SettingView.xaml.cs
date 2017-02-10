@@ -91,8 +91,8 @@ namespace Islands.UWP
         public delegate void NightModeToggledEventHandler(object sender, RoutedEventArgs e);
         public event NightModeToggledEventHandler NightModelToggled;
 
-        public delegate void BackButtonClickedEventHandler(object sender, RoutedEventArgs e);
-        public event BackButtonClickedEventHandler BackButtonClicked;
+        //public delegate void BackButtonClickedEventHandler(object sender, RoutedEventArgs e);
+        //public event BackButtonClickedEventHandler BackButtonClicked;
 
         public delegate void BackgroundImagePathChangedEventHandler(object sender, string path);
         public event BackgroundImagePathChangedEventHandler BackgroundImagePathChanged;
@@ -113,17 +113,17 @@ namespace Islands.UWP
             NightModelToggled?.Invoke(sender, e);
         }
 
-        private void BackButton_Clicked(object sender, RoutedEventArgs e)
-        {
-            BackButtonClicked?.Invoke(sender, e);
-        }
+        //private void BackButton_Clicked(object sender, RoutedEventArgs e)
+        //{
+        //    BackButtonClicked?.Invoke(sender, e);
+        //}
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
-        {
-            //UpdateSetting();
-            BackButton_Clicked(sender, e);
-            //SaveSettingAsync();
-        }
+        //private void BackButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    //UpdateSetting();
+        //    BackButton_Clicked(sender, e);
+        //    //SaveSettingAsync();
+        //}
 
         private async void Settings_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -246,14 +246,14 @@ namespace Islands.UWP
 
         private void AddEvent()
         {
-            BackButton.Click += BackButton_Click;
+            //BackButton.Click += BackButton_Click;
             DataRoamingButton.Click += DataRoamingButton_Click;
             settingUIList.ForEach(x => { x.LostFocus += Settings_LostFocus; });
         }
 
         private void RemoveEvent()
         {
-            BackButton.Click -= BackButton_Click;
+            //BackButton.Click -= BackButton_Click;
             DataRoamingButton.Click -= DataRoamingButton_Click;
             settingUIList.ForEach(x => { x.LostFocus -= Settings_LostFocus; });
         }

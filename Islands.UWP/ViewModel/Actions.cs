@@ -47,7 +47,8 @@ namespace Islands.UWP.ViewModel
                     CurrentControl?.ThreadOrReplyGotoPage();
                     break;
                 case ActionTypes.BackTapped:
-                    CurrentControl?.Back();
+                    //CurrentControl?.Back();
+                    CurrentPage.Back();
                     break;
                 case ActionTypes.MarkTapped:
                     CurrentControl.Mark();
@@ -115,13 +116,21 @@ namespace Islands.UWP.ViewModel
             }
         }
 
-        private MainControl CurrentControl
+        private MainPage CurrentPage
         {
             get
             {
                 Frame rootFrame = Window.Current.Content as Frame;
                 var mp = rootFrame.Content as MainPage;
-                return mp.CurrentControl;
+                return mp;
+            }
+        }
+
+        private MainControl CurrentControl
+        {
+            get
+            {
+                return CurrentPage.CurrentControl;
             }
         }
     }
