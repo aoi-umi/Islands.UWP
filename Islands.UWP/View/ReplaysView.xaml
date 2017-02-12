@@ -9,7 +9,7 @@
     xmlns:viewModel="using:Islands.UWP.ViewModel"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
-    mc:Ignorable="d" MinHeight="400" MinWidth="200" ItemTemplateSelector="{StaticResource ItemDataTemplateSelector}">
+    mc:Ignorable="d" Title="" MinHeight="400" MinWidth="200" ItemTemplateSelector="{StaticResource ItemDataTemplateSelector}">
     <local:BaseListView.Resources>
     </local:BaseListView.Resources>
     <local:BaseListView.TopContent>

@@ -15,7 +15,7 @@ namespace Islands.UWP
         public MarksView()
         {
             this.InitializeComponent();
-            //this.DataContext = MainPage.Global;
+            Title = "收藏";
         }
 
         protected override void OnApplyTemplate()

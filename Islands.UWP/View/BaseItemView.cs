@@ -167,13 +167,16 @@ namespace Islands.UWP
                         Hyperlink h = inline as Hyperlink;
                         if (h != null && h.UnderlineStyle == UnderlineStyle.None)
                         {
-                            var model = new InsertRefModel()
+                            if (!IsRef)
                             {
-                                InsertAfterInline = h,
-                                InsertInline = GetInsertInlines(h, ViewModel.ParentList)
-                            };
-                            if (model.InsertInline != null)
-                                insertList.Add(model);
+                                var model = new InsertRefModel()
+                                {
+                                    InsertAfterInline = h,
+                                    InsertInline = GetInsertInlines(h, ViewModel.ParentList)
+                                };
+                                if (model.InsertInline != null)
+                                    insertList.Add(model);
+                            }
                             h.Click += Ref_Click;
                         }
                     }
@@ -263,11 +266,13 @@ namespace Islands.UWP
                 }
                 else if (match.DataType == DataTypes.Reply)
                 {
+                    var para = match.Parameter as ItemParameter;
                     match.Parameter = new ItemParameter()
                     {
                         IsRef = showRefBackground,
                         IsTextSelectionEnabled = true,
-                        //ParentList = list,
+                        ParentList = list,
+                        IsPo = para == null ? false : para.IsPo,
                     };
                     content.ContentTemplate = ItemDataTemplateSelector.GetTemplate(DataTypes.Reply);
                 }

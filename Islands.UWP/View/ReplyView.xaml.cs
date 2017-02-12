@@ -1,9 +1,6 @@
 ﻿using Islands.UWP.Model;
 using Islands.UWP.ViewModel;
 using System;
-using UmiAoi.UWP;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -14,7 +11,6 @@ namespace Islands.UWP
         public ReplyView()
         {
             InitializeComponent();
-            //NoImage = MainPage.Global.NoImage;
         }
 
         private ReplyModel _Reply { get; set; }
@@ -35,7 +31,7 @@ namespace Islands.UWP
                 }
             }
         }
-
+        public string PoId { get; set; }
         protected override void OnViewModelChanged()
         {
             base.OnViewModelChanged();
@@ -72,16 +68,6 @@ namespace Islands.UWP
             {
                 Data.Message.ShowMessage(ex.Message);                
             }            
-        }
-
-        private void Item_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-
-        }
-
-        private void Item_Holding(object sender, HoldingRoutedEventArgs e)
-        {
-
         }
     }
 }

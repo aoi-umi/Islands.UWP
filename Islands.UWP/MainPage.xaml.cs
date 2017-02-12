@@ -34,15 +34,6 @@ namespace Islands.UWP
             {
                 var mainControl = new MainControl() {
                     IslandConfig = configIsland.Value,
-                    //Host = configIsland.Value.Host,
-                    //PictureHost = configIsland.Value.PictureHost,
-                    //GetThreadAPI = configIsland.Value.GetThreadAPI,
-                    //GetReplyAPI = configIsland.Value.GetReplyAPI,
-                    //GetRefAPI = configIsland.Value.GetRefAPI,
-                    //PostThreadAPI = configIsland.Value.PostThreadAPI,
-                    //PostReplyAPI = configIsland.Value.PostReplyAPI,
-                    //PageSize = configIsland.Value.PageSize,
-                    //IslandCode = configIsland.Value.IslandCode,
                 };
                 mainControl.Init();
                 switch (configIsland.Value.IslandCode)
@@ -57,63 +48,11 @@ namespace Islands.UWP
                         pivotItemB.Content = mainControl;
                         break;
                 }
-                mainControl.SettingTapped += SettingTapped;
+                //mainControl.SettingTapped += SettingTapped;
             }
 
-            #region 旧方法
-            //MainControl mainControlA = new MainControl()
-            //{
-            //    Host = Config.A.Host,
-            //    PictureHost = Config.A.PictureHost,
-            //    GetThreadAPI = Config.A.GetThreadAPI,
-            //    GetReplyAPI = Config.A.GetReplyAPI,
-            //    GetRefAPI = Config.A.GetRefAPI,
-            //    PostThreadAPI = Config.A.PostThreadAPI,
-            //    PostReplyAPI = Config.A.PostReplyAPI,
-            //    PageSize = Config.A.PageSize,
-            //    IslandCode = IslandsCode.A
-            //};
-            //mainControlA.Init();
-            //pivotItemA.Content = mainControlA;
-
-            //MainControl mainControlK = new MainControl()
-            //{
-            //    Host = Config.K.Host,
-            //    PictureHost = Config.K.PictureHost,
-            //    GetThreadAPI = Config.K.GetThreadAPI,
-            //    GetReplyAPI = Config.K.GetReplyAPI,
-            //    GetRefAPI = Config.K.GetRefAPI,
-            //    PostThreadAPI = Config.K.PostThreadAPI,
-            //    PostReplyAPI = Config.K.PostReplyAPI,
-            //    PageSize = Config.K.PageSize,
-            //    IslandCode = IslandsCode.Koukuko
-            //};
-            //mainControlK.Init();
-            //pivotItemK.Content = mainControlK;
-
-            //MainControl mainControlB = new MainControl()
-            //{
-            //    Host = Config.B.Host,
-            //    PictureHost = Config.B.PictureHost,
-            //    GetThreadAPI = Config.B.GetThreadAPI,
-            //    GetReplyAPI = Config.B.GetReplyAPI,
-            //    GetRefAPI = Config.B.GetRefAPI,
-            //    PostThreadAPI = Config.B.PostThreadAPI,
-            //    PostReplyAPI = Config.B.PostReplyAPI,
-            //    PageSize = Config.B.PageSize,
-            //    IslandCode = IslandsCode.Beitai
-            //};
-            //mainControlB.Init();
-            //pivotItemB.Content = mainControlB;
-
-            //mainControlA.SettingTapped += SettingTapped;
-            //mainControlK.SettingTapped += SettingTapped;
-            //mainControlB.SettingTapped += SettingTapped;
             #endregion
-            #endregion
-
-
-            //SettingControl.BackButtonClicked += BackButton_Clicked;
+            
             SettingControl.NightModelToggled += SettingControl_NightModelToggled;
             SettingControl.BackgroundImagePathChanged += SettingControl_BackgroundImagePathChanged;
 
@@ -149,16 +88,10 @@ namespace Islands.UWP
             SetBackgroundImage(MainPage.Global.BackgroundImagePath);
         }
 
-        private void SettingTapped(object sender, TappedRoutedEventArgs e)
-        {
-            MovableMenu.Visibility = mainPivot.Visibility = Visibility.Collapsed;
-            SettingControl.Visibility = Visibility.Visible;
-        }
-
-        //private void BackButton_Clicked(object sender, RoutedEventArgs e)
+        //private void SettingTapped(object sender, TappedRoutedEventArgs e)
         //{
-        //    MovableMenu.Visibility = mainPivot.Visibility = Visibility.Visible;
-        //    SettingControl.Visibility = Visibility.Collapsed;
+        //    /*MovableMenu.Visibility =*/ mainPivot.Visibility = Visibility.Collapsed;
+        //    SettingControl.Visibility = Visibility.Visible;
         //}
 
         private void SettingControl_NightModelToggled(object sender, RoutedEventArgs e)
@@ -181,22 +114,45 @@ namespace Islands.UWP
                 if (selectItem != null)
                 {
                     var content = selectItem.Content as MainControl;
-                    content.MenuNavigate(btn.Content.ToString());
+                    if (btn.Content.ToString() != "setting")
+                    {
+                        content.MenuNavigate(btn.Content.ToString());
+                        SettingSwitch(false);
+                    }
+                    else
+                    {
+                        SettingSwitch(true);
+                    }
                 }
             }
         }
 
         public void Back()
         {
-            if (SettingControl.Visibility == Visibility.Visible)
-            {
-                MovableMenu.Visibility = mainPivot.Visibility = Visibility.Visible;
-                SettingControl.Visibility = Visibility.Collapsed;
-            }
-            else
+            if (!SettingSwitch(false))
             {
                 CurrentControl?.Back();
             }
+        }
+
+        private bool SettingSwitch(bool visible)
+        {
+            var result = false;
+            if (visible && SettingControl.Visibility != Visibility.Visible)
+            {
+                /*MovableMenu.Visibility =*/
+                mainPivot.Visibility = Visibility.Collapsed;
+                SettingControl.Visibility = Visibility.Visible;
+                result = true;
+            }
+            else if (!visible && SettingControl.Visibility == Visibility.Visible)
+            {
+                /*MovableMenu.Visibility =*/
+                mainPivot.Visibility = Visibility.Visible;
+                SettingControl.Visibility = Visibility.Collapsed;
+                result = true;
+            }
+            return result;
         }
     }
     

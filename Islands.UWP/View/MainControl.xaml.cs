@@ -2,11 +2,8 @@
 using Islands.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -29,15 +26,6 @@ namespace Islands.UWP
         }
 
         public IslandConfigModel IslandConfig { get; set; }
-        //public string Host { get; set; }
-        //public string PictureHost { get; set; }
-        //public string GetThreadAPI { get; set; }
-        //public string GetReplyAPI { get; set; }
-        //public string GetRefAPI { get; set; }
-        //public string PostThreadAPI { get; set; }
-        //public string PostReplyAPI { get; set; }
-        //public int PageSize { get; set; }
-        //public IslandsCode IslandCode;
 
         public delegate void SettingTappedEventHandler(object sender, TappedRoutedEventArgs e);
         public SettingTappedEventHandler SettingTapped;

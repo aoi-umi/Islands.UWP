@@ -16,7 +16,7 @@ namespace Islands.UWP
         public MyReplysView()
         {
             this.InitializeComponent();
-            //DataContext = this;
+            Title = "我的回复";
         }
 
         protected override void OnApplyTemplate()

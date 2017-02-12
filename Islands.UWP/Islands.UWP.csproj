@@ -97,7 +97,6 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Islands.UWP_StoreKey.pfx" />
     <None Include="Islands.UWP_TemporaryKey.pfx" />
     <None Include="project.json" />

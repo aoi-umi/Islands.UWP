@@ -17,12 +17,16 @@
     </local:BaseContentView.Resources>
     <local:BaseContentView.TopContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
-            <Button Name="Menu" Content="&#xE700;"
-                    RelativePanel.AlignLeftWithPanel="True"
-                    RelativePanel.AlignVerticalCenterWithPanel="True"
-                    Style="{StaticResource NavButton}" Visibility="Collapsed"/>
+            <Button x:Name="MenuButton" Content="&#xE700;" Style="{StaticResource NavButton}" 
+                    Visibility="{Binding IsHideMenu, Converter={StaticResource ShowConverter}}">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="Tapped">
+                        <viewModel:Actions ActionType="MenuTapped"/>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
             <TextBlock Name="Title" Text="图片"
-                       RelativePanel.RightOf="Menu" FontSize="22"/>
+                       RelativePanel.RightOf="MenuButton" FontSize="22"/>
             <Button Name="RefreshButton" Content="&#xE117;"
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}"
