@@ -43,10 +43,11 @@ namespace Islands.UWP
             }
         }
 
-        private bool IsCancelButtonVisible
+        private bool IsSelectMode
         {
             set
             {
+                SelectAllButton.Visibility=
                 CancelButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
                 BackButton.Visibility = !value ? Visibility.Visible : Visibility.Collapsed;
             }
@@ -81,7 +82,7 @@ namespace Islands.UWP
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (IsCancelButtonVisible)
+            if (IsSelectMode)
             {
                 DeleteAsync();
             }
@@ -89,7 +90,7 @@ namespace Islands.UWP
             {
                 SelectionMode = ListViewSelectionMode.Multiple;
             }
-            IsCancelButtonVisible = !IsCancelButtonVisible;
+            IsSelectMode = !IsSelectMode;
         }
 
         private async void DeleteAsync()
@@ -111,9 +112,16 @@ namespace Islands.UWP
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            IsCancelButtonVisible = false;
+            IsSelectMode = false;
             SelectionMode = ListViewSelectionMode.None;
         }
 
+        private void SelectAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (SelectedItems.Count != Items.Count)
+                SelectAll();
+            else
+                DeselectRange(new Windows.UI.Xaml.Data.ItemIndexRange(0, (uint)Items.Count));
+        }
     }
 }

@@ -9,9 +9,18 @@
     xmlns:viewModel="using:Islands.UWP.ViewModel"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
-    mc:Ignorable="d" MinHeight="400" MinWidth="200" ItemTemplate="{StaticResource ThreadDataTemplate}">
+    mc:Ignorable="d" MinHeight="400" MinWidth="200" 
+    ItemTemplate="{StaticResource ThreadDataTemplate}">
     <local:BaseListView.Resources>
     </local:BaseListView.Resources>
+    <!--<local:BaseListView.TopContent>
+        <RelativePanel>
+            <ComboBox SelectedIndex="0" RelativePanel.AlignRightWithPanel="True">
+                <ComboBoxItem Content="±¾µØ"/>
+                <ComboBoxItem Content="ÂþÓÎ"/>
+            </ComboBox>
+        </RelativePanel>
+    </local:BaseListView.TopContent>-->
     <local:BaseListView.BottomContent>
         <RelativePanel  Background="{StaticResource ThemeColor}">
             <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}">
@@ -28,6 +37,10 @@
             <Button Name="CancelButton" Content="&#xE10A;"
                     Style="{StaticResource NavButton}" Visibility="Collapsed"
                     Click="CancelButton_Click"/>
+            <Button Name="SelectAllButton" Content="&#xE133;" 
+                    RelativePanel.RightOf="CancelButton"
+                    Style="{StaticResource NavButton}"
+                    Click="SelectAll_Click" Visibility="Collapsed"/>
         </RelativePanel>
     </local:BaseListView.BottomContent>
 </local:BaseListView>

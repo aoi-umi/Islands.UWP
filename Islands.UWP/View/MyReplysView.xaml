@@ -29,6 +29,10 @@
             <Button Name="CancelButton" Content="&#xE10A;"
                     Style="{StaticResource NavButton}"
                     Visibility="Collapsed" Click="CancelButton_Click"/>
+            <Button Name="SelectAllButton" Content="&#xE133;" 
+                    RelativePanel.RightOf="CancelButton"
+                    Style="{StaticResource NavButton}"
+                    Click="SelectAll_Click" Visibility="Collapsed"/>
         </RelativePanel>
     </local:BaseListView.BottomContent>
 </local:BaseListView>
