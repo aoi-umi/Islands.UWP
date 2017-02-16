@@ -48,7 +48,7 @@ namespace Islands.UWP
                         pivotItemB.Content = mainControl;
                         break;
                 }
-                //mainControl.SettingTapped += SettingTapped;
+                mainControl.SettingTapped += SettingTapped;
             }
 
             #endregion
@@ -88,11 +88,10 @@ namespace Islands.UWP
             SetBackgroundImage(MainPage.Global.BackgroundImagePath);
         }
 
-        //private void SettingTapped(object sender, TappedRoutedEventArgs e)
-        //{
-        //    /*MovableMenu.Visibility =*/ mainPivot.Visibility = Visibility.Collapsed;
-        //    SettingControl.Visibility = Visibility.Visible;
-        //}
+        private void SettingTapped(object sender, TappedRoutedEventArgs e)
+        {
+            SettingSwitch(true);
+        }
 
         private void SettingControl_NightModelToggled(object sender, RoutedEventArgs e)
         {

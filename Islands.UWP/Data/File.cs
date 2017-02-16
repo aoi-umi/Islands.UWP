@@ -210,5 +210,20 @@ namespace Islands.UWP.Data
             }
             return folder;
         }
+
+        public static async Task<IReadOnlyList<StorageFile>> GetLocalImageList()
+        {
+            IReadOnlyList<StorageFile> files = null;
+            try
+            {
+                var folder = await ApplicationData.Current.LocalFolder.CreateFoldersAsync(Config.SendImageFolder);
+                files = await folder.GetFilesAsync();
+            }
+            catch (Exception ex)
+            {
+                Message.ShowMessage(ex.Message);
+            }
+            return files;
+        }
     }
 }

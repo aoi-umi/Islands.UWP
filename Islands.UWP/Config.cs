@@ -353,6 +353,11 @@ namespace Islands.UWP
             }
             },
         };
+
+        public static List<string> DatabaseTypeList = new List<string>() {
+            "本地",
+            "漫游"
+        };
     }
 
     public class IslandConfigModel

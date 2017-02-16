@@ -71,16 +71,16 @@ namespace Islands.UWP.Data
             return true;
         }
 
-        public static int DeleteByIDs(string table, List<int> idList)
+        public static int DeleteByIDs(string table, List<int> idList, bool Roaming = false)
         {
             if (idList == null || idList.Count == 0) return 0;
             string sql = string.Format("delete from {0} where _id in ({1})", table, string.Join(",", idList));
-            return Execute(sql);
+            return Execute(sql, Roaming ? RoamingDbPath : null);
         }
 
-        public static List<SendModel> GetMyReplyList(IslandsCode islandCode)
+        public static List<SendModel> GetMyReplyList(IslandsCode islandCode, bool Roaming = false)
         {
-            using (var conn = GetDbConnection<SendModel>(DbPath))
+            using (var conn = GetDbConnection<SendModel>(!Roaming ? DbPath : RoamingDbPath))
             {
                 if (conn != null)
                 {
@@ -93,9 +93,9 @@ namespace Islands.UWP.Data
             }
         }
 
-        public static List<ThreadModel> GetMarkList(IslandsCode islandCode, string id = null)
+        public static List<ThreadModel> GetMarkList(IslandsCode islandCode, string id = null, bool Roaming = false)
         {
-            using (var conn = GetDbConnection<ThreadModel>(DbPath))
+            using (var conn = GetDbConnection<ThreadModel>(!Roaming ? DbPath : RoamingDbPath))
             {
                 if (conn != null)
                 {
@@ -180,11 +180,11 @@ namespace Islands.UWP.Data
             }
         }
 
-        private static SQLiteConnection GetDbConnection()
+        private static SQLiteConnection GetDbConnection(string dbPath=null)
         {
             try
             {
-                var conn = new SQLiteConnection(new SQLitePlatformWinRT(), DbPath);
+                var conn = new SQLiteConnection(new SQLitePlatformWinRT(), dbPath ?? DbPath);
                 return conn;
             }
             catch (Exception ex)
@@ -194,10 +194,10 @@ namespace Islands.UWP.Data
             }
         }
 
-        private static int Execute(string sql)
+        private static int Execute(string sql, string dbPath = null)
         {
             int count = 0;
-            using (var conn = GetDbConnection())
+            using (var conn = GetDbConnection(dbPath))
             {
                 if (conn == null) return 0;
                 count = conn.Execute(sql);

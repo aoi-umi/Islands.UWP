@@ -13,6 +13,9 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
     <local:BaseContentView.Resources>
+        <Style TargetType="Pivot">
+            <Setter Property="FontSize" Value="10"/>
+        </Style>
         <Style TargetType="ToggleSwitch">
             <Setter Property="OffContent" Value="关"/>
             <Setter Property="OnContent" Value="开"/>
@@ -32,53 +35,87 @@
             </Button>
         </RelativePanel>
     </local:BaseContentView.BottomContent>
-    <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto">
-        <StackPanel Margin="5">
-            <toolkitCtr:UniformGrid Columns="2">
+    <Pivot>
+        <PivotItem Header="基本设置" Margin="0">
+            <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto">
                 <StackPanel Margin="5">
-                    <TextBlock Text="夜间模式"/>
-                    <ToggleSwitch Name="NightModeSwitch" Toggled="NightModeSwitch_Toggled"/>
-                </StackPanel>
-                <StackPanel Margin="5">
-                    <TextBlock Text="隐藏菜单"/>
-                    <ToggleSwitch Name="IsHideMenuSwitch" />
-                </StackPanel>
-                <StackPanel Margin="5">
-                    <TextBlock Text="无图模式"/>
-                    <ToggleSwitch Name="NoImageSwitch" />
-                </StackPanel>
-                <StackPanel Margin="5">
-                    <TextBlock Text="图片保存"/>
-                    <RelativePanel>
-                        <CheckBox Name="IsAskEachTimeBox" Content="每次询问" IsChecked="True"/>
-                        <TextBlock Name="ImagePathBox" TextWrapping="Wrap" Visibility="Collapsed"/>
-                    </RelativePanel>
-                </StackPanel>
-                <StackPanel Margin="5">
-                    <TextBlock Text="数据同步"/>
-                    <Button Name="DataRoamingButton" Content="&#xE117;" Style="{StaticResource NavButton}"/>
-                </StackPanel>
-                <StackPanel>
-                    <TextBlock Text="设置背景" />
-                    <StackPanel Orientation="Horizontal">
-                        <Button Name="SetImagePathButton" Content="&#xE25A;" Click="SetImagePathButton_Click" Style="{StaticResource NavButton}"/>
-                        <Button Name="CancelButton" Content="&#xE10A;" Click="CancelButton_Click" Style="{StaticResource NavButton}"/>
+                    <toolkitCtr:UniformGrid Columns="2">
+                        <StackPanel Margin="5">
+                            <TextBlock Text="夜间模式"/>
+                            <ToggleSwitch Name="NightModeSwitch" Toggled="NightModeSwitch_Toggled"/>
+                        </StackPanel>
+                        <StackPanel Margin="5">
+                            <TextBlock Text="隐藏菜单"/>
+                            <ToggleSwitch Name="IsHideMenuSwitch" />
+                        </StackPanel>
+                        <StackPanel Margin="5">
+                            <TextBlock Text="无图模式"/>
+                            <ToggleSwitch Name="NoImageSwitch" />
+                        </StackPanel>
+                        <StackPanel Margin="5">
+                            <TextBlock Text="图片保存"/>
+                            <RelativePanel>
+                                <CheckBox Name="IsAskEachTimeBox" Content="每次询问" IsChecked="True"/>
+                                <TextBlock Name="ImagePathBox" TextWrapping="Wrap" Visibility="Collapsed"/>
+                            </RelativePanel>
+                        </StackPanel>
+                        <StackPanel Margin="5">
+                            <TextBlock Text="数据同步"/>
+                            <Button Name="DataRoamingButton" Content="&#xE117;" Style="{StaticResource NavButton}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="设置背景" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Name="SetImagePathButton" Content="&#xE25A;" Click="SetImagePathButton_Click" Style="{StaticResource NavButton}"/>
+                                <Button Name="CancelButton" Content="&#xE10A;" Click="CancelButton_Click" Style="{StaticResource NavButton}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </toolkitCtr:UniformGrid>
+                    <StackPanel>
+                        <StackPanel Margin="5">
+                            <TextBlock Text="遮罩透明度"/>
+                            <Slider Name="MaskOpacitySlider" Value="0" Minimum="0" Maximum="90" ValueChanged="MaskOpacitySlider_ValueChanged"/>
+                        </StackPanel>
+                        <StackPanel Margin="5">
+                            <TextBlock Text="字体大小"/>
+                            <Slider Name="TitleFontSizeSlider" Value="10" Minimum="1" Maximum="100"/>
+                            <Slider Name="ContentFontSizeSlider" Value="16" Minimum="1" Maximum="100"/>
+                            <TextBlock Text="标题" FontSize="{Binding ElementName=TitleFontSizeSlider,Path=Value,Mode=OneWay}"/>
+                            <TextBlock Text="内容" FontSize="{Binding ElementName=ContentFontSizeSlider,Path=Value,Mode=OneWay}"/>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
-            </toolkitCtr:UniformGrid>
-            <StackPanel>
-                <StackPanel Margin="5">
-                    <TextBlock Text="遮罩透明度"/>
-                    <Slider Name="MaskOpacitySlider" Value="0" Minimum="0" Maximum="90" ValueChanged="MaskOpacitySlider_ValueChanged"/>
-                </StackPanel>
-                <StackPanel Margin="5">
-                    <TextBlock Text="字体大小"/>
-                    <Slider Name="TitleFontSizeSlider" Value="10" Minimum="1" Maximum="100"/>
-                    <Slider Name="ContentFontSizeSlider" Value="16" Minimum="1" Maximum="100"/>
-                    <TextBlock Text="标题" FontSize="{Binding ElementName=TitleFontSizeSlider,Path=Value,Mode=OneWay}"/>
-                    <TextBlock Text="内容" FontSize="{Binding ElementName=ContentFontSizeSlider,Path=Value,Mode=OneWay}"/>
-                </StackPanel>
-            </StackPanel>
-        </StackPanel>
-    </ScrollViewer>
+            </ScrollViewer>
+        </PivotItem>
+        <PivotItem Header="图片管理" Margin="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto">
+                    <StackPanel>
+                        <GridView Name="LocalImageView" SelectionMode="Multiple">
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="4"/>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                            <GridView.ItemTemplate>
+                                <DataTemplate>
+                                    <Image Stretch="Uniform" Source="{Binding Path}" Height="100" Width="100"/>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                        </GridView>
+                    </StackPanel>
+                </ScrollViewer>
+                <RelativePanel Grid.Row="1" Margin="0 0 0 10">
+                    <Button Name="RefreshImageButton" Content="&#xE117;" Style="{StaticResource NavButton}"
+                            Click="RefreshImage_Click"/>
+                    <Button Name="DeleteImageButton" Content="&#xE107;" RelativePanel.AlignRightWithPanel="True" Style="{StaticResource NavButton}"
+                            Click="DeleteImage_Click"/>
+                </RelativePanel>
+            </Grid>
+        </PivotItem>
+    </Pivot>
 </local:BaseContentView>

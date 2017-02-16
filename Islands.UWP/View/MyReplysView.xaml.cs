@@ -17,24 +17,11 @@ namespace Islands.UWP
         {
             this.InitializeComponent();
             Title = "我的回复";
+            DataTypeBox.ItemsSource = Config.DatabaseTypeList;
+            DataTypeBox.SelectedIndex = 0;
         }
 
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            InitMyReplyList();
-        }
-
-        public List<SendModel> myReplyList { get; set; }
-
-        public void AddMyReply(SendModel sm)
-        {
-            if (myReplyList == null) return;
-            myReplyList.Insert(0, sm);
-            sm.islandCode = IslandCode;
-            ItemList.Insert(0, new DataModel() { DataType = DataTypes.MyReply, Data = sm });
-            myReplyCount = myReplyList.Count.ToString();
-        }
+        //public List<SendModel> myReplyList { get; set; }
 
         private string myReplyCount
         {
@@ -58,12 +45,31 @@ namespace Islands.UWP
             }
         }
 
+        private bool Romaing { get { return DataTypeBox.SelectedValue.ToString() == "漫游"; } }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            InitMyReplyList();
+        }
+
+        public void AddMyReply(SendModel sm)
+        {
+            //if (myReplyList == null) return;
+            //myReplyList.Insert(0, sm);
+            sm.islandCode = IslandCode;
+            ItemList.Insert(0, new DataModel() { DataType = DataTypes.MyReply, Data = sm });
+            myReplyCount = ItemList.Count.ToString();// myReplyList.Count.ToString();
+        }
+
         private async void InitMyReplyList()
         {
             RefreshStart();
+            var romaing = Romaing;
+            List<SendModel> myReplyList = null;
             await Task.Run(() =>
             {
-                myReplyList = Data.Database.GetMyReplyList(IslandCode);
+                myReplyList = Data.Database.GetMyReplyList(IslandCode, romaing);
             });
             ItemList.Clear();
             foreach (var myreply in myReplyList)
@@ -71,8 +77,34 @@ namespace Islands.UWP
                 myreply.islandCode = IslandCode;
                 ItemList.Add(new DataModel() { DataType = DataTypes.MyReply, Data = myreply });
             }
-            myReplyCount = myReplyList.Count.ToString();
+            myReplyCount = ItemList.Count.ToString();// myReplyList.Count.ToString();
             RefreshEnd();
+        }
+
+        private async void DeleteAsync()
+        {
+            var romaing = Romaing;
+            int count = 0;
+            var idList = SelectedItems.Where(x =>
+            {
+                var model = (x as DataModel);
+                if (model != null && (model.Data as SendModel) != null) return true;
+                return false;
+            }).Select(x => ((x as DataModel).Data as SendModel)._id).ToList();
+
+            await Task.Run(() =>
+            {
+                count = Data.Database.DeleteByIDs(nameof(SendModel), idList, romaing);
+            });
+            if (count > 0) InitMyReplyList();
+            SelectionMode = ListViewSelectionMode.None;
+            Data.Message.ShowMessage($"成功删除{count}项");
+        }
+
+        protected override void OnRefresh(int page)
+        {
+            base.OnRefresh(page);
+            InitMyReplyList();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -88,35 +120,10 @@ namespace Islands.UWP
             IsSelectMode = !IsSelectMode;
         }
 
-        private async void DeleteAsync()
-        {
-            int count = 0;
-            var idList = SelectedItems.Where(x =>
-            {
-                var model = (x as DataModel);
-                if (model != null && (model.Data as SendModel) != null) return true;
-                return false;
-            }).Select(x => ((x as DataModel).Data as SendModel)._id).ToList();
-
-            await Task.Run(() =>
-            {
-                count = Data.Database.DeleteByIDs(nameof(Model.SendModel), idList);
-            });
-            if (count > 0) InitMyReplyList();
-            SelectionMode = ListViewSelectionMode.None;
-            Data.Message.ShowMessage($"成功删除{count}项");
-        }
-
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             IsSelectMode = false;
             SelectionMode = ListViewSelectionMode.None;
-        }
-
-        protected override void OnRefresh(int page)
-        {
-            base.OnRefresh(page);
-            InitMyReplyList();
         }
 
         private void SelectAll_Click(object sender, RoutedEventArgs e)
@@ -125,6 +132,11 @@ namespace Islands.UWP
                 SelectAll();
             else
                 DeselectRange(new Windows.UI.Xaml.Data.ItemIndexRange(0, (uint)Items.Count));
+        }
+
+        private void DataType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            OnRefresh(1);
         }
     }
 }

@@ -13,14 +13,13 @@
     ItemTemplate="{StaticResource ThreadDataTemplate}">
     <local:BaseListView.Resources>
     </local:BaseListView.Resources>
-    <!--<local:BaseListView.TopContent>
+    <local:BaseListView.TopContent>
         <RelativePanel>
-            <ComboBox SelectedIndex="0" RelativePanel.AlignRightWithPanel="True">
-                <ComboBoxItem Content="±¾µØ"/>
-                <ComboBoxItem Content="ÂþÓÎ"/>
+            <ComboBox Name="DataTypeBox" RelativePanel.AlignRightWithPanel="True"
+                      SelectionChanged="DataType_SelectionChanged">
             </ComboBox>
         </RelativePanel>
-    </local:BaseListView.TopContent>-->
+    </local:BaseListView.TopContent>
     <local:BaseListView.BottomContent>
         <RelativePanel  Background="{StaticResource ThemeColor}">
             <Button Name="BackButton" Content="&#xE80F;" Style="{StaticResource NavButton}">

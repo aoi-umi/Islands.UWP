@@ -1,10 +1,11 @@
-﻿using Islands.UWP.Model;
+﻿using Islands.UWP.Data;
+using Islands.UWP.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -112,18 +113,6 @@ namespace Islands.UWP
         {
             NightModelToggled?.Invoke(sender, e);
         }
-
-        //private void BackButton_Clicked(object sender, RoutedEventArgs e)
-        //{
-        //    BackButtonClicked?.Invoke(sender, e);
-        //}
-
-        //private void BackButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    //UpdateSetting();
-        //    BackButton_Clicked(sender, e);
-        //    //SaveSettingAsync();
-        //}
 
         private async void Settings_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -246,14 +235,12 @@ namespace Islands.UWP
 
         private void AddEvent()
         {
-            //BackButton.Click += BackButton_Click;
             DataRoamingButton.Click += DataRoamingButton_Click;
             settingUIList.ForEach(x => { x.LostFocus += Settings_LostFocus; });
         }
 
         private void RemoveEvent()
         {
-            //BackButton.Click -= BackButton_Click;
             DataRoamingButton.Click -= DataRoamingButton_Click;
             settingUIList.ForEach(x => { x.LostFocus -= Settings_LostFocus; });
         }
@@ -587,6 +574,35 @@ namespace Islands.UWP
             Data.Message.ShowMessage(string.Format("同步到漫游：收藏{0}，回复{1}\r\n同步到本地：收藏{2}，回复{3}",
                 roamingMarkCount, roamingMyReplyCount, localMarkCount, localMyReplyCount), "同步完毕");
             DataRoamingButton.Visibility = Visibility.Visible;
+        }
+
+        private void RefreshImage_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshImage();
+        }
+
+        private async void RefreshImage()
+        {
+            LocalImageView.ItemsSource = await File.GetLocalImageList();
+        }
+
+        private void DeleteImage_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteImage();
+        }
+
+        private async void DeleteImage()
+        {
+            foreach (StorageFile x in LocalImageView.SelectedItems)
+            {
+                try
+                {
+                    await x.DeleteAsync();
+                } catch
+                {
+                }
+            }
+            RefreshImage();
         }
     }
 }
