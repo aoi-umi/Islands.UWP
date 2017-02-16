@@ -13,7 +13,7 @@
     <local:BaseListView.Resources>
     </local:BaseListView.Resources>
     <local:BaseListView.TopContent>
-        <RelativePanel>
+        <RelativePanel Padding="5">
             <ComboBox Name="DataTypeBox" RelativePanel.AlignRightWithPanel="True"
                       SelectionChanged="DataType_SelectionChanged">
             </ComboBox>

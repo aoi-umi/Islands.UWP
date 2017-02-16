@@ -211,19 +211,20 @@ namespace Islands.UWP.Data
             return folder;
         }
 
-        public static async Task<IReadOnlyList<StorageFile>> GetLocalImageList()
+        public static async Task<List<StorageFile>> GetLocalImageList()
         {
-            IReadOnlyList<StorageFile> files = null;
+            List<StorageFile> list = new List<StorageFile>();
             try
             {
                 var folder = await ApplicationData.Current.LocalFolder.CreateFoldersAsync(Config.SendImageFolder);
-                files = await folder.GetFilesAsync();
+                var files = await folder.GetFilesAsync();
+                list.InsertRange(0, files);
             }
             catch (Exception ex)
             {
                 Message.ShowMessage(ex.Message);
             }
-            return files;
+            return list;
         }
     }
 }

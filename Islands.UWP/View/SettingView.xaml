@@ -13,8 +13,8 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
     <local:BaseContentView.Resources>
-        <Style TargetType="Pivot">
-            <Setter Property="FontSize" Value="10"/>
+        <Style TargetType="PivotHeaderItem">
+            <Setter Property="FontSize" Value="20"/>
         </Style>
         <Style TargetType="ToggleSwitch">
             <Setter Property="OffContent" Value="关"/>
@@ -103,7 +103,7 @@
                             </GridView.ItemsPanel>
                             <GridView.ItemTemplate>
                                 <DataTemplate>
-                                    <Image Stretch="Uniform" Source="{Binding Path}" Height="100" Width="100"/>
+                                    <Image Stretch="Uniform" Source="{Binding Path}" Height="90" Width="90"/>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
                         </GridView>

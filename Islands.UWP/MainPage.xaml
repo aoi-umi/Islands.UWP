@@ -10,8 +10,8 @@
     xmlns:uaCtr="using:UmiAoi.UWP.Controls"
     mc:Ignorable="d" >
     <Page.Resources>
-        <Style TargetType="Pivot">
-            <Setter Property="FontSize" Value="10"/>
+        <Style TargetType="PivotHeaderItem">
+            <Setter Property="FontSize" Value="20"/>
         </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

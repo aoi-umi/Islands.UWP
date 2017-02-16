@@ -247,7 +247,7 @@ namespace Islands.UWP
 
         private void InitSetting()
         {
-            SettingList = Data.Database.GetSettingList(islandcode);
+            SettingList = Database.GetSettingList(islandcode);
             foreach (SettingModel model in SettingList)
             {
                 switch (model.SettingName)
@@ -366,10 +366,10 @@ namespace Islands.UWP
         //        model.SettingValue = SettingValue;
         //        if (model._id == 0)
         //        {
-        //            await Data.Database.InsertAsync(model);
+        //            await Database.InsertAsync(model);
         //            NightModeSwitch.Tag = model;
         //        }
-        //        else await Data.Database.UpdateAsync(model);
+        //        else await Database.UpdateAsync(model);
         //    }
         //    #endregion
 
@@ -387,10 +387,10 @@ namespace Islands.UWP
         //        model.SettingValue = SettingValue;
         //        if (model._id == 0)
         //        {
-        //            await Data.Database.InsertAsync(model);
+        //            await Database.InsertAsync(model);
         //            TitleFontSizeSlider.Tag = model;
         //        }
-        //        else await Data.Database.UpdateAsync(model);
+        //        else await Database.UpdateAsync(model);
         //    }
         //    #endregion
 
@@ -408,10 +408,10 @@ namespace Islands.UWP
         //        model.SettingValue = SettingValue;
         //        if (model._id == 0)
         //        {
-        //            await Data.Database.InsertAsync(model);
+        //            await Database.InsertAsync(model);
         //            ContentFontSizeSlider.Tag = model;
         //        }
-        //        else await Data.Database.UpdateAsync(model);
+        //        else await Database.UpdateAsync(model);
         //    }
         //    #endregion
 
@@ -428,10 +428,10 @@ namespace Islands.UWP
         //        model.SettingValue = SettingValue;
         //        if (model._id == 0)
         //        {
-        //            await Data.Database.InsertAsync(model);
+        //            await Database.InsertAsync(model);
         //            MaskOpacitySlider.Tag = model;
         //        }
-        //        else await Data.Database.UpdateAsync(model);
+        //        else await Database.UpdateAsync(model);
         //    }
         //    #endregion
 
@@ -449,10 +449,10 @@ namespace Islands.UWP
         //        model.SettingValue = SettingValue;
         //        if (model._id == 0)
         //        {
-        //            await Data.Database.InsertAsync(model);
+        //            await Database.InsertAsync(model);
         //            IsAskEachTimeBox.Tag = model;
         //        }
-        //        else await Data.Database.UpdateAsync(model);
+        //        else await Database.UpdateAsync(model);
         //    }
         //    #endregion
 
@@ -469,10 +469,10 @@ namespace Islands.UWP
         //        model.SettingValue = SettingValue;
         //        if (model._id == 0)
         //        {
-        //            await Data.Database.InsertAsync(model);
+        //            await Database.InsertAsync(model);
         //            BackgroundImageSettingModel = model;
         //        }
-        //        else await Data.Database.UpdateAsync(model);
+        //        else await Database.UpdateAsync(model);
         //    }
         //    #endregion
 
@@ -490,10 +490,10 @@ namespace Islands.UWP
         //        model.SettingValue = SettingValue;
         //        if (model._id == 0)
         //        {
-        //            await Data.Database.InsertAsync(model);
+        //            await Database.InsertAsync(model);
         //            IsHideMenuSwitch.Tag = model;
         //        }
-        //        else await Data.Database.UpdateAsync(model);
+        //        else await Database.UpdateAsync(model);
         //    }
         //    #endregion
 
@@ -511,10 +511,10 @@ namespace Islands.UWP
         //        model.SettingValue = SettingValue;
         //        if (model._id == 0)
         //        {
-        //            await Data.Database.InsertAsync(model);
+        //            await Database.InsertAsync(model);
         //            NoImageSwitch.Tag = model;
         //        }
-        //        else await Data.Database.UpdateAsync(model);
+        //        else await Database.UpdateAsync(model);
         //    }
         //    #endregion
         //}
@@ -529,8 +529,8 @@ namespace Islands.UWP
 
         private async Task SaveSettingAsync(SettingModel model)
         {
-            if (model._id == 0) await Data.Database.InsertAsync(model);
-            else await Data.Database.UpdateAsync(model);
+            if (model._id == 0) await Database.InsertAsync(model);
+            else await Database.UpdateAsync(model);
         }
         
         private async void RoamingDataAsync()
@@ -541,10 +541,10 @@ namespace Islands.UWP
             int localMyReplyCount = 0;
             await Task.Run(() =>
             {
-                var roamingMarkList = Data.Database.RoamingGetMarkList();
-                var roamingMyReplyList = Data.Database.RoamingGetMyReplyList();
-                var markList = Data.Database.GetMarkList(IslandsCode.All);
-                var replyList = Data.Database.GetMyReplyList(IslandsCode.All);
+                var roamingMarkList = Database.RoamingGetMarkList();
+                var roamingMyReplyList = Database.RoamingGetMyReplyList();
+                var markList = Database.GetMarkList(IslandsCode.All);
+                var replyList = Database.GetMyReplyList(IslandsCode.All);
                 var saveToRoamingMarkList = markList.Where(x => !roamingMarkList.Exists(y => y.id == x.id && y.islandCode == x.islandCode)).ToList();
                 var saveToRoamingMyReplyList = replyList.Where(x =>
                 !roamingMyReplyList.Exists(y => y.sendDateTime == x.sendDateTime && y.sendContent == x.sendContent && y.islandCode == x.islandCode)).ToList();
@@ -555,19 +555,19 @@ namespace Islands.UWP
 
                 saveToLocalMarkList.ForEach(x =>
                 {
-                    if (Data.Database.Insert(x) > 0) localMarkCount++;
+                    if (Database.Insert(x) > 0) localMarkCount++;
                 });
                 saveToMyReplyList.ForEach(x =>
                 {
-                    if (Data.Database.Insert(x) > 0) localMyReplyCount++;
+                    if (Database.Insert(x) > 0) localMyReplyCount++;
                 });
                 saveToRoamingMarkList.ForEach(x =>
                 {
-                    if (Data.Database.RoamingInsert(x) > 0) roamingMarkCount++;
+                    if (Database.RoamingInsert(x) > 0) roamingMarkCount++;
                 });
                 saveToRoamingMyReplyList.ForEach(x =>
                 {
-                    if (Data.Database.RoamingInsert(x) > 0) roamingMyReplyCount++;
+                    if (Database.RoamingInsert(x) > 0) roamingMyReplyCount++;
                 });
             });
 
@@ -593,6 +593,7 @@ namespace Islands.UWP
 
         private async void DeleteImage()
         {
+            if (LocalImageView.SelectedItems.Count == 0) return;
             foreach (StorageFile x in LocalImageView.SelectedItems)
             {
                 try
