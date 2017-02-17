@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -20,15 +21,11 @@ namespace Islands.UWP
             DataTypeBox.SelectedIndex = 0;
         }
 
-        //public List<ThreadModel> markList { get; set; }
-
         public void AddMark(ThreadModel tm)
         {
-            //if (markList == null) return;
-            //markList.Insert(0, tm);
             tm.islandCode = IslandCode;
             ItemList.Insert(0, new DataModel() { DataType = DataTypes.Thread, Data = tm });
-            markCount = ItemList.Count.ToString();// markList.Count.ToString();
+            markCount = ItemList.Count.ToString();
         }
 
         private string markCount
@@ -43,13 +40,14 @@ namespace Islands.UWP
         {
             set
             {
+                SelectionMode = value ? ListViewSelectionMode.Multiple : ListViewSelectionMode.None;
                 SelectAllButton.Visibility =
                 CancelButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
                 BackButton.Visibility = !value ? Visibility.Visible : Visibility.Collapsed;
             }
             get
             {
-                return CancelButton.Visibility == Visibility.Visible ? true : false;
+                return SelectionMode != ListViewSelectionMode.None;
             }
         }
 
@@ -82,7 +80,7 @@ namespace Islands.UWP
                 mark.islandCode = IslandCode;
                 ItemList.Add(new DataModel() { DataType = DataTypes.Mark, Data = mark });
             }
-            markCount = ItemList.Count.ToString();// markList.Count.ToString();
+            markCount = ItemList.Count.ToString();
             RefreshEnd();
         }
 
@@ -101,7 +99,6 @@ namespace Islands.UWP
                 count = Data.Database.DeleteByIDs(nameof(ThreadModel), idList, romaing);
             });
             if (count > 0) InitMarkList();
-            SelectionMode = ListViewSelectionMode.None;
             Data.Message.ShowMessage($"成功删除{count}项");
         }
 
@@ -111,17 +108,12 @@ namespace Islands.UWP
             {
                 DeleteAsync();
             }
-            else
-            {
-                SelectionMode = ListViewSelectionMode.Multiple;
-            }
             IsSelectMode = !IsSelectMode;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             IsSelectMode = false;
-            SelectionMode = ListViewSelectionMode.None;
         }
 
         private void SelectAll_Click(object sender, RoutedEventArgs e)
@@ -129,7 +121,7 @@ namespace Islands.UWP
             if (SelectedItems.Count != Items.Count)
                 SelectAll();
             else
-                DeselectRange(new Windows.UI.Xaml.Data.ItemIndexRange(0, (uint)Items.Count));
+                DeselectRange(new ItemIndexRange(0, (uint)Items.Count));
         }
 
         private void DataType_SelectionChanged(object sender, SelectionChangedEventArgs e)

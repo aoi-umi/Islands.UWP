@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Islands.UWP.Model;
+using System.Collections.Generic;
 using System.IO;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
@@ -162,85 +163,104 @@ namespace Islands.UWP
                     PageSize = 19,
                     IslandCode = IslandsCode.A,
                     #region 板块
-                    Forums = new List<string>() {
-                        "综合,,group",
-                        "综合版,4,1",
-                        "欢乐恶搞,20,1",
-                        "推理,11,1",
-                        "技术讨论,30,1",
-                        "美食,32,1",
-                        "喵版,40,1",
-                        "音乐,35,1",
-                        "校园,56,1",
-                        "科学,15,1",
-                        "活动,104,1",
-                        "文学,103,1",
-                        "二次创作,17,1",
-                        "姐妹,98,1",
-                        "女性向,102,1",
-                        "女装,97,1",
-                        "日记,89,1",
-                        "WIKI,27,1",
-                        "都市怪谈,81,1",
-                        "买买买,106,1",
-                        "活动,104,1",
-
-                        "二次元,,group",
-                        "动画,14,1",
-                        "漫画,12,1",
-                        "国漫,99,1",
-                        "美漫,90,1",
-                        "轻小说,87,1",
-                        "小说,19,1",
-                        "GALGAME,64,1",
-                        "VOCALOID,6,1",
-                        "东方,5,1",
-                        "舰娘,93,1",
-                        "LL,101,1",
-
-                        "游戏,,group",
-                        "游戏综合版,2,1",
-                        "守望先锋,109,1",
-                        "手游,3,1",
-                        "EVE,73,1",
-                        "DNF,72,1",
-                        "战争雷霆,86,1",
-                        "LOL,22,1",
-                        "DOTA,70,1",
-                        "Steam,107,1",
-                        "辐射4,108,1",
-                        "GTA5,95,1",
-                        "MC,10,1",
-                        "音游,34,1",
-                        "WOT,51,1",
-                        "WOW,44,1",
-                        "D3,23,1",
-                        "卡牌桌游,45,1",
-                        "炉石传说,80,1",
-                        "怪物猎人,28,1",
-                        "口袋妖怪,38,1",
-                        "AC大逃杀,29,1",
-                        "索尼,24,1",
-                        "任天堂,25,1",
-                        "日麻,92,1",
-
-                        "2.5次元,,group",
-                        "AKB48,16,1",
-                        "SNH48,100,1",
-                        "眼科,13,1",
-                        "声优,55,1",
-                        "模型,39,1",
-
-                        "三次元,,group",
-                        "影视,31,1",
-                        "摄影,54,1",
-                        "体育,33,1",
-                        "军武,37,1",
-                        "数码,75,1",
-                        "天台,88,1",
-
-                        "其他,,group",
-                        "询问2,36,1"
+                    Groups = new List<Group<ForumModel>>() {
+                        new Group<ForumModel>() {
+                            GroupName = "综合",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "综合版", forumValue = "4", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "欢乐恶搞", forumValue = "20", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "推理", forumValue = "11", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "技术讨论", forumValue = "30", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "美食", forumValue = "32", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "喵版", forumValue = "40", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "音乐", forumValue = "35", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "校园", forumValue = "56", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "科学", forumValue = "15", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "活动", forumValue = "104", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "文学", forumValue = "103", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "二次创作", forumValue = "17", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "姐妹", forumValue = "98", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "女性向", forumValue = "102", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "女装", forumValue = "97", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "日记", forumValue = "89", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "WIKI", forumValue = "27", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "都市怪谈", forumValue = "81", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "买买买", forumValue = "106", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "活动", forumValue = "104", forumGroupId = "1"},
+                            }
+                        },
+                        new Group<ForumModel>() {
+                            GroupName = "二次元",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "动画", forumValue = "14", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "漫画", forumValue = "12", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "国漫", forumValue = "99", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "美漫", forumValue = "90", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "轻小说", forumValue = "87", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "小说", forumValue = "19", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "GALGAME", forumValue = "64", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "VOCALOID", forumValue = "6", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "东方", forumValue = "5", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "舰娘", forumValue = "93", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "LL", forumValue = "101", forumGroupId = "1"},
+                            }
+                        },
+                        new Group<ForumModel>() {
+                            GroupName = "游戏",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "游戏综合版", forumValue = "2", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "守望先锋", forumValue = "109", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "手游", forumValue = "3", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "EVE", forumValue = "73", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "DNF", forumValue = "72", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "战争雷霆", forumValue = "86", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "LOL", forumValue = "22", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "DOTA", forumValue = "70", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "Steam", forumValue = "107", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "辐射4", forumValue = "108", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "GTA5", forumValue = "95", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "MC", forumValue = "10", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "音游", forumValue = "34", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "WOT", forumValue = "51", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "WOW", forumValue = "44", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "D3", forumValue = "23", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "卡牌桌游", forumValue = "45", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "炉石传说", forumValue = "80", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "怪物猎人", forumValue = "28", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "口袋妖怪", forumValue = "38", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "AC大逃杀", forumValue = "29", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "索尼", forumValue = "24", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "任天堂", forumValue = "25", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "日麻", forumValue = "92", forumGroupId = "1"},
+                            }
+                        },
+                        new Group<ForumModel>() {
+                            GroupName = "2.5次元,",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "AKB48", forumValue = "16", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "SNH48", forumValue = "100", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "眼科", forumValue = "13", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "声优", forumValue = "55", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "模型", forumValue = "39", forumGroupId = "1"},
+                            }
+                        },
+                        new Group<ForumModel>() {
+                            GroupName = "三次元",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "影视", forumValue = "31", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "摄影", forumValue = "54", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "体育", forumValue = "33", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "军武", forumValue = "37", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "数码", forumValue = "75", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "天台", forumValue = "88", forumGroupId = "1"},
+                            }
+                        },
+                        new Group<ForumModel>() {
+                            GroupName = "其他",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "询问2", forumValue = "36", forumGroupId = "1"},
+                            }
+                        },
                     }
                     #endregion
             }
@@ -256,69 +276,86 @@ namespace Islands.UWP
                     PageSize = 20,
                     IslandCode = IslandsCode.Koukuko,
                     #region 板块
-                    Forums = new List<string>() {
-                        "综合,,group",
-                        "综合版1,综合版1,4",
-                        "欢乐恶搞,欢乐恶搞,20",
-                        "推理,推理,11",
-                        "技术讨论,技术宅,30",
-                        "美食,料理,32",
-                        "喵版,貓版,40",
-                        "音乐,音乐,35",
-                        "体育,体育,33",
-                        "军武,军武,37",
-                        "模型,模型,39",
-                        "考试,考试,56",
-                        "数码,数码,75",
-                        "日记,日记,89",
-                        "速报,速报,83",
-                        "都市怪谈,都市怪谈,81",
-
-                        "二次元,,group",
-                        "动画,动画,14",
-                        "漫画,漫画,12",
-                        "美漫,美漫,90",
-                        "轻小说,轻小说,87",
-                        "小说,小说,19",
-                        "二次创作,二次创作,17",
-                        "VOCALOID,VOCALOID,6",
-                        "东方,东方Project,5",
-                        "辣鸡,辣鸡,95",
-
-                        "游戏,,group",
-                        "游戏综合版,游戏,2",
-                        "EVE,EVE,73",
-                        "DNF,DNF,72",
-                        "战争雷霆,战争雷霆,86",
-                        "百万亚瑟王,扩散性百万亚瑟王,63",
-                        "LOL,LOL,22",
-                        "DOTA,DOTA,70",
-                        "MC,Minecraft,10",
-                        "音游,MUG,34",
-                        "MUGEN,MUGEN,48",
-                        "WOT,WOT,51",
-                        "WOW,WOW,44",
-                        "D3,D3,23",
-                        "卡牌桌游,卡牌桌游,45",
-                        "炉石传说,炉石传说,80",
-                        "怪物猎人,怪物猎人,28",
-                        "口袋妖怪,口袋妖怪,38",
-                        "索尼,索尼,24",
-                        "任天堂,任天堂,25",
-                        "日麻,日麻,92",
-                        "舰娘,舰娘,93",
-                        "LL,LoveLive,97",
-                        "辐射,辐射,96",
-
-                        "三次元,,group",
-                        "AKB48,AKB,16",
-                        "眼科,COSPLAY,13",
-                        "影视,影视,31",
-                        "摄影,摄影,54",
-                        "声优,声优,55",
-
-                        "其他,,group",
-                        "询问2,询问2,36"
+                    Groups = new List<Group<ForumModel>>()
+                    {
+                        new Group<ForumModel>() {
+                            GroupName = "综合",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "综合版1", forumValue = "综合版1", forumGroupId = "4"},
+                                new ForumModel() {  forumName = "欢乐恶搞", forumValue = "欢乐恶搞", forumGroupId = "20"},
+                                new ForumModel() {  forumName = "推理", forumValue = "推理", forumGroupId = "11"},
+                                new ForumModel() {  forumName = "技术讨论", forumValue = "技术宅", forumGroupId = "30"},
+                                new ForumModel() {  forumName = "美食", forumValue = "料理", forumGroupId = "32"},
+                                new ForumModel() {  forumName = "喵版", forumValue = "貓版", forumGroupId = "40"},
+                                new ForumModel() {  forumName = "音乐", forumValue = "音乐", forumGroupId = "35"},
+                                new ForumModel() {  forumName = "体育", forumValue = "体育", forumGroupId = "33"},
+                                new ForumModel() {  forumName = "军武", forumValue = "军武", forumGroupId = "37"},
+                                new ForumModel() {  forumName = "模型", forumValue = "模型", forumGroupId = "39"},
+                                new ForumModel() {  forumName = "考试", forumValue = "考试", forumGroupId = "56"},
+                                new ForumModel() {  forumName = "数码", forumValue = "数码", forumGroupId = "75"},
+                                new ForumModel() {  forumName = "日记", forumValue = "日记", forumGroupId = "89"},
+                                new ForumModel() {  forumName = "速报", forumValue = "速报", forumGroupId = "83"},
+                                new ForumModel() {  forumName = "都市怪谈", forumValue = "都市怪谈", forumGroupId = "81"},
+                            }
+                        },
+                        new Group<ForumModel>() {
+                            GroupName = "二次元",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "动画", forumValue = "动画", forumGroupId = "14"},
+                                new ForumModel() {  forumName = "漫画", forumValue = "漫画", forumGroupId = "12"},
+                                new ForumModel() {  forumName = "美漫", forumValue = "美漫", forumGroupId = "90"},
+                                new ForumModel() {  forumName = "轻小说", forumValue = "轻小说", forumGroupId = "87"},
+                                new ForumModel() {  forumName = "小说", forumValue = "小说", forumGroupId = "19"},
+                                new ForumModel() {  forumName = "二次创作", forumValue = "二次创作", forumGroupId = "17"},
+                                new ForumModel() {  forumName = "VOCALOID", forumValue = "VOCALOID", forumGroupId = "6"},
+                                new ForumModel() {  forumName = "东方", forumValue = "东方Project", forumGroupId = "5"},
+                                new ForumModel() {  forumName = "辣鸡", forumValue = "辣鸡", forumGroupId = "95"},
+                            }
+                        },
+                        new Group<ForumModel>() {
+                            GroupName = "游戏",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "游戏综合版", forumValue = "游戏", forumGroupId = "2"},
+                                new ForumModel() {  forumName = "EVE", forumValue = "EVE", forumGroupId = "73"},
+                                new ForumModel() {  forumName = "DNF", forumValue = "DNF", forumGroupId = "72"},
+                                new ForumModel() {  forumName = "战争雷霆", forumValue = "战争雷霆", forumGroupId = "86"},
+                                new ForumModel() {  forumName = "百万亚瑟王", forumValue = "扩散性百万亚瑟王", forumGroupId = "63"},
+                                new ForumModel() {  forumName = "LOL", forumValue = "LOL", forumGroupId = "22"},
+                                new ForumModel() {  forumName = "DOTA", forumValue = "DOTA", forumGroupId = "70"},
+                                new ForumModel() {  forumName = "MC", forumValue = "Minecraft", forumGroupId = "10"},
+                                new ForumModel() {  forumName = "音游", forumValue = "MUG", forumGroupId = "34"},
+                                new ForumModel() {  forumName = "MUGEN", forumValue = "MUGEN", forumGroupId = "48"},
+                                new ForumModel() {  forumName = "WOT", forumValue = "WOT", forumGroupId = "51"},
+                                new ForumModel() {  forumName = "WOW", forumValue = "WOW", forumGroupId = "44"},
+                                new ForumModel() {  forumName = "D3", forumValue = "D3", forumGroupId = "23"},
+                                new ForumModel() {  forumName = "卡牌桌游", forumValue = "卡牌桌游", forumGroupId = "45"},
+                                new ForumModel() {  forumName = "炉石传说", forumValue = "炉石传说", forumGroupId = "80"},
+                                new ForumModel() {  forumName = "怪物猎人", forumValue = "怪物猎人", forumGroupId = "28"},
+                                new ForumModel() {  forumName = "口袋妖怪", forumValue = "口袋妖怪", forumGroupId = "38"},
+                                new ForumModel() {  forumName = "索尼", forumValue = "索尼", forumGroupId = "24"},
+                                new ForumModel() {  forumName = "任天堂", forumValue = "任天堂", forumGroupId = "25"},
+                                new ForumModel() {  forumName = "日麻", forumValue = "日麻", forumGroupId = "92"},
+                                new ForumModel() {  forumName = "舰娘", forumValue = "舰娘", forumGroupId = "93"},
+                                new ForumModel() {  forumName = "LL", forumValue = "LoveLive", forumGroupId = "97"},
+                                new ForumModel() {  forumName = "辐射", forumValue = "辐射", forumGroupId = "96"},
+                            }
+                        },
+                        new Group<ForumModel>() {
+                            GroupName = "三次元",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "AKB48", forumValue = "AKB", forumGroupId = "16"},
+                                new ForumModel() {  forumName = "眼科", forumValue = "COSPLAY", forumGroupId = "13"},
+                                new ForumModel() {  forumName = "影视", forumValue = "影视", forumGroupId = "31"},
+                                new ForumModel() {  forumName = "摄影", forumValue = "摄影", forumGroupId = "54"},
+                                new ForumModel() {  forumName = "声优", forumValue = "声优", forumGroupId = "55"},
+                            }
+                        },
+                        new Group<ForumModel>() {
+                            GroupName = "其他",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "询问2", forumValue = "询问2", forumGroupId = "36"},
+                            }
+                        },
                     }
                     #endregion
             }
@@ -334,20 +371,25 @@ namespace Islands.UWP
                     PageSize = 19,
                     IslandCode = IslandsCode.Beitai,
                     #region 板块
-                    Forums = new List<string>() {
-                        "板块,,group",
-                        "综合,1,1",
-                        "技术,2,1",
-                        "二次创作,3,1",
-                        "动画漫画,4,1",
-                        "值班室,5,1",
-                        "游戏,6,1",
-                        "欢乐恶搞,7,1",
-                        "小说,11,1",
-                        "数码音乐,13,1",
-                        "射影,14,1",
-                        "都市怪谈,15,1",
-                        "支援1,17,1"
+                    Groups = new List<Group<ForumModel>>()
+                    {
+                        new Group<ForumModel>() {
+                            GroupName = "板块",
+                            Models = new List<ForumModel>() {
+                                new ForumModel() {  forumName = "综合", forumValue = "1", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "技术", forumValue = "2", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "二次创作", forumValue = "3", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "动画漫画", forumValue = "4", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "值班室", forumValue = "5", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "游戏", forumValue = "6", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "欢乐恶搞", forumValue = "7", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "小说", forumValue = "11", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "数码音乐", forumValue = "13", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "射影", forumValue = "14", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "都市怪谈", forumValue = "15", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "支援1", forumValue = "17", forumGroupId = "1"},
+                            }
+                        }
                     }
                     #endregion
             }
@@ -371,6 +413,6 @@ namespace Islands.UWP
         public string PostReplyAPI { get; set; }
         public int PageSize { get; set; }
         public IslandsCode IslandCode { get; set; }
-        public List<string> Forums { get; set; }
+        public List<Group<ForumModel>> Groups { get; set; }
     }
 }

@@ -1,5 +1,13 @@
-﻿namespace Islands.UWP.Model
+﻿using System.Collections.Generic;
+
+namespace Islands.UWP.Model
 {
+    public class Group<T>
+    {
+        public string GroupName { get; set; }
+        public List<T> Models { get; set; }
+    }
+
     public class ForumModel
     {
         public string forumName { get; set; }

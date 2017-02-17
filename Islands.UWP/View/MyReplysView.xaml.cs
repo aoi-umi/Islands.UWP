@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -21,8 +22,6 @@ namespace Islands.UWP
             DataTypeBox.SelectedIndex = 0;
         }
 
-        //public List<SendModel> myReplyList { get; set; }
-
         private string myReplyCount
         {
             set
@@ -35,13 +34,14 @@ namespace Islands.UWP
         {
             set
             {
+                SelectionMode = value ? ListViewSelectionMode.Multiple : ListViewSelectionMode.None;
                 SelectAllButton.Visibility =
                 CancelButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
                 BackButton.Visibility = !value ? Visibility.Visible : Visibility.Collapsed;
             }
             get
             {
-                return CancelButton.Visibility == Visibility.Visible ? true : false;
+                return SelectionMode != ListViewSelectionMode.None;
             }
         }
 
@@ -55,11 +55,9 @@ namespace Islands.UWP
 
         public void AddMyReply(SendModel sm)
         {
-            //if (myReplyList == null) return;
-            //myReplyList.Insert(0, sm);
             sm.islandCode = IslandCode;
             ItemList.Insert(0, new DataModel() { DataType = DataTypes.MyReply, Data = sm });
-            myReplyCount = ItemList.Count.ToString();// myReplyList.Count.ToString();
+            myReplyCount = ItemList.Count.ToString();
         }
 
         private async void InitMyReplyList()
@@ -75,9 +73,11 @@ namespace Islands.UWP
             foreach (var myreply in myReplyList)
             {
                 myreply.islandCode = IslandCode;
+                if(myreply.isMain)
+                    myreply.sendId = GetFourmName(myreply.sendId);
                 ItemList.Add(new DataModel() { DataType = DataTypes.MyReply, Data = myreply });
             }
-            myReplyCount = ItemList.Count.ToString();// myReplyList.Count.ToString();
+            myReplyCount = ItemList.Count.ToString();
             RefreshEnd();
         }
 
@@ -97,7 +97,6 @@ namespace Islands.UWP
                 count = Data.Database.DeleteByIDs(nameof(SendModel), idList, romaing);
             });
             if (count > 0) InitMyReplyList();
-            SelectionMode = ListViewSelectionMode.None;
             Data.Message.ShowMessage($"成功删除{count}项");
         }
 
@@ -113,17 +112,12 @@ namespace Islands.UWP
             {
                 DeleteAsync();
             }
-            else
-            {
-                SelectionMode = ListViewSelectionMode.Multiple;
-            }
             IsSelectMode = !IsSelectMode;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             IsSelectMode = false;
-            SelectionMode = ListViewSelectionMode.None;
         }
 
         private void SelectAll_Click(object sender, RoutedEventArgs e)
@@ -131,12 +125,23 @@ namespace Islands.UWP
             if (SelectedItems.Count != Items.Count)
                 SelectAll();
             else
-                DeselectRange(new Windows.UI.Xaml.Data.ItemIndexRange(0, (uint)Items.Count));
+                DeselectRange(new ItemIndexRange(0, (uint)Items.Count));
         }
 
         private void DataType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             OnRefresh(1);
+        }
+
+        private string GetFourmName(string id)
+        {
+            string name = id;
+            if (IslandCode == IslandsCode.A || IslandCode == IslandsCode.Beitai)
+            {
+                var match = Config.Island[IslandCode.ToString()].Groups.Select(x => x.Models.Find(y => y.forumValue == id)).First();
+                if (match != null) name = match.forumName;
+            }
+            return name;
         }
     }
 }

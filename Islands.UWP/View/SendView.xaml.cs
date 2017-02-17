@@ -223,11 +223,6 @@ namespace Islands.UWP
             }
         }
 
-        //private void RefButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    SendContent.Document.Selection.SetText(TextSetOptions.None, ">>No.");
-        //}
-
         public void InsertText(string str)
         {
             var start = SendContent.Document.Selection.StartPosition;

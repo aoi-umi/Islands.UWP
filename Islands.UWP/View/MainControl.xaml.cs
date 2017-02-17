@@ -17,13 +17,7 @@ namespace Islands.UWP
             this.InitializeComponent();
             DataContext = MainPage.Global;
             CurrentContent = CurrentContent;
-        }
-
-        public class Group<T>
-        {
-            public string GroupName { get; set; }
-            public List<T> Models { get; set; }
-        }
+        }        
 
         public IslandConfigModel IslandConfig { get; set; }
 
@@ -344,42 +338,8 @@ namespace Islands.UWP
         private void ForumsListInit(IslandsCode islandCode, out ForumModel currForum)
         {
             currForum = new ForumModel();
-            List<String> forums = Config.Island[islandCode.ToString()].Forums;
-            //switch (islandCode)
-            //{
-            //    case IslandsCode.A:
-            //        forums = Config.A.Forums;
-            //        break;
-            //    case IslandsCode.Koukuko:
-            //        forums = Config.K.Forums;
-            //        break;
-            //    case IslandsCode.Beitai:
-            //        forums = Config.B.Forums;
-            //        break;
-            //}
-            var groupName = "";
-            Group<ForumModel> group = new Group<ForumModel>();
-            List<Group<ForumModel>> groups = new List<Group<ForumModel>>();
-            foreach (var forum in forums)
-            {
-                var split = forum.Split(',');
-                if (split[2] == "group")
-                {
-                    groupName = split[0];
-                    group = new Group<ForumModel>() { GroupName = groupName, Models = new List<ForumModel>() };
-                    groups.Add(group);
-                    continue;
-                }
-                var f = new ForumModel()
-                {
-                    forumName = split[0],
-                    forumValue = split[1],
-                    forumGroupId = split[2]
-                };
-                group.Models.Add(f);
-                if (groups.Count == 1 && group.Models.Count == 1)
-                    currForum = f;
-            }
+            var groups = Config.Island[islandCode.ToString()].Groups;
+            currForum = groups[0].Models[0];
             forumGroup.Source = groups;
             forumGroup.ItemsPath = new PropertyPath("Models");
             forumZoomInView.ItemsSource = forumGroup.View;
