@@ -296,7 +296,12 @@ namespace Islands.UWP
                 var item = model.Data as SendModel;
                 if (item != null)
                 {
-                    if (item.isMain && !string.IsNullOrEmpty(item.ThreadId))
+                    if (item.ThreadId == "draft")
+                    {
+                        SendControl.FillSendContent(item);
+                        SendTapped();
+                    }
+                    else if (item.isMain && !string.IsNullOrEmpty(item.ThreadId))
                     {
                         IsMain = false;
                         BackToHome();
@@ -321,7 +326,7 @@ namespace Islands.UWP
             if (Success)
             {
                 Data.Message.ShowMessage("发送成功");
-                Data.Database.Insert(send);
+                Data.Database.Save(send, send._id);
                 MyReplysControl.AddMyReply(send);
             }
             else

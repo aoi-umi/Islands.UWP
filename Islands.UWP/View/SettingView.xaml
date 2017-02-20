@@ -63,12 +63,15 @@
                             <TextBlock Text="数据同步"/>
                             <Button Name="DataRoamingButton" Content="&#xE117;" Style="{StaticResource NavButton}"/>
                         </StackPanel>
-                        <StackPanel>
+                        <StackPanel Margin="5">
                             <TextBlock Text="设置背景" />
                             <StackPanel Orientation="Horizontal">
                                 <Button Name="SetImagePathButton" Content="&#xE25A;" Click="SetImagePathButton_Click" Style="{StaticResource NavButton}"/>
                                 <Button Name="CancelButton" Content="&#xE10A;" Click="CancelButton_Click" Style="{StaticResource NavButton}"/>
                             </StackPanel>
+                        </StackPanel>
+                        <StackPanel Margin="5">
+                            <HyperlinkButton Content="到应用商店评价" Click="WindowsStore_Click"/>
                         </StackPanel>
                     </toolkitCtr:UniformGrid>
                     <StackPanel>

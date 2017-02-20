@@ -605,5 +605,11 @@ namespace Islands.UWP
             }
             RefreshImage();
         }
+
+        private async void WindowsStore_Click(object sender, RoutedEventArgs e)
+        {
+            string uri = "ms-windows-store://review/?ProductId=9nblggh4v7wz";
+            await Windows.System.Launcher.LaunchUriAsync(new Uri(uri));
+        }
     }
 }

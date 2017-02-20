@@ -1,4 +1,5 @@
 ﻿using Islands.UWP.Data;
+using Islands.UWP.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -8,7 +9,6 @@ using Windows.UI.Text;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Imaging;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -31,7 +31,7 @@ namespace Islands.UWP
             public IslandsCode islandCode { get; set; }
             public bool IsMain { get; set; }
             public string Host { get; set; }
-            public Model.CookieModel Cookie { get; set; }
+            public CookieModel Cookie { get; set; }
             public string Id { get; set; }
             public string Api { get; set; }
             public PostModel() { }
@@ -103,16 +103,31 @@ namespace Islands.UWP
 
         private void OnSendClick(object sender, RoutedEventArgs e)
         {
-            if (Response != null) SendClick(sender, e);
+            SendClick?.Invoke(sender, e);
         }
 
         private void EmptyButton_Click(object sender, RoutedEventArgs e)
+        {
+            EmptySendContent();
+        }
+
+        private void EmptySendContent()
         {
             txtSendTitle = "";
             txtSendEmail = "";
             txtSendName = "";
             txtSendContent = "";
             txtImageUri = "";
+        }
+
+        public void FillSendContent(SendModel model)
+        {
+            title = model.sendId;
+            txtSendTitle = model.sendTitle;
+            txtSendEmail = model.sendEmail;
+            txtSendName = model.sendName;
+            txtSendContent = model.sendContent;
+            txtImageUri = model.sendImage;
         }
 
         private async void ImageButton_Click(object sender, RoutedEventArgs e)
@@ -125,14 +140,14 @@ namespace Islands.UWP
         {
             Send(e);
         }
-
+        
         private async void Send(RoutedEventArgs e)
         {
             try
             {
                 if (string.IsNullOrEmpty(postModel.Id))
                     throw new Exception("无法回复空串");
-                var send = new Model.SendModel()
+                var send = new SendModel()
                 {
                     sendTitle = txtSendTitle,
                     sendEmail = txtSendEmail,
@@ -169,6 +184,15 @@ namespace Islands.UWP
                 IsHitTestVisible = false;
                 IsLoading = true;
                 OnSendClick(this, e);
+                //try
+                //{
+                //    send.ThreadId = "draft";
+                //    var result = Database.Save(send, 0);
+                //    if (result > 0) EmptySendContent();                 
+                //}
+                //catch (Exception ex)
+                //{
+                //}
 
                 var res = await Http.PostData(send);
                 bool IsSuccess = false;
@@ -179,7 +203,10 @@ namespace Islands.UWP
                     case IslandsCode.Beitai:
                         if (res.body.IndexOf("没有饼干") >= 0) throw new Exception("没有饼干");
                         if (res.body.IndexOf("回复成功") >= 0 || res.body.IndexOf("发帖成功") >= 0)
+                        {
+                            send.ThreadId = "";
                             IsSuccess = true;
+                        }
                         break;
                     case IslandsCode.Koukuko:
                         JObject jobj = (JObject)JsonConvert.DeserializeObject(res.body);
@@ -196,11 +223,14 @@ namespace Islands.UWP
                     {
                         var imageName = Path.GetFileName(send.sendImage);
                         var sf = ApplicationData.Current.LocalFolder;
-                        var copyResult = await sf.TryCopyImage(send.sendImage, Config.SendImageFolder, imageName);
-                        if (copyResult) send.sendImage = Path.Combine(sf.Path, Config.SendImageFolder, imageName);
+                        if (send.sendImage != Path.Combine(sf.Path, Config.SendImageFolder, imageName))
+                        {
+                            var copyResult = await sf.TryCopyImage(send.sendImage, Config.SendImageFolder, imageName);
+                            if (copyResult) send.sendImage = Path.Combine(sf.Path, Config.SendImageFolder, imageName);
+                        }
                     }
                     if (!string.IsNullOrEmpty(originalContent)) send.sendContent += "\r\n" + originalContent;
-                    EmptyButton_Click(null, null);
+                    EmptySendContent();
                 }
                 send.ThreadId = ThreadId;
                 OnResponse(IsSuccess, send);

@@ -13,6 +13,14 @@ namespace Islands.UWP.Data
 {
     public static class Database
     {
+        public static int Save<T>(T model, int id)
+        {
+            int result = 0;
+            if (id == 0) result = Insert(model);
+            else result = Update(model);
+            return result;
+        }
+
         public static int Insert<T>(T model)
         {
             int result = 0;
