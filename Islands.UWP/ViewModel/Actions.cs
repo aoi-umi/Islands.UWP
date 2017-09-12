@@ -3,6 +3,7 @@ using Islands.UWP.Model;
 using Microsoft.Xaml.Interactivity;
 using System;
 using UmiAoi.UWP;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -63,7 +64,9 @@ namespace Islands.UWP.ViewModel
                     break;
                 case ActionTypes.FlyoutMenuClicked:
                     if (ele != null)
-                        FlyoutMenuClicked(ele.DataContext as ItemViewModel);
+                    {
+                        FlyoutMenuClicked(ele.DataContext as ItemViewModel, ele.Tag.ToString());
+                    }
                     break;
             }
             return true;
@@ -98,16 +101,26 @@ namespace Islands.UWP.ViewModel
             flyout.ShowAt(ele, e.GetPosition(ele));
         }
 
-        private void FlyoutMenuClicked(ItemViewModel viewModel)
+        private void FlyoutMenuClicked(ItemViewModel viewModel, string type)
         {
             try
             {
-                if (viewModel == null || string.IsNullOrWhiteSpace(viewModel.ItemNo)) throw new Exception("引用失败");
-                if (CurrentControl != null)
+                if (viewModel == null || string.IsNullOrWhiteSpace(viewModel.ItemNo)) throw new Exception("失败");
+                switch (type.ToLower())
                 {
-                    var str = ">>No." + viewModel.ItemNo + Environment.NewLine;
-                    CurrentControl.InsertSendText(str);
-                    CurrentControl.SendTapped();
+                    case "ref":
+                        if (CurrentControl != null)
+                        {
+                            var str = ">>No." + viewModel.ItemNo + Environment.NewLine;
+                            CurrentControl.InsertSendText(str);
+                            CurrentControl.SendTapped();
+                        }
+                        break;
+                    case "copyimageurl":
+                        DataPackage dataPackage = new DataPackage();
+                        dataPackage.SetText(viewModel.ItemImage ?? "");
+                        Clipboard.SetContent(dataPackage);
+                        break;
                 }
             }
             catch (Exception ex)

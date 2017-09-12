@@ -167,6 +167,7 @@ namespace Islands.UWP
                         Hyperlink h = inline as Hyperlink;
                         if (h != null && h.UnderlineStyle == UnderlineStyle.None)
                         {
+                            h.Click -= Ref_Click;
                             if (!IsRef)
                             {
                                 var model = new InsertRefModel()

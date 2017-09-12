@@ -13,6 +13,7 @@
     <local:BaseContentView.Resources>
         <MenuFlyout x:Key="ImageMenuFlyout">
             <MenuFlyoutItem Text="copy" Click="MenuFlyoutCopyImage_Click"/>
+            <MenuFlyoutItem Text="url" Click="CopyImageUrl_Click"/>
         </MenuFlyout>
     </local:BaseContentView.Resources>
     <local:BaseContentView.TopContent>
@@ -43,6 +44,10 @@
                     </Core:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Button>
+            <Button Name="UrlButton" Content="&#xE71B;"
+                    RelativePanel.LeftOf="SaveButton"
+                    Style="{StaticResource NavButton}"
+                    Click="CopyImageUrl_Click"/>
             <Button Name="SaveButton" Content="&#xE105;"
                     RelativePanel.AlignRightWithPanel="True"
                     Style="{StaticResource NavButton}"/>

@@ -130,6 +130,13 @@ namespace Islands.UWP
             Clipboard.SetContent(dataPackage);
         }
 
+        private void CopyImageUrl_Click(object sender, RoutedEventArgs e)
+        {
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.SetText(ImageUrl ?? "");
+            Clipboard.SetContent(dataPackage);
+        }
+
         ~ImageView()
         {
             RemoveEvent();

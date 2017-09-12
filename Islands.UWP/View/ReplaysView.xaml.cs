@@ -142,6 +142,7 @@ namespace Islands.UWP
         private async void GetReplyList(PostRequest req, IslandsCode code)
         {
             if (IsLoading) return;
+            req.Host = Config.Island[IslandCode.ToString()].Host;
             RefreshStart();
             replyCount = 0;
             string res = "";

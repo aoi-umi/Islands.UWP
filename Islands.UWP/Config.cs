@@ -25,6 +25,10 @@ namespace Islands.UWP
         public const string BackgroundImagePath = "BackgroundImagePath";
         public const string NoImage = "NoImage";
         public const string IsHideMenu = "IsHideMenu";
+        public const string AHost = "AHost";
+        public const string APictureHost = "APictureHost";
+        public const string BHost = "BHost";
+        public const string BPictureHost = "BPictureHost";
     }
 
     public static class Config
@@ -154,7 +158,7 @@ namespace Islands.UWP
         {
             { "A" , new IslandConfigModel() {
                     Host = "https://h.nimingban.com",
-                    PictureHost = "http://cdn.ovear.info:8998/",
+                    PictureHost = "http://img6.nimingban.com/",
                     GetThreadAPI = "{0}/Api/showf/id/{1}/page/{2}",
                     GetReplyAPI = "{0}/Api/thread/id/{1}/page/{2}",
                     GetRefAPI = "{0}/Api/ref?id={1}",
@@ -175,6 +179,7 @@ namespace Islands.UWP
                                 new ForumModel() {  forumName = "喵版", forumValue = "40", forumGroupId = "1"},
                                 new ForumModel() {  forumName = "音乐", forumValue = "35", forumGroupId = "1"},
                                 new ForumModel() {  forumName = "校园", forumValue = "56", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "社畜", forumValue = "110", forumGroupId = "1"},
                                 new ForumModel() {  forumName = "科学", forumValue = "15", forumGroupId = "1"},
                                 new ForumModel() {  forumName = "活动", forumValue = "104", forumGroupId = "1"},
                                 new ForumModel() {  forumName = "文学", forumValue = "103", forumGroupId = "1"},
@@ -187,6 +192,8 @@ namespace Islands.UWP
                                 new ForumModel() {  forumName = "都市怪谈", forumValue = "81", forumGroupId = "1"},
                                 new ForumModel() {  forumName = "买买买", forumValue = "106", forumGroupId = "1"},
                                 new ForumModel() {  forumName = "活动", forumValue = "104", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "圈内", forumValue = "96", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "速报", forumValue = "83", forumGroupId = "1"},
                             }
                         },
                         new Group<ForumModel>() {
@@ -361,8 +368,8 @@ namespace Islands.UWP
             }
             },
             { "Beitai" , new IslandConfigModel() {
-                    Host = "http://h.adnmb.com",
-                    PictureHost = "http://h.adnmb.com/Public/Upload/",
+                    Host = "https://tnmb.org",
+                    PictureHost = "https://tnmbstatic.fastmirror.org/Public/Upload/",
                     GetThreadAPI = "{0}/Api/showf/id/{1}/page/{2}",
                     GetReplyAPI = "{0}/Api/thread/id/{1}/page/{2}",
                     GetRefAPI = "{0}/Api/ref?id={1}",
@@ -388,6 +395,13 @@ namespace Islands.UWP
                                 new ForumModel() {  forumName = "射影", forumValue = "14", forumGroupId = "1"},
                                 new ForumModel() {  forumName = "都市怪谈", forumValue = "15", forumGroupId = "1"},
                                 new ForumModel() {  forumName = "支援1", forumValue = "17", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "基佬", forumValue = "18", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "姐妹2", forumValue = "19", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "日记", forumValue = "20", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "美食", forumValue = "21", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "喵版", forumValue = "22", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "社畜", forumValue = "23", forumGroupId = "1"},
+                                new ForumModel() {  forumName = "车万养老院", forumValue = "24", forumGroupId = "1"},
                             }
                         }
                     }

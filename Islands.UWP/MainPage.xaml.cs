@@ -23,6 +23,14 @@ namespace Islands.UWP
                 statusBar.ForegroundColor = Colors.White;
                 statusBar.BackgroundColor = Colors.Black;
                 statusBar.BackgroundOpacity = 1;
+
+                //statusBar.BackgroundColor = Colors.Transparent;
+                //statusBar.BackgroundOpacity = 0;
+                //Frame rootFrame = Window.Current.Content as Frame;
+                //if (rootFrame != null)
+                //{
+                //    rootFrame.Margin = new Thickness(0, -statusBar.OccludedRect.Height, 0, 0);
+                //}
             }
 
             this.InitializeComponent();

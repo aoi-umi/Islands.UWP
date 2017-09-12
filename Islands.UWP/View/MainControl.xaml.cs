@@ -47,7 +47,7 @@ namespace Islands.UWP
             {
                 postReq = new PostRequest()
                 {
-                    Host = IslandConfig.Host,
+                    //Host = IslandConfig.Host,
                     API = IslandConfig.GetThreadAPI,
                     ID = currForum.forumValue
                 },
@@ -60,7 +60,7 @@ namespace Islands.UWP
             {
                 postReq = new PostRequest
                 {
-                    Host = IslandConfig.Host,
+                    //Host = IslandConfig.Host,
                     API = IslandConfig.GetReplyAPI
                 },
                 IslandCode = IslandConfig.IslandCode,

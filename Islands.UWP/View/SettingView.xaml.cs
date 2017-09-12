@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -30,6 +31,10 @@ namespace Islands.UWP
                 IsAskEachTimeBox,
                 IsHideMenuSwitch,
                 NoImageSwitch,
+                AHostBox,
+                APictureHostBox,
+                BHostBox,
+                BPictureHostBox,
             };
             
             Loaded += SettingView_Loaded;
@@ -122,7 +127,7 @@ namespace Islands.UWP
             string SettingValue = string.Empty;
             if (model == null)
             {
-                model = new SettingModel();
+                model = new SettingModel() { SettingValue = string.Empty };
                 ele.Tag = model;
             }
             switch (ele.Name)
@@ -194,6 +199,48 @@ namespace Islands.UWP
                         MainPage.Global.NoImage = NoImage;
                     break;
                 #endregion
+
+                #region A岛域名
+                case "AHostBox":
+                    SettingName = Settings.AHost;
+                    SettingValue = AHostBox.Text.Trim();
+                    if (SettingValue == Config.Island[IslandsCode.A.ToString()].Host)
+                        SettingValue = string.Empty;
+                    else
+                        Config.Island[IslandsCode.A.ToString()].Host = SettingValue;
+                    break;
+                #endregion
+                #region A岛图片域名
+                case "APictureHostBox":
+                    SettingName = Settings.APictureHost;
+                    SettingValue = APictureHostBox.Text.Trim();
+                    if (SettingValue == Config.Island[IslandsCode.A.ToString()].PictureHost)
+                        SettingValue = string.Empty;
+                    else
+                        Config.Island[IslandsCode.A.ToString()].PictureHost = SettingValue;
+                    break;
+                #endregion
+
+                #region 备胎岛域名
+                case "BHostBox":
+                    SettingName = Settings.BHost;
+                    SettingValue = BHostBox.Text.Trim();
+                    if (SettingValue == Config.Island[IslandsCode.Beitai.ToString()].Host)
+                        SettingValue = string.Empty;
+                    else
+                        Config.Island[IslandsCode.Beitai.ToString()].Host = SettingValue;
+                    break;
+                #endregion
+                #region 备胎岛图片域名
+                case "BPictureHostBox":
+                    SettingName = Settings.BPictureHost;
+                    SettingValue = BPictureHostBox.Text.Trim();
+                    if (SettingValue == Config.Island[IslandsCode.Beitai.ToString()].PictureHost)
+                        SettingValue = string.Empty;
+                    else
+                        Config.Island[IslandsCode.Beitai.ToString()].PictureHost = SettingValue;
+                    break;
+                    #endregion
             }
             //SettingName不为空,且值与原来不同时保存
             if (!string.IsNullOrWhiteSpace(SettingName) &&
@@ -300,8 +347,48 @@ namespace Islands.UWP
                         NoImageSwitch.Tag = model;
                         MainPage.Global.NoImage = NoImage = string.IsNullOrEmpty(model.SettingValue) ? false : true;
                         break;
+                    case Settings.AHost:
+                        AHostBox.Tag = model;
+                        if (string.IsNullOrEmpty(model.SettingValue))
+                            model.SettingValue = Config.Island[IslandsCode.A.ToString()].Host;
+                        else
+                            Config.Island[IslandsCode.A.ToString()].Host = model.SettingValue;
+                        AHostBox.Text = model.SettingValue;
+                        break;
+                    case Settings.APictureHost:
+                        APictureHostBox.Tag = model;
+                        if (string.IsNullOrEmpty(model.SettingValue))
+                            model.SettingValue = Config.Island[IslandsCode.A.ToString()].PictureHost;
+                        else
+                            Config.Island[IslandsCode.A.ToString()].PictureHost = model.SettingValue;
+                        APictureHostBox.Text = model.SettingValue;
+                        break;
+                    case Settings.BHost:
+                        BHostBox.Tag = model;
+                        if (string.IsNullOrEmpty(model.SettingValue))
+                            model.SettingValue = Config.Island[IslandsCode.Beitai.ToString()].Host;
+                        else
+                            Config.Island[IslandsCode.Beitai.ToString()].Host = model.SettingValue;
+                        BHostBox.Text = model.SettingValue;
+                        break;
+                    case Settings.BPictureHost:
+                        APictureHostBox.Tag = model;
+                        if (string.IsNullOrEmpty(model.SettingValue))
+                            model.SettingValue = Config.Island[IslandsCode.Beitai.ToString()].PictureHost;
+                        else
+                            Config.Island[IslandsCode.Beitai.ToString()].PictureHost = model.SettingValue;
+                        BPictureHostBox.Text = model.SettingValue;
+                        break;
                 }
             }
+            if (string.IsNullOrEmpty(AHostBox.Text))
+                AHostBox.Text = Config.Island[IslandsCode.A.ToString()].Host;
+            if (string.IsNullOrEmpty(APictureHostBox.Text))
+                APictureHostBox.Text = Config.Island[IslandsCode.A.ToString()].PictureHost;
+            if (string.IsNullOrEmpty(BHostBox.Text))
+                BHostBox.Text = Config.Island[IslandsCode.Beitai.ToString()].Host;
+            if (string.IsNullOrEmpty(BPictureHostBox.Text))
+                BPictureHostBox.Text = Config.Island[IslandsCode.Beitai.ToString()].PictureHost;
         }
 
         private async void BackgroundImagePathChange(string path)

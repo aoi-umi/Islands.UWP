@@ -23,7 +23,14 @@
                         </Interactivity:Interaction.Behaviors>
                         <Border.Resources>
                             <MenuFlyout x:Key="ItemMenuFlyout">
-                                <MenuFlyoutItem Text="引用">
+                                <MenuFlyoutItem Text="引用" Tag="Ref">
+                                    <Interactivity:Interaction.Behaviors>
+                                        <Core:EventTriggerBehavior EventName="Click">
+                                            <viewModel:Actions ActionType="FlyoutMenuClicked"/>
+                                        </Core:EventTriggerBehavior>
+                                    </Interactivity:Interaction.Behaviors>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="复制图片链接" Tag="CopyImageUrl">
                                     <Interactivity:Interaction.Behaviors>
                                         <Core:EventTriggerBehavior EventName="Click">
                                             <viewModel:Actions ActionType="FlyoutMenuClicked"/>

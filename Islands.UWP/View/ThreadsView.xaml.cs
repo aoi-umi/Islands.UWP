@@ -102,6 +102,7 @@ namespace Islands.UWP
         private async void GetThreadList(PostRequest req, IslandsCode code)
         {
             if (IsLoading) return;
+            req.Host = Config.Island[IslandCode.ToString()].Host;
             RefreshStart();
             string res = "";
             try

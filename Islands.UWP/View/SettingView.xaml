@@ -80,6 +80,16 @@
                             <Slider Name="MaskOpacitySlider" Value="0" Minimum="0" Maximum="90" ValueChanged="MaskOpacitySlider_ValueChanged"/>
                         </StackPanel>
                         <StackPanel Margin="5">
+                            <TextBlock Text="A岛域名"/>
+                            <TextBox Name="AHostBox"/>
+                            <TextBlock Text="A岛图片域名"/>
+                            <TextBox Name="APictureHostBox"/>
+                            <TextBlock Text="备胎岛域名"/>
+                            <TextBox Name="BHostBox"/>
+                            <TextBlock Text="备胎岛图片域名"/>
+                            <TextBox Name="BPictureHostBox"/>
+                        </StackPanel>
+                        <StackPanel Margin="5">
                             <TextBlock Text="字体大小"/>
                             <Slider Name="TitleFontSizeSlider" Value="10" Minimum="1" Maximum="100"/>
                             <Slider Name="ContentFontSizeSlider" Value="16" Minimum="1" Maximum="100"/>
