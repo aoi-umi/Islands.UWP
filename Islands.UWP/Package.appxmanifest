@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="741aoi-umi.s" Publisher="CN=umi" Version="0.0.15.0" />
+  <Identity Name="741aoi-umi.s" Publisher="CN=43963C60-BC50-49E1-8E9F-D1B5B4D1A9B2" Version="0.0.15.0" />
   <mp:PhoneIdentity PhoneProductId="17dc9801-f91f-4b2e-9a60-7b3c3ded95de" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>匿名版s</DisplayName>

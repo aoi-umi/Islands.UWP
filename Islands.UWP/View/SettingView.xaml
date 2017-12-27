@@ -23,6 +23,9 @@
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="16"/>
         </Style>
+        <Style TargetType="PivotItem">
+            <Setter Property="Margin" Value="0"></Setter>
+        </Style>
     </local:BaseContentView.Resources>
     <local:BaseContentView.BottomContent>
         <RelativePanel Background="{StaticResource ThemeColor}">
@@ -36,7 +39,7 @@
         </RelativePanel>
     </local:BaseContentView.BottomContent>
     <Pivot>
-        <PivotItem Header="基本设置" Margin="0">
+        <PivotItem Header="基本设置">
             <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto">
                 <StackPanel Margin="5">
                     <toolkitCtr:UniformGrid Columns="2">
@@ -80,16 +83,6 @@
                             <Slider Name="MaskOpacitySlider" Value="0" Minimum="0" Maximum="90" ValueChanged="MaskOpacitySlider_ValueChanged"/>
                         </StackPanel>
                         <StackPanel Margin="5">
-                            <TextBlock Text="A岛域名"/>
-                            <TextBox Name="AHostBox"/>
-                            <TextBlock Text="A岛图片域名"/>
-                            <TextBox Name="APictureHostBox"/>
-                            <TextBlock Text="备胎岛域名"/>
-                            <TextBox Name="BHostBox"/>
-                            <TextBlock Text="备胎岛图片域名"/>
-                            <TextBox Name="BPictureHostBox"/>
-                        </StackPanel>
-                        <StackPanel Margin="5">
                             <TextBlock Text="字体大小"/>
                             <Slider Name="TitleFontSizeSlider" Value="10" Minimum="1" Maximum="100"/>
                             <Slider Name="ContentFontSizeSlider" Value="16" Minimum="1" Maximum="100"/>
@@ -100,7 +93,67 @@
                 </StackPanel>
             </ScrollViewer>
         </PivotItem>
-        <PivotItem Header="图片管理" Margin="0">
+        <PivotItem Header="其他设置">
+            <StackPanel Margin="5">
+                <StackPanel Padding="5" BorderBrush="Gray" BorderThickness="1">
+                    <TextBlock Text="A岛"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="域名"/>
+                        <TextBox Name="AHostBox" Grid.Column="1"/>
+                        <TextBlock Text="图片域名" Grid.Row="2"/>
+                        <TextBox Name="APictureHostBox" Grid.Row="2" Grid.Column="1"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Padding="5" BorderBrush="Gray" BorderThickness="1">
+                    <TextBlock Text="光驱岛"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="域名"/>
+                        <TextBox Name="KHostBox" Grid.Column="1"/>
+                        <TextBlock Text="图片域名" Grid.Row="2"/>
+                        <TextBox Name="KPictureHostBox" Grid.Row="2" Grid.Column="1"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Padding="5" BorderBrush="Gray" BorderThickness="1">
+                    <TextBlock Text="备胎岛"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="域名"/>
+                        <TextBox Name="BHostBox" Grid.Column="1"/>
+                        <TextBlock Text="图片域名" Grid.Row="2"/>
+                        <TextBox Name="BPictureHostBox" Grid.Row="2" Grid.Column="1"/>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </PivotItem>
+        <PivotItem Header="图片管理">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>

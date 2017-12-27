@@ -27,6 +27,8 @@ namespace Islands.UWP
         public const string IsHideMenu = "IsHideMenu";
         public const string AHost = "AHost";
         public const string APictureHost = "APictureHost";
+        public const string KHost = "KHost";
+        public const string KPictureHost = "KPictureHost";
         public const string BHost = "BHost";
         public const string BPictureHost = "BPictureHost";
     }

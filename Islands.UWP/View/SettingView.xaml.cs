@@ -33,6 +33,8 @@ namespace Islands.UWP
                 NoImageSwitch,
                 AHostBox,
                 APictureHostBox,
+                KHostBox,
+                KPictureHostBox,
                 BHostBox,
                 BPictureHostBox,
             };
@@ -175,13 +177,6 @@ namespace Islands.UWP
                     break;
                 #endregion
 
-                //#region 背景图片
-                //case "SettingView":
-                //    SettingName = Settings.BackgroundImagePath;
-                //    SettingValue = MainPage.Global.BackgroundImagePath;
-                //    break;
-                //#endregion
-
                 #region 隐藏菜单
                 case "IsHideMenuSwitch":
                     SettingName = Settings.IsHideMenu;
@@ -218,6 +213,27 @@ namespace Islands.UWP
                         SettingValue = string.Empty;
                     else
                         Config.Island[IslandsCode.A.ToString()].PictureHost = SettingValue;
+                    break;
+                #endregion
+
+                #region 光驱岛域名
+                case "KHostBox":
+                    SettingName = Settings.KHost;
+                    SettingValue = KHostBox.Text.Trim();
+                    if (SettingValue == Config.Island[IslandsCode.Koukuko.ToString()].Host)
+                        SettingValue = string.Empty;
+                    else
+                        Config.Island[IslandsCode.Koukuko.ToString()].Host = SettingValue;
+                    break;
+                #endregion
+                #region 光驱岛图片域名
+                case "KPictureHostBox":
+                    SettingName = Settings.KPictureHost;
+                    SettingValue = KPictureHostBox.Text.Trim();
+                    if (SettingValue == Config.Island[IslandsCode.Koukuko.ToString()].PictureHost)
+                        SettingValue = string.Empty;
+                    else
+                        Config.Island[IslandsCode.Koukuko.ToString()].PictureHost = SettingValue;
                     break;
                 #endregion
 
@@ -347,6 +363,7 @@ namespace Islands.UWP
                         NoImageSwitch.Tag = model;
                         MainPage.Global.NoImage = NoImage = string.IsNullOrEmpty(model.SettingValue) ? false : true;
                         break;
+
                     case Settings.AHost:
                         AHostBox.Tag = model;
                         if (string.IsNullOrEmpty(model.SettingValue))
@@ -363,6 +380,24 @@ namespace Islands.UWP
                             Config.Island[IslandsCode.A.ToString()].PictureHost = model.SettingValue;
                         APictureHostBox.Text = model.SettingValue;
                         break;
+
+                    case Settings.KHost:
+                        KHostBox.Tag = model;
+                        if (string.IsNullOrEmpty(model.SettingValue))
+                            model.SettingValue = Config.Island[IslandsCode.Koukuko.ToString()].Host;
+                        else
+                            Config.Island[IslandsCode.Koukuko.ToString()].Host = model.SettingValue;
+                        KHostBox.Text = model.SettingValue;
+                        break;
+                    case Settings.KPictureHost:
+                        KPictureHostBox.Tag = model;
+                        if (string.IsNullOrEmpty(model.SettingValue))
+                            model.SettingValue = Config.Island[IslandsCode.Koukuko.ToString()].PictureHost;
+                        else
+                            Config.Island[IslandsCode.Koukuko.ToString()].PictureHost = model.SettingValue;
+                        KPictureHostBox.Text = model.SettingValue;
+                        break;
+
                     case Settings.BHost:
                         BHostBox.Tag = model;
                         if (string.IsNullOrEmpty(model.SettingValue))
